@@ -197,10 +197,10 @@ export class StandardBBCodeParser extends CoreBBCodeParser {
             'url',
             (parser, parent, _, content) => {
                 const tagData = analyzeUrlTag(parser, _, content);
-
                 const root = parser.createElement('span');
-                // const el = parser.createElement('span');
+
                 parent.appendChild(root);
+
                 // root.appendChild(el);
 
                 if (!tagData.success) {

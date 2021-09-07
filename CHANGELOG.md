@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.14.0
+* Fixed Redgifs previews
+* Fixed zoom in/out/reset (Ctrl +/-/0)
+* Fixed tiger sharks being labeled as felines
+* Fixed bug that prevented posting normal channel messages when auto-posting is active
+* Fixed bug that removed links when chat messages were copied to clipboard
+
 ## 1.13.0
 *   Position is now part of the profile match score
 

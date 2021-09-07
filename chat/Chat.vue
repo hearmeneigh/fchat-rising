@@ -64,12 +64,24 @@
     function scanNode(node: BBCodeNode, end: Node, range: Range, flags: {endFound?: true}, hide?: boolean): string {
         let str = '';
         hide = hide || node instanceof HTMLElement && node.classList.contains('bbcode-pseudo');
+
+        const component = (node as any)?.__vue__;
+
+        if ((component?.$el?.bbcodeTag) || (component?.$el?.bbcodeParam)) {
+          // nothing?
+        }
+
         if(node === end) flags.endFound = true;
         if(node.bbcodeTag !== undefined) str += `[${node.bbcodeTag}${node.bbcodeParam !== undefined ? `=${node.bbcodeParam}` : ''}]`;
+        // if(component?.$el?.bbcodeTag !== undefined) str += `[${component?.$el?.bbcodeTag}${component?.$el?.bbcodeParam !== undefined ? `=${component?.$el?.bbcodeParam}` : ''}]`;
         if(node instanceof Text) str += node === range.endContainer ? node.nodeValue!.substr(0, range.endOffset) : node.nodeValue;
         else if(node instanceof HTMLImageElement) str += node.alt;
+        // else if ((node as any)?.__vue__ && (node as any)?.__vue__ instanceof UrlTagView) {
+        //   console.log('URLTAGVIEWNODE', node);
+        // }
         if(node.firstChild !== null && !flags.endFound) str += scanNode(node.firstChild, end, range, flags, hide);
         if(node.bbcodeTag !== undefined) str += `[/${node.bbcodeTag}]`;
+        // if(component?.$el?.bbcodeTag !== undefined) str += `[/${component?.$el?.bbcodeTag}]`;
         if(node instanceof HTMLElement && getComputedStyle(node).display === 'block' && !flags.endFound) str += '\r\n';
         if(node.nextSibling !== null && !flags.endFound) str += scanNode(node.nextSibling, end, range, flags, hide);
         return hide ? '' : str;

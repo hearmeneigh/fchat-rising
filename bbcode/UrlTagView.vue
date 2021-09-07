@@ -36,9 +36,17 @@
         @Prop({required: true})
         readonly domain!: string;
 
+        readonly type!: 'UrlTagView';
+
         @Hook('beforeDestroy')
         beforeDestroy(): void {
             this.dismiss();
+        }
+
+        @Hook('mounted')
+        mounted(): void {
+          (this.$el as any).bbcodeTag = 'url';
+          (this.$el as any).bbcodeParam = this.url;
         }
 
         @Hook('deactivated')

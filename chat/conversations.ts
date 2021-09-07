@@ -404,7 +404,7 @@ class ChannelConversation extends Conversation implements Interfaces.ChannelConv
     protected async doSend(): Promise<void> {
         const isAd = this.isSendingAds;
 
-        if(this.adManager.isActive()) {
+        if(isAd && this.adManager.isActive()) {
             this.errorText = 'Cannot post ads manually while ad auto-posting is active';
             return;
         }
