@@ -330,6 +330,11 @@
                 (<Modal>this.$refs['fixLogsModal']).show();
             });
 
+            electron.ipcRenderer.on('update-zoom', (_e, zoomLevel) => {
+                webContents.setZoomLevel(zoomLevel);
+                // log.info('INDEXVUE ZOOM UPDATE', zoomLevel);
+            });
+
             window.addEventListener('keydown', (e) => {
                 const key = getKey(e);
 

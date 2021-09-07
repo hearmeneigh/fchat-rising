@@ -49,6 +49,8 @@
 
     const browserWindow = electron.remote.getCurrentWindow();
 
+    // void browserWindow.webContents.setVisualZoomLevelLimits(1, 5);
+
     function getWindowBounds(): Electron.Rectangle {
         const bounds = browserWindow.getContentBounds();
         const height = document.body.offsetHeight;
@@ -131,6 +133,11 @@
                     t.view.webContents.session.setSpellCheckerLanguages(langs);
                 }
             });
+
+            // electron.ipcRenderer.on('update-zoom', (_e: Event, zoomLevel: number) => {
+            //   // log.info('WINDOWVUE ZOOM UPDATE', zoomLevel);
+            //   // browserWindow.webContents.setZoomLevel(zoomLevel);
+            // });
 
             electron.ipcRenderer.on('connect', (_e: Event, id: number, name: string) => {
                 const tab = this.tabMap[id];

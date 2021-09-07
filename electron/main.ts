@@ -170,6 +170,9 @@ function setUpWebContents(webContents: Electron.WebContents): void {
         else return electron.shell.openExternal(linkUrl);
     };
 
+    webContents.setVisualZoomLevelLimits(1, 5);
+
+
     webContents.on('will-navigate', openLinkExternally);
     webContents.on('new-window', openLinkExternally);
 }
@@ -338,6 +341,8 @@ function showPatchNotes(): void {
 }
 
 
+let zoomLevel = 0;
+
 function onReady(): void {
     let hasCompletedUpgrades = false;
 
@@ -408,9 +413,49 @@ function onReady(): void {
     const viewItem = {
         label: `&${l('action.view')}`,
         submenu: <Electron.MenuItemConstructorOptions[]>[
-            {role: 'resetzoom'},
-            {role: 'zoomin'},
-            {role: 'zoomout'},
+            // {role: 'resetZoom'},
+            {
+                label: 'Reset Zoom',
+                click: (_m: Electron.MenuItem, w: Electron.BrowserWindow) => {
+                    // log.info('MENU ZOOM0');
+                    // w.webContents.setZoomLevel(0);
+
+                    zoomLevel = 0;
+
+                    for(const win of electron.webContents.getAllWebContents()) win.send('update-zoom', 0);
+                    for(const win of windows) win.webContents.send('update-zoom', 0);
+                },
+                accelerator: 'CmdOrCtrl+0'
+            },
+            {
+                // role: 'zoomIn',
+                label: 'Zoom In',
+                click: (_m: Electron.MenuItem, w: Electron.BrowserWindow) => {
+
+                    // log.info('MENU ZOOM+');
+                    zoomLevel = Math.min(zoomLevel + w.webContents.getZoomFactor()/2, 6);
+                    // w.webContents.setZoomLevel(newZoom);
+
+                    for(const win of electron.webContents.getAllWebContents()) win.send('update-zoom', zoomLevel);
+                    for(const win of windows) win.webContents.send('update-zoom', zoomLevel);
+                },
+                accelerator: 'CmdOrCtrl+Plus'
+            },
+            {
+                // role: 'zoomIn',
+                label: 'Zoom Out',
+                click: (_m: Electron.MenuItem, w: Electron.BrowserWindow) => {
+                    // log.info('MENU ZOOM-');
+                    zoomLevel = Math.max(0, zoomLevel - w.webContents.getZoomFactor()/2);
+
+                    // w.webContents.setZoomLevel(newZoom);
+
+                    for(const win of electron.webContents.getAllWebContents()) win.send('update-zoom', zoomLevel);
+                    for(const win of windows) win.webContents.send('update-zoom', zoomLevel);
+                },
+                accelerator: 'CmdOrCtrl+-'
+            },
+            // {role: 'zoomOut'},
             {type: 'separator'},
             {role: 'togglefullscreen'}
         ]
@@ -656,6 +701,11 @@ function onReady(): void {
         // console.log('RISING COMPLETE SHARE');
         hasCompletedUpgrades = true;
         for(const w of electron.webContents.getAllWebContents()) w.send('rising-upgrade-complete');
+    });
+
+    electron.ipcMain.on('update-zoom', (_e, zoomLevel: number) => {
+        // log.info('MENU ZOOM UPDATE', zoomLevel);
+        for(const w of electron.webContents.getAllWebContents()) w.send('update-zoom', zoomLevel);
     });
 
     createWindow();
