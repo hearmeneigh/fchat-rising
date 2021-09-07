@@ -64,7 +64,7 @@ export class ImageUrlMutator {
           async(_url: string, match: RegExpMatchArray): Promise<string> => {
             const redgifId = match[2];
 
-            return `https://www.gifdeliverynetwork.com/ifr/${redgifId}?controls=0&hd=1`;
+            return `https://www.redgifs.com/ifr/${redgifId}?controls=0&hd=1`;
           }
         );
 
