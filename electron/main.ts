@@ -416,7 +416,7 @@ function onReady(): void {
             // {role: 'resetZoom'},
             {
                 label: 'Reset Zoom',
-                click: (_m: Electron.MenuItem, w: Electron.BrowserWindow) => {
+                click: (_m: Electron.MenuItem, _w: Electron.BrowserWindow) => {
                     // log.info('MENU ZOOM0');
                     // w.webContents.setZoomLevel(0);
 
