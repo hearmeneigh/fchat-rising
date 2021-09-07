@@ -448,8 +448,8 @@ export const speciesMapping: SpeciesMap = {
     [Species.Erinaceidae]: ['hedgehog', 'gymnure', 'moonrat'],
     [Species.Elephantidae]: ['elephant', 'mammoth', 'mastodon', 'pachyderm', 'tusker'],
 
-    [Species.Fish]: ['shark', 'great white', 'sergal', 'fish', 'aquatic', 'melanopterus', 'carcharhinus', '.*fish', '.*shark',
-        gen('(shark|fish)'), 'tiger ?shark'
+    [Species.Fish]: ['shark', 'great white', 'sergal', 'fish', 'salmon', 'eel', 'aquatic', 'melanopterus', 'carcharhinus', '.*fish', '.*shark',
+        gen('(shark|fish)'), '(angel|tiger|bull|whale|white|leopard|crocodile|goblin|zebra) ?shark', 'mako'
     ],
 
     [Species.Giraffe]: ['giraffe', '🦒', 'kirinmimi', 'okapi', '[gk]ira(ff|hv)[ei]?'],
