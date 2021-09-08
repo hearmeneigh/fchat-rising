@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.14.1
+* Security updates
+* Fixed Redgifs (again)
+
 ## 1.14.0
 * Fixed Redgifs previews
 * Fixed zoom in/out/reset (Ctrl +/-/0)
