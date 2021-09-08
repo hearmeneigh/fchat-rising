@@ -69,6 +69,15 @@ export class ImageUrlMutator {
         );
 
         this.add(
+          /^https?:\/\/media[0-9]?.giphy.com\/media\/(.+)$/,
+          async(_url: string, match: RegExpMatchArray): Promise<string> => {
+            const giphyUri = match[1];
+
+            return `https://i.giphy.com/media/${giphyUri}`;
+          }
+        );
+
+        this.add(
           /^https?:\/\/(www.)?gfycat.com\/([a-z0-9A-Z\-]+)\/?$/,
           async(_url: string, match: RegExpMatchArray): Promise<string> => {
             const gfyId = match[2];
@@ -76,6 +85,7 @@ export class ImageUrlMutator {
             return `https://gfycat.com/ifr/${gfyId}?controls=0&hd=1`;
           }
         );
+
 
         this.add(
           /^https?:\/\/e621.net\/(posts|post\/show)\/([0-9]+)/,

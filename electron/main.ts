@@ -239,6 +239,10 @@ function createWindow(): Electron.BrowserWindow | undefined {
 
             blocker.enableBlockingInSession(electron.session.defaultSession);
 
+            // blocker.blockStyles();
+            blocker.blockFonts();
+            // blocker.blockScripts();
+
             // Temp fix -- manually override adblocker's preload script
             // to point to CJS  that has been copied over with config in webpack.config.js
             // require.resolve('@cliqz/adblocker-electron-preload');

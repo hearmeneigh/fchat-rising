@@ -168,7 +168,7 @@ export class ImageDomMutator {
         this.add('sexbot.gallery', this.getBaseJsMutatorScript(['video.hero', 'video']));
         this.add('imagefap.com', this.getBaseJsMutatorScript(['.image-wrapper img', 'video', 'img']));
         this.add('myhentaicomics.com', this.getBaseJsMutatorScript(['#entire_image img', 'video', 'img']));
-        this.add('redgifs.com', this.getBaseJsMutatorScript(['video']));
+        this.add('redgifs.com', this.getBaseJsMutatorScript(['video'], true, [], false, true));
         this.add('furaffinity.net', this.getBaseJsMutatorScript(['#submissionImg', 'video', 'img']));
         this.add('rule34.paheal.net', this.getBaseJsMutatorScript(['#main_image', 'video', 'img']));
         this.add('xhamster.com', this.getBaseJsMutatorScript(['#photo_slider video', '#photo_slider img', 'video', 'img']));
@@ -316,7 +316,7 @@ export class ImageDomMutator {
     }
 
 
-    protected getBaseJsMutatorScript(elSelector: string[], skipElementRemove: boolean = false, safeTags: string[] = [], delayPreprocess = false): string {
+    protected getBaseJsMutatorScript(elSelector: string[], skipElementRemove: boolean = false, safeTags: string[] = [], delayPreprocess: boolean = false, scheduled: boolean = false): string {
         const js = this.scripts.processor; // ./assets/browser.processor.raw.js
 
         const settings = {
@@ -324,6 +324,7 @@ export class ImageDomMutator {
             safeTags,
             delayPreprocess,
             selectors: elSelector,
+            schedule: scheduled,
             debug: this.debug
         };
 

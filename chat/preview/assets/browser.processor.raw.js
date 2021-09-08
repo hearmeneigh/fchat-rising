@@ -24,7 +24,8 @@ class FListImagePreviewDomMutator {
             skipElementRemove: false,
             safeTags: [],
             injectStyle: false,
-            delayPreprocess: false
+            delayPreprocess: false,
+            schedule: false
         };
         /* ## SETTINGS_END ## */
 
@@ -113,6 +114,8 @@ class FListImagePreviewDomMutator {
         this.updateImgSizeTimer(this.img);
 
         this.cleanDom(this.body);
+
+        this.finalize();
     }
 
 
@@ -396,9 +399,51 @@ class FListImagePreviewDomMutator {
     error(...args) {
         console.error('DOM Mutator:', ...args, `${(Date.now() - this.startTime)/1000}s`);
     }
+
+    finalize(counter) {
+        if (counter <= 0) {
+            return;
+        }
+
+        setTimeout(
+            () => {
+                if (this.img) {
+                    this.attemptPlay(this.img);
+                }
+
+                this.finalize(counter - 1);
+            },
+            100
+        );
+    }
+
+    scheduler() {
+        setTimeout(
+            () => {
+                this.img = this.detectImage(this.selectors, this.body);
+
+                if (!this.img) {
+                    this.scheduler();
+                    return;
+                }
+
+                this.run();
+            },
+            200
+        );
+    }
+
+    execute() {
+        if (this.settings.schedule) {
+            this.scheduler();
+            return;
+        }
+
+        this.run();
+    }
 }
 
 /* ## EXECUTION_START ## */
 const flistImagePreviewMutator = new FListImagePreviewDomMutator();
-flistImagePreviewMutator.run();
+flistImagePreviewMutator.execute();
 /* ## EXECUTION_END ## */
