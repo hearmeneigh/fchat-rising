@@ -184,6 +184,7 @@ export default class Connection implements Interfaces.Connection {
           'api.query.start',
           {
             endpoint,
+            data,
             character: core.characters.ownCharacter?.name,
             deltaToLastApiCall: Date.now() - lastFetch,
             deltaToLastApiTicket: Date.now() - lastApiTicketFetch
@@ -218,6 +219,7 @@ export default class Connection implements Interfaces.Connection {
               {
                 error: res.error,
                 endpoint,
+                data,
                 character: core.characters.ownCharacter?.name,
                 deltaToLastApiCall: Date.now() - lastFetch,
                 deltaToLastApiTicket: Date.now() - lastApiTicketFetch
@@ -233,6 +235,7 @@ export default class Connection implements Interfaces.Connection {
           'api.query.success',
           {
             endpoint,
+            data,
             character: core.characters.ownCharacter?.name,
             deltaToLastApiCall: Date.now() - lastFetch,
             deltaToLastApiTicket: Date.now() - lastApiTicketFetch

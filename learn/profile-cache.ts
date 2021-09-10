@@ -91,7 +91,7 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
         cacheRecord.added = new Date(pd.firstSeen * 1000);
 
         cacheRecord.meta = {
-            lastMetaFetched: pd.lastMetaFetched ? new Date(pd.lastMetaFetched) : null,
+            lastMetaFetched: pd.lastMetaFetched ? new Date(pd.lastMetaFetched * 1000) : null,
             groups: pd.groups,
             friends: pd.friends,
             images: pd.images,

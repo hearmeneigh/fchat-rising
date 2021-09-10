@@ -394,10 +394,12 @@
                 (cache && !skipCache)
                 && (cache.meta)
                 && (cache.meta.lastMetaFetched)
-                && (Date.now() - cache.meta.lastMetaFetched.getTime() > CHARACTER_META_CACHE_EXPIRE)
+                && (Date.now() - cache.meta.lastMetaFetched.getTime() < CHARACTER_META_CACHE_EXPIRE)
             ) {
               // do nothing
             } else {
+                log.debug('profile.updateMeta', { timestamp: cache?.meta?.lastMetaFetched, diff: Date.now() - (cache?.meta?.lastMetaFetched?.getTime() || 0) });
+
                 // No await on purpose:
                 // tslint:disable-next-line no-floating-promises
                 this.updateMeta(this.name).catch(err => console.error('profile.updateMeta', err));

@@ -21,6 +21,8 @@ import { PermanentIndexedStore } from './store/types';
 import * as path from 'path';
 // import * as electron from 'electron';
 
+import log from 'electron-log'; //tslint:disable-line:match-default-export-name
+
 
 export interface ProfileCacheQueueEntry {
     name: string;
@@ -29,6 +31,7 @@ export interface ProfileCacheQueueEntry {
     gender?: Gender;
     score: number;
     channelId?: string;
+    retryCount: number;
 }
 
 
@@ -53,6 +56,8 @@ export class CacheManager {
 
     protected lastFetch = Date.now();
 
+    protected fetchLog: Record<string, number> = {};
+    protected ongoingLog: Record<string, true> = {};
 
     markLastPostTime(): void {
         this.lastPost = new Date();
@@ -67,6 +72,7 @@ export class CacheManager {
             return;
         }
 
+        log.info('profile.cache.queue', { name, skipCacheCheck, channelId });
 
         if (!skipCacheCheck) {
             const c = await this.profileCache.get(name);
@@ -87,7 +93,8 @@ export class CacheManager {
             key,
             channelId,
             added: new Date(),
-            score: 0
+            score: 0,
+            retryCount: 0
         };
 
         this.queue.push(entry);
@@ -102,7 +109,6 @@ export class CacheManager {
             await methods.fieldsGet();
 
             const c = await methods.characterData(name, -1, true);
-
             const r = await this.profileCache.register(c);
 
             this.updateAdScoringForProfile(c, r.match.matchScore);
@@ -167,6 +173,11 @@ export class CacheManager {
         // console.log('QUEUE', _.map(this.queue, (q) => `${q.name}: ${q.score}`));
 
         const entry = this.queue.pop() as ProfileCacheQueueEntry;
+
+        if (entry) {
+          // just in case - remove duplicates
+          this.queue = _.filter(this.queue, (q) => q.name !== entry.name);
+        }
 
         // console.log('PopFromQueue', entry.name, this.queue.length);
 
@@ -253,17 +264,42 @@ export class CacheManager {
                         // console.log('Next in queue', next.name, (Date.now() - d) / 1000.0);
 
                         try {
+                            let skipFetch = false;
+
+                            if (
+                              (next.name in this.ongoingLog) ||
+                              ((next.name in this.fetchLog) && (Date.now() - this.fetchLog[next.name] < 120000))
+                            ) {
+                              skipFetch = true;
+                            }
+
                             // tslint:disable-next-line: binary-expression-operand-order
                             if ((false) && (next)) {
                               console.log(`Fetch '${next.name}' for channel '${next.channelId}', gap: ${(Date.now() - this.lastFetch)}ms`);
                               this.lastFetch = Date.now();
                             }
 
-                            await this.fetchProfile(next.name);
+                            if (!skipFetch) {
+                              this.ongoingLog[next.name] = true;
+
+                              await this.fetchProfile(next.name);
+
+                              this.fetchLog[next.name] = Date.now();
+                            }
+
+                            // just in case - remove duplicates
+                            this.queue = _.filter(this.queue, (q) => q.name !== next.name);
+                            delete this.ongoingLog[next.name];
                         } catch (err) {
                             console.error('Profile queue error', err);
 
-                            this.queue.push(next); // return to queue
+                            delete this.ongoingLog[next.name];
+
+                            next.retryCount += 1;
+
+                            if (next.retryCount < 10) {
+                              this.queue.push(next); // return to queue
+                            }
                         }
 
                         // console.log('Completed', next.name, (Date.now() - d) / 1000.0);

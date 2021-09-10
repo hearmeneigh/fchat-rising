@@ -8,7 +8,6 @@ type IndexedCallback = (params: Record<string, any>) => Promise<any>;
 
 let indexed: IndexedStore;
 
-
 const reply = (req: IndexedRequest, result?: any, err?: string | Error): void => {
   const res: any = {
     type: 'res',
