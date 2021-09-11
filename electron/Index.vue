@@ -110,6 +110,7 @@
     import { Component, Hook, Watch } from '@f-list/vue-ts';
     import Axios from 'axios';
     import * as electron from 'electron';
+    import * as remote from '@electron/remote';
     import log from 'electron-log'; //tslint:disable-line:match-default-export-name
     import * as fs from 'fs';
     import * as path from 'path';
@@ -143,11 +144,11 @@
     // import Connection from '../fchat/connection';
     // import Notifications from './notifications';
 
-    const webContents = electron.remote.getCurrentWebContents();
-    const parent = electron.remote.getCurrentWindow().webContents;
+    const webContents = remote.getCurrentWebContents();
+    const parent = remote.getCurrentWindow().webContents;
 
     // Allow requests to imgur.com
-    const session = electron.remote.session;
+    const session = remote.session;
 
     /* tslint:disable:no-unsafe-any no-any no-unnecessary-type-assertion */
     session!.defaultSession!.webRequest!.onBeforeSendHeaders(
@@ -453,7 +454,7 @@
         }
 
         async openProfileInBrowser(): Promise<void> {
-            await electron.remote.shell.openExternal(`https://www.f-list.net/c/${this.profileName}`);
+            await remote.shell.openExternal(`https://www.f-list.net/c/${this.profileName}`);
 
             // tslint:disable-next-line: no-any no-unsafe-any
             (this.$refs.profileViewer as any).hide();

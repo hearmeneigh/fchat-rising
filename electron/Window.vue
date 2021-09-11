@@ -7,7 +7,7 @@
                 <i class="fa fa-cog"></i>
             </div>
             <ul class="nav nav-tabs" style="border-bottom:0;margin-bottom:-1px;margin-top:1px" ref="tabs">
-                <li v-for="tab in tabs" :key="tab.view.id" class="nav-item" @click.middle="remove(tab)">
+                <li v-for="(tab,index) in tabs" :key="'tab-' + index" class="nav-item" @click.middle="remove(tab)">
                     <a href="#" @click.prevent="show(tab)" class="nav-link tab"
                         :class="{active: tab === activeTab, hasNew: tab.hasNew && tab !== activeTab}">
                         <img v-if="tab.user" :src="'https://static.f-list.net/images/avatar/' + tab.user.toLowerCase() + '.png'"/>
@@ -38,6 +38,7 @@
 
     import {Component, Hook} from '@f-list/vue-ts';
     import * as electron from 'electron';
+    import * as remote from '@electron/remote';
     import * as fs from 'fs';
     import * as path from 'path';
     import * as url from 'url';
@@ -47,7 +48,7 @@
     import { getSafeLanguages, updateSupportedLanguages } from './language';
     import log from 'electron-log'; // tslint:disable-line: match-default-export-name
 
-    const browserWindow = electron.remote.getCurrentWindow();
+    const browserWindow = remote.getCurrentWindow();
 
     // void browserWindow.webContents.setVisualZoomLevelLimits(1, 5);
 
@@ -60,7 +61,43 @@
     function destroyTab(tab: Tab): void {
         if(tab.user !== undefined) electron.ipcRenderer.send('disconnect', tab.user);
         tab.tray.destroy();
-        tab.view.destroy();
+
+        tab.view.webContents.stop();
+        tab.view.webContents.stopPainting();
+
+        try {
+          if ((tab.view.webContents as any).destroy) {
+            (tab.view.webContents as any).destroy();
+          }
+        } catch (err) {
+          console.log(err);
+        }
+
+        try {
+          if ((tab.view.webContents as any).close) {
+            (tab.view.webContents as any).close();
+          }
+        } catch (err) {
+          console.log(err);
+        }
+
+        try {
+          if ((tab.view as any).destroy) {
+            (tab.view as any).destroy();
+          }
+        } catch (err) {
+          console.log(err);
+        }
+
+        try {
+          if ((tab.view as any).close) {
+            (tab.view as any).close();
+          }
+        } catch (err) {
+          console.log(err);
+        }
+
+        // tab.view.destroy();
         electron.ipcRenderer.send('tab-closed');
     }
 
@@ -145,7 +182,7 @@
                 tab.tray.setToolTip(`${l('title')} - ${tab.user}`);
                 const menu = this.createTrayMenu(tab);
                 menu.unshift({label: tab.user, enabled: false}, {type: 'separator'});
-                tab.tray.setContextMenu(electron.remote.Menu.buildFromTemplate(menu));
+                tab.tray.setContextMenu(remote.Menu.buildFromTemplate(menu));
             });
             electron.ipcRenderer.on('disconnect', (_e: Event, id: number) => {
                 const tab = this.tabMap[id];
@@ -155,7 +192,7 @@
                 }
                 tab.user = undefined;
                 tab.tray.setToolTip(l('title'));
-                tab.tray.setContextMenu(electron.remote.Menu.buildFromTemplate(this.createTrayMenu(tab)));
+                tab.tray.setContextMenu(remote.Menu.buildFromTemplate(this.createTrayMenu(tab)));
             });
             electron.ipcRenderer.on('has-new', (_e: Event, id: number, hasNew: boolean) => {
                 const tab = this.tabMap[id];
@@ -252,11 +289,11 @@
 
         async addTab(): Promise<void> {
             if(this.lockTab) return;
-            const tray = new electron.remote.Tray(trayIcon);
+            const tray = new remote.Tray(trayIcon);
             tray.setToolTip(l('title'));
             tray.on('click', (_e) => this.trayClicked(tab));
 
-            const view = new electron.remote.BrowserView(
+            const view = new remote.BrowserView(
               {
                 webPreferences: {
                   webviewTag: true,
@@ -277,7 +314,7 @@
             view.setAutoResize({width: true, height: true});
             electron.ipcRenderer.send('tab-added', view.webContents.id);
             const tab = {active: false, view, user: undefined, hasNew: false, tray};
-            tray.setContextMenu(electron.remote.Menu.buildFromTemplate(this.createTrayMenu(tab)));
+            tray.setContextMenu(remote.Menu.buildFromTemplate(this.createTrayMenu(tab)));
             this.tabs.push(tab);
             this.tabMap[view.webContents.id] = tab;
             this.show(tab);
@@ -332,7 +369,7 @@
         }
 
         openMenu(): void {
-            electron.remote.Menu.getApplicationMenu()!.popup({});
+            remote.Menu.getApplicationMenu()!.popup({});
         }
     }
 </script>

@@ -11,7 +11,8 @@ const mainConfig = {
     entry: [path.join(__dirname, 'main.ts'), path.join(__dirname, 'package.json')],
     output: {
         path: __dirname + '/app',
-        filename: 'main.js'
+        filename: 'main.js',
+        globalObject: 'global'
     },
     context: __dirname,
     target: 'electron-main',
@@ -31,6 +32,7 @@ const mainConfig = {
         ]
     },
     node: {
+        global: true,
         __dirname: false,
         __filename: false
     },
@@ -104,6 +106,7 @@ const mainConfig = {
         ]
     },
     node: {
+        global: true,
         __dirname: false,
         __filename: false
     },
@@ -156,7 +159,12 @@ const storeWorkerEndpointConfig = _.assign(
             filename: 'storeWorkerEndpoint.js',
             globalObject: 'this'
         },
+
         target: 'electron-renderer',
+
+        node: {
+            global: true,
+        },
 
         module: {
             rules: [

@@ -1,3 +1,6 @@
+// tslint:disable-next-line:no-submodule-imports no-import-side-effect
+import 'core-js/es7/global';
+
 import * as qs from 'querystring';
 import log from 'electron-log'; //tslint:disable-line:match-default-export-name
 
@@ -18,7 +21,7 @@ log.transports.file.maxSize = 5 * 1024 * 1024;
 log.info('init.window.vue');
 
 //tslint:disable-next-line:no-unused-expression
-new Window({
+export default new Window({
     el: '#app',
     data: {settings}
 });

@@ -1,4 +1,4 @@
-import {remote} from 'electron';
+import * as remote from '@electron/remote';
 import core from '../chat/core';
 import {Conversation} from '../chat/interfaces';
 //tslint:disable-next-line:match-default-export-name

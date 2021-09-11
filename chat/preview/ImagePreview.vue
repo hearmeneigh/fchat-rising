@@ -56,7 +56,9 @@
       CharacterPreviewHelper, RenderStyle
     } from './helper';
 
-    import {Point, WebviewTag, remote} from 'electron';
+    import {Point, WebviewTag} from 'electron';
+    import * as remote from '@electron/remote';
+
     import Timer = NodeJS.Timer;
     import IpcMessageEvent = Electron.IpcMessageEvent;
     import CharacterPreview from './CharacterPreview.vue';

@@ -1,4 +1,4 @@
-import * as electron from 'electron';
+import * as remote from '@electron/remote';
 import * as fs from 'fs';
 import * as path from 'path';
 import {promisify} from 'util';
@@ -17,12 +17,12 @@ declare module '../chat/interfaces' {
 const dayMs = 86400000;
 const read = promisify(fs.read);
 
-function writeFile(p: fs.PathLike | number, data: string | object | number,
-                   options?: {encoding?: string | null; mode?: number | string; flag?: string} | string | null): void {
+function writeFile(p: fs.PathLike | number, data: string | NodeJS.ArrayBufferView,
+                   options?: fs.WriteFileOptions): void {
     try {
         fs.writeFileSync(p, data, options);
     } catch(e) {
-        electron.remote.dialog.showErrorBox(l('fs.error'), (<Error>e).message);
+        remote.dialog.showErrorBox(l('fs.error'), (<Error>e).message);
     }
 }
 

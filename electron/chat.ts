@@ -30,6 +30,9 @@
  * @see {@link https://github.com/f-list/exported|GitHub repo}
  */
 
+// tslint:disable-next-line:no-submodule-imports no-import-side-effect
+import 'core-js/es7/global';
+
 // import { DebugLogger } from './debug-logger';
 // // @ts-ignore
 // const dl = new DebugLogger('chat');
@@ -37,6 +40,7 @@
 import Axios from 'axios';
 import {exec, execSync} from 'child_process';
 import * as electron from 'electron';
+import * as remote from '@electron/remote';
 import * as path from 'path';
 import * as qs from 'querystring';
 import {getKey} from '../chat/common';
@@ -60,7 +64,7 @@ log.debug('init.chat');
 
 document.addEventListener('keydown', (e: KeyboardEvent) => {
     if(e.ctrlKey && e.shiftKey && getKey(e) === Keys.KeyI)
-        electron.remote.getCurrentWebContents().toggleDevTools();
+        remote.getCurrentWebContents().toggleDevTools();
 });
 
 /* process.env.SPELLCHECKER_PREFER_HUNSPELL = '1';
@@ -76,12 +80,12 @@ const sc = nativeRequire<{
 const spellchecker = new sc.Spellchecker();*/
 
 
-Axios.defaults.params = {__fchat: `desktop/${electron.remote.app.getVersion()}`};
+Axios.defaults.params = {__fchat: `desktop/${remote.app.getVersion()}`};
 
 if(process.env.NODE_ENV === 'production') {
-    // setupRaven('https://a9239b17b0a14f72ba85e8729b9d1612@sentry.f-list.net/2', electron.remote.app.getVersion());
+    // setupRaven('https://a9239b17b0a14f72ba85e8729b9d1612@sentry.f-list.net/2', remote.app.getVersion());
 
-    electron.remote.getCurrentWebContents().on('devtools-opened', () => {
+    remote.getCurrentWebContents().on('devtools-opened', () => {
         console.log(`%c${l('consoleWarning.head')}`, 'background: red; color: yellow; font-size: 30pt');
         console.log(`%c${l('consoleWarning.body')}`, 'font-size: 16pt; color:red');
     });
@@ -106,7 +110,7 @@ function openIncognito(url: string): void {
     exec(`start ${start} ${url}`);
 }
 
-const webContents = electron.remote.getCurrentWebContents();
+const webContents = remote.getCurrentWebContents();
 const wordPosSearch = new WordPosSearch();
 
 webContents.on('context-menu', (_, props) => {
@@ -200,12 +204,12 @@ webContents.on('context-menu', (_, props) => {
         );
     }
 
-    if(menuTemplate.length > 0) electron.remote.Menu.buildFromTemplate(menuTemplate).popup({});
+    if(menuTemplate.length > 0) remote.Menu.buildFromTemplate(menuTemplate).popup({});
 
     log.debug('context.text', { linkText: props.linkText, misspelledWord: props.misspelledWord, selectionText: props.selectionText, titleText: props.titleText });
 });
 
-let dictDir = path.join(electron.remote.app.getPath('userData'), 'spellchecker');
+let dictDir = path.join(remote.app.getPath('userData'), 'spellchecker');
 
 if(process.platform === 'win32') //get the path in DOS (8-character) format as special characters cause problems otherwise
     exec(`for /d %I in ("${dictDir}") do @echo %~sI`, (_, stdout) => dictDir = stdout.trim());
@@ -244,7 +248,7 @@ onSettings(settings);
 
 log.debug('init.chat.core');
 
-const connection = new Connection(`F-Chat 3.0 (${process.platform})`, electron.remote.app.getVersion(), Socket);
+const connection = new Connection(`F-Chat 3.0 (${process.platform})`, remote.app.getVersion(), Socket);
 initCore(connection, settings, Logs, SettingsStore, Notifications);
 
 log.debug('init.chat.vue');

@@ -1,3 +1,6 @@
+// tslint:disable-next-line:no-submodule-imports no-import-side-effect
+import 'core-js/es7/global';
+
 import * as electron from 'electron';
 import * as path from 'path';
 
