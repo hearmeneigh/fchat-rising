@@ -11,8 +11,7 @@ const mainConfig = {
     entry: [path.join(__dirname, 'main.ts'), path.join(__dirname, 'package.json')],
     output: {
         path: __dirname + '/app',
-        filename: 'main.js',
-        globalObject: 'global'
+        filename: 'main.js'
     },
     context: __dirname,
     target: 'electron-main',
@@ -32,7 +31,6 @@ const mainConfig = {
         ]
     },
     node: {
-        global: true,
         __dirname: false,
         __filename: false
     },
@@ -106,7 +104,6 @@ const mainConfig = {
         ]
     },
     node: {
-        global: true,
         __dirname: false,
         __filename: false
     },

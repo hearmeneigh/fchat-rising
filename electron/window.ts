@@ -1,6 +1,3 @@
-// tslint:disable-next-line:no-submodule-imports no-import-side-effect
-import 'core-js/es7/global';
-
 import * as qs from 'querystring';
 import log from 'electron-log'; //tslint:disable-line:match-default-export-name
 

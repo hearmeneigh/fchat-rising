@@ -300,7 +300,8 @@
                   nodeIntegration: true,
                   nodeIntegrationInWorker: true,
                   spellcheck: true,
-                  enableRemoteModule: true
+                  enableRemoteModule: true,
+                  contextIsolation: false
                 }
               }
             );

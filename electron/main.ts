@@ -178,6 +178,8 @@ function setUpWebContents(webContents: electron.WebContents): void {
 
 
     webContents.on('will-navigate', openLinkExternally);
+
+    // webContents.setWindowOpenHandler(openLinkExternally);
     webContents.on('new-window', openLinkExternally);
 }
 

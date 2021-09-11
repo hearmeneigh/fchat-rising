@@ -30,9 +30,6 @@
  * @see {@link https://github.com/f-list/exported|GitHub repo}
  */
 
-// tslint:disable-next-line:no-submodule-imports no-import-side-effect
-import 'core-js/es7/global';
-
 // import { DebugLogger } from './debug-logger';
 // // @ts-ignore
 // const dl = new DebugLogger('chat');
