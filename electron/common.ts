@@ -5,13 +5,22 @@ import log from 'electron-log'; //tslint:disable-line:match-default-export-name
 
 export const defaultHost = 'wss://chat.f-list.net/chat2';
 
+function getDefaultLanguage(): string {
+    try {
+        return (electron.app.getLocale() || process.env.LC_ALL || process.env.LC_MESSAGES || process.env.LANG || process.env.LANGUAGE || 'en-GB')
+            .replace(/[.:].*/, '');
+    } catch (err) {
+        return 'en-GB';
+    }
+}
+
 export class GeneralSettings {
     account = '';
     closeToTray = true;
     profileViewer = true;
     host = defaultHost;
     logDirectory = path.join(electron.app.getPath('userData'), 'data');
-    spellcheckLang: string[] | string | undefined = 'en_GB';
+    spellcheckLang: string[] | string | undefined = [getDefaultLanguage()];
     theme = 'default';
     version = electron.app.getVersion();
     beta = false;
