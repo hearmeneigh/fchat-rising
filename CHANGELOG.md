@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.15.0
+* Upgraded to Electron 13.x
+* Fixed cache bugs that slowed down the client
+
 ## 1.14.1
 * Security updates
 * Fixed Redgifs (again)
