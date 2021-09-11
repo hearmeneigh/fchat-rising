@@ -171,7 +171,7 @@
               {% for platform in site.download.downloads %}
               <div class="download_link {{platform.type}}">
                 <a href="{{ site.download.url | replace: '%PLATFORM_TAIL%', platform.tail | replace: '%VERSION%', site.download.version }}"><i></i> {{platform.name}}</a>
-                <small>({{ platform.size }})</small>
+                <small>({{ platform.size }}{% if platform.instructions %} | <a href='{{ platform.instructions }}'>Help with installation</a>{% endif %})</small>
               </div>
               {% endfor %}
             </section>
@@ -189,7 +189,9 @@
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
-        <p></p>
+        <p>
+            By downloading and/or using F-Chat Rising you accept its <a href="https://github.com/mrstallion/fchat-rising/blob/master/LICENSE">license</a>.
+        </p>
       </footer>
     </div>
 

@@ -64,6 +64,7 @@ download:
       name: MacOS
       tail: macos.dmg
       size: 76 MB
+      instructions: ./macos-install
 
     - type: linux
       name: Linux
