@@ -69,7 +69,7 @@ const data = {
         Vue.set(vue, module, subState);
         (<VueState[K]>data[module]) = subState;
     },
-    watch<T>(getter: (this: VueState) => T, callback: WatchHandler<T>): void {
+    watch<T>(getter: (this: VueState) => T, callback: (n: any, o: any) => void): void {
         vue.$watch(getter, callback);
     },
     async reloadSettings(): Promise<void> {
