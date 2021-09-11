@@ -14,7 +14,10 @@ layout: rising
 > Consider these alternatives to increase your safety:
 > 
 > 1) Compile F-Chat Rising yourself from the [source](https://github.com/mrstallion/fchat-rising); or
-> 2) Donate a code signing certificate so we can sign the client.
+>
+> 2) Run F-Chat Rising in a [virtual machine](https://www.parallels.com/); or
+> 
+> 3) Donate a code signing certificate, so we can sign the client.
 >
 > F-Chat Rising is not malware. 
 > No reason not to trust what the internet says, _right?_

@@ -117,7 +117,7 @@ export default class CharacterPreview extends Vue {
   @Hook('mounted')
   mounted(): void {
     // tslint:disable-next-line no-unsafe-any no-any
-    this.scoreWatcher = async(event: {character: Character, score: number}): Promise<void> => {
+    this.scoreWatcher = (event: {character: Character, score: number}): void => {
         // console.log('scoreWatcher', event);
 
         if (
@@ -125,7 +125,7 @@ export default class CharacterPreview extends Vue {
             && (this.characterName)
             && (event.character.name === this.characterName)
         ) {
-          await this.load(this.characterName, true);
+          this.load(this.characterName, true);
         }
     };
 
@@ -149,7 +149,7 @@ export default class CharacterPreview extends Vue {
   }
 
 
-  async load(characterName: string, force: boolean = false): Promise<void> {
+  load(characterName: string, force: boolean = false): void {
     if (
       (this.characterName === characterName)
       && (!force)
@@ -173,13 +173,14 @@ export default class CharacterPreview extends Vue {
     this.updateOnlineStatus();
     this.updateAdStatus();
 
-    this.character = await this.getCharacterData(characterName);
-    this.match = Matcher.identifyBestMatchReport(this.ownCharacter.character, this.character.character);
+    setTimeout(async () => {
+      this.character = await this.getCharacterData(characterName);
+      this.match = Matcher.identifyBestMatchReport(this.ownCharacter!.character, this.character!.character);
 
-    this.updateCustoms();
-    this.updateDetails();
+      this.updateCustoms();
+      this.updateDetails();
+    }, 0);
   }
-
 
   updateOnlineStatus(): void {
     this.onlineCharacter = core.characters.get(this.characterName!);

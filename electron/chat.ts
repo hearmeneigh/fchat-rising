@@ -203,7 +203,10 @@ webContents.on('context-menu', (_, props) => {
 
     if(menuTemplate.length > 0) remote.Menu.buildFromTemplate(menuTemplate).popup({});
 
-    log.debug('context.text', { linkText: props.linkText, misspelledWord: props.misspelledWord, selectionText: props.selectionText, titleText: props.titleText });
+    log.debug(
+        'context.text',
+        { linkText: props.linkText, misspelledWord: props.misspelledWord, selectionText: props.selectionText, titleText: props.titleText }
+    );
 });
 
 let dictDir = path.join(remote.app.getPath('userData'), 'spellchecker');

@@ -47,13 +47,12 @@ import { getSafeLanguages, knownLanguageNames, updateSupportedLanguages } from '
 import * as windowState from './window_state';
 // import BrowserWindow = electron.BrowserWindow;
 import MenuItem = electron.MenuItem;
-import { ElectronBlocker } from '@cliqz/adblocker-electron';
-import fetch from 'node-fetch';
 import MenuItemConstructorOptions = electron.MenuItemConstructorOptions;
 import * as _ from 'lodash';
 import DownloadItem = electron.DownloadItem;
 import { AdCoordinatorHost } from '../chat/ads/ad-coordinator-host';
 import { IpcMainEvent } from 'electron';
+import { BlockerIntegration } from './blocker/blocker';
 
 //tslint:disable-next-line:no-require-imports
 const pck = require('./package.json');
@@ -191,7 +190,7 @@ function createWindow(): electron.BrowserWindow | undefined {
         ...lastState, center: lastState.x === undefined, show: false,
         webPreferences: {
           webviewTag: true, nodeIntegration: true, nodeIntegrationInWorker: true, spellcheck: true,
-          enableRemoteModule: true, contextIsolation: false
+          enableRemoteModule: true, contextIsolation: false, partition: 'persist:fchat'
         } as any
     };
 
@@ -213,98 +212,8 @@ function createWindow(): electron.BrowserWindow | undefined {
     electron.session.defaultSession.setSpellCheckerLanguages(safeLanguages);
     window.webContents.session.setSpellCheckerLanguages(safeLanguages);
 
-    log.debug('adblock.init');
-
-    // tslint:disable-next-line:no-floating-promises
-    ElectronBlocker.fromLists(
-        fetch,
-   [
-            'https://easylist.to/easylist/easylist.txt',
-            'https://easylist.to/easylist/easyprivacy.txt', // EasyPrivacy
-            'https://easylist-downloads.adblockplus.org/easylist-cookie.txt', // Easy Cookies
-            'https://easylist.to/easylist/fanboy-social.txt', // Fanboy Social
-            'https://easylist.to/easylist/fanboy-annoyance.txt', // Fanboy Annoyances
-            'https://filters.adtidy.org/extension/chromium/filters/2.txt', // AdGuard Base
-            'https://filters.adtidy.org/extension/chromium/filters/11.txt', // AdGuard Mobile Ads
-            'https://filters.adtidy.org/extension/chromium/filters/4.txt', // AdGuard Social Media
-            'https://filters.adtidy.org/extension/chromium/filters/14.txt', // AdGuard Annoyances
-            'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/annoyances.txt', // uBlock Origin Annoyances
-            'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt', // uBlock Origin Filters
-            'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt', // uBlock Origin Privacy
-            'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badware.txt', // uBlock Origin Badware
-            'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/resource-abuse.txt', // uBlock Origin Resource Abuse
-            'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt' // uBlock Origin Unbreak
-        ],
-        {
-            enableCompression: true
-        },
-        {
-            path: path.join(baseDir, 'adblocker.bin'),
-            read: fs.promises.readFile,
-            write: fs.promises.writeFile
-        }
-    ).then(
-        (blocker) => {
-            log.debug('adblock.load.complete');
-
-            blocker.enableBlockingInSession(electron.session.defaultSession);
-
-            // blocker.blockStyles();
-            blocker.blockFonts();
-            // blocker.blockScripts();
-
-            // Temp fix -- manually override adblocker's preload script
-            // to point to CJS  that has been copied over with config in webpack.config.js
-            // require.resolve('@cliqz/adblocker-electron-preload');
-            const preloadScript =  path.join(electron.app.getAppPath(), './preview/assets/adblocker/preload.cjs.js');
-
-            // const originPath = require.resolve('@cliqz/adblocker-electron-preload');
-            // const preloadScript = path.resolve(path.dirname(originPath), 'preload.cjs.js');
-            log.debug('adblock.preload.path', { finalPath: preloadScript /*, originPath */ });
-
-            electron.session.defaultSession.setPreloads(
-                _.concat(
-                    _.filter(
-                        electron.session.defaultSession.getPreloads(),
-                        (p) => (p.indexOf('adblocker-electron-preload') < 0)
-                    ),
-                    [preloadScript]
-                )
-            );
-
-            log.debug('adblock.preloaders', { loaders: electron.session.defaultSession.getPreloads() });
-
-            blocker.on('request-blocked', (request: Request) => {
-                log.debug('adblock.request.blocked', { url: request.url });
-            });
-
-            blocker.on('request-redirected', (request: Request) => {
-                log.debug('adblock.request.redirected', { url: request.url });
-            });
-
-            blocker.on('request-whitelisted', (request: Request) => {
-                log.debug('adblock.request.whitelisted', { url: request.url });
-            });
-
-            blocker.on('csp-injected', (request: Request) => {
-                log.debug('adblock.inject.csp', { url: request.url });
-            });
-
-            blocker.on('script-injected', (script: string, url: string) => {
-                log.debug('adblock.inject.script', { length: script.length, url });
-            });
-
-            blocker.on('style-injected', (style: string, url: string) => {
-                log.debug('adblock.inject.style', { length: style.length, url });
-            });
-        }
-    ).catch(
-      (err) => {
-        log.warn('adblock.init.error', 'Adblocker failed to initialize.'
-            + 'This does not break F-Chat Rising, but may produce slower image previews', err);
-      }
-    );
-
+    // Set up ad blocker
+    BlockerIntegration.factory(baseDir);
 
     // This prevents automatic download prompts on certain webview URLs without
     // stopping conversation logs from being downloaded

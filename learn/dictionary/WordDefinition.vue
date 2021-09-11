@@ -6,6 +6,7 @@
       enableremotemodule="false"
       allowpopups="false"
       nodeIntegration="false"
+      partition="persist:adblocked"
 
       id="defintion-preview"
       ref="definitionPreview"

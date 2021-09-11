@@ -301,7 +301,8 @@
                   nodeIntegrationInWorker: true,
                   spellcheck: true,
                   enableRemoteModule: true,
-                  contextIsolation: false
+                  contextIsolation: false,
+                  partition: 'persist:fchat'
                 }
               }
             );

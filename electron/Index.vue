@@ -166,7 +166,6 @@
         }
     );
 
-
     log.info('init.chat.keytar.load.start');
 
     /* tslint:disable: no-any no-unsafe-any */ //because this is hacky

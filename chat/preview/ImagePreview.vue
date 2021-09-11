@@ -17,6 +17,7 @@
             enableremotemodule="false"
             allowpopups="false"
             nodeIntegration="false"
+            partition="persist:adblocked"
 
             id="image-preview-ext"
             ref="imagePreviewExt"

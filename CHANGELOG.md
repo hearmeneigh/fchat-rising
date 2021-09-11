@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.15.1
+* Fixed missing ad buttons
+
 ## 1.15.0
 * Upgraded to Electron 13.x
 * Fixed cache bugs that slowed down the client
