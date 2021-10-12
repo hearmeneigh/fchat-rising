@@ -56,7 +56,7 @@
     "@cliqz/adblocker-electron": "^1.22.5",
     "jquery": "^3.6.0",
     "keytar": "~7.5.0",
-    "node-fetch": "^2.6.2"
+    "node-fetch": "^2.6.4"
   },
   "optionalDependencies": {
     "appdmg": "^0.6.0",
