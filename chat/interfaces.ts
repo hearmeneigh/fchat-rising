@@ -160,6 +160,7 @@ export interface SearchData {
     furryprefs: string[]
     roles: string[]
     positions: string[]
+    bodytypes: string[]
 }
 
 export interface ExtendedSearchData extends SearchData {

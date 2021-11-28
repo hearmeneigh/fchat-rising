@@ -171,11 +171,12 @@
             furryprefs: [],
             roles: [],
             positions: [],
-            species: []
+            species: [],
+            bodytypes: []
         };
 
         listItems: ReadonlyArray<keyof SearchData> = [
-            'genders', 'orientations', 'languages', 'furryprefs', 'roles', 'positions'
+            'genders', 'orientations', 'languages', 'furryprefs', 'roles', 'positions', 'bodytypes'
         ]; // SearchData is correct
 
         searchString = '';
@@ -197,7 +198,8 @@
                 furryprefs: options.listitems.filter((x) => x.name === 'furrypref').map((x) => x.value),
                 roles: options.listitems.filter((x) => x.name === 'subdom').map((x) => x.value),
                 positions: options.listitems.filter((x) => x.name === 'position').map((x) => x.value),
-                species: this.getSpeciesOptions()
+                species: this.getSpeciesOptions(),
+                bodytypes: options.listitems.filter((x) => x.name === 'bodytype').map((x) => x.value)
             });
 
 
@@ -268,7 +270,7 @@
             core.connection.onMessage('FKS', async (data) => {
                 const results = data.characters.map((x) => ({ character: core.characters.get(x), profile: null }))
                     .filter((x) => core.state.hiddenUsers.indexOf(x.character.name) === -1 && !x.character.isIgnored)
-                    .filter((x) => this.isSpeciesMatch(x))
+                    .filter((x) => this.isSpeciesMatch(x) && this.isBodyTypeMatch(x))
                     .sort(sort);
 
                 // pre-warm cache
@@ -346,7 +348,7 @@
         private resort(results = this.results) {
           this.results = (_.filter(
               results,
-              (x) => this.isSpeciesMatch(x)
+              (x) => this.isSpeciesMatch(x) && this.isBodyTypeMatch(x)
           ) as SearchResult[]).sort(sort);
         }
 
@@ -380,6 +382,21 @@
             || !!_.find(this.data.species, (s: SearchSpecies) => (
               (s.id === species)
             ));
+        }
+
+        isBodyTypeMatch(result: SearchResult) {
+            if (this.data.bodytypes.length === 0) return true
+
+            const knownCharacter = core.cache.profileCache.getSync(result.character.name)
+            if (!knownCharacter) return false
+
+            result.profile = knownCharacter
+
+            const bodytypeId = result.profile.character.character.infotags[51]?.list
+            if (bodytypeId === undefined) return false
+
+            const bodytype = options!.listitems.filter(x => x.name === 'bodytype').find(x => +x.id === bodytypeId)
+            return this.data.bodytypes.indexOf(bodytype!.value) > -1
         }
 
         getSpeciesOptions(): SearchSpecies[] {
@@ -459,7 +476,7 @@
 
 
         reset(): void {
-            this.data = {kinks: [], genders: [], orientations: [], languages: [], furryprefs: [], roles: [], positions: [], species: []};
+            this.data = {kinks: [], genders: [], orientations: [], languages: [], furryprefs: [], roles: [], positions: [], species: [], bodytypes: []};
         }
 
 
@@ -504,7 +521,7 @@
             const data: Connection.ClientCommands['FKS'] & {[key: string]: (string | number)[]} = {kinks: []};
             for(const key in this.data) {
                 const item = this.data[<keyof SearchData>key]; // SearchData is correct
-                if(item.length > 0)
+                if(item.length > 0 && key !== 'bodytypes')
                     data[key] = key === 'kinks' ? (<SearchKink[]>item).map((x) => x.id) : (<string[]>item);
             }
             core.connection.send('FKS', data);
