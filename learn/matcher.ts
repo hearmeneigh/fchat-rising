@@ -337,9 +337,9 @@ export class Matcher {
         return _.map(
             speciesOptions,
             (species) => {
-                const nc = _.cloneDeep(c);
-
-                nc.infotags[TagId.Species] = { string: species };
+                // Avoid _.cloneDeep because it chokes on array-like objects with very large keys
+                // _.cloneDeep will happily make arrays with 41 million elements
+                const nc = {...c, infotags: {...c.infotags, [TagId.Species]: {string: species}}};
 
                 return { character: nc, analysis: new CharacterAnalysis(nc) };
             }
@@ -975,18 +975,14 @@ export class Matcher {
     private getAllStandardKinks(c: Character): { [key: number]: KinkChoice } {
         const kinks = _.pickBy(c.kinks, _.isString);
 
-        _.each(
-          c.customs,
-          (custom: any) => {
-            if (!custom) {
-                return;
+        // Avoid using _.forEach on c.customs because lodash thinks it is an array
+        for (const custom of Object.values(c.customs)) {
+            if (custom) {
+                const children = (custom as any).children ?? {};
+
+                _.each(children, (child) => kinks[child] = custom.choice);
             }
-
-            const children = (custom.children) ? custom.children : {};
-
-            _.each(children, (child) => kinks[child] = custom.choice);
-          }
-        );
+        }
 
         return kinks as any;
     }

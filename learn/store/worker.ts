@@ -26,7 +26,22 @@ export class WorkerStore implements PermanentIndexedStore {
 
 
     async getProfile(name: string): Promise<ProfileRecord | undefined> {
-        return this.workerClient.request('get', { name });
+        const record: ProfileRecord | undefined = await this.workerClient.request('get', { name });
+
+        // fix custom kinks to prevent hangs
+
+        if (record && Array.isArray(record.profileData.character.customs)) {
+            // fix customs because it will crash the client
+            const customsObject: ProfileRecord['profileData']['character']['customs'] = {};
+
+            for (const [key, value] of Object.entries(record.profileData.character.customs)) {
+                if (value !== undefined) customsObject[key] = value;
+            }
+
+            record.profileData.character.customs = customsObject;
+        }
+
+        return record;
     }
 
 
