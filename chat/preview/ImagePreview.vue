@@ -560,6 +560,8 @@
 
 
         async executeJavaScript(js: string | undefined, context: string = 'unknown', logDetails?: any): Promise<any> {
+            if (!this.runJs) return;
+
             const webview = this.getWebview();
 
             if (!js) {
