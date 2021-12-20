@@ -7,7 +7,7 @@
             rel="nofollow noreferrer noopener"
             target="_blank"
             class="user-link"
-            @click="handleClick()"
+            @click="handleClick"
             @mouseover.prevent="show()"
             @mouseenter.prevent="show()"
             @mouseleave.prevent="dismiss()"
@@ -66,8 +66,13 @@
             EventBus.$emit('imagepreview-toggle-stickyness', {url: this.url});
         }
 
-        handleClick(): void {
-            this.dismiss(true);
+        handleClick(e: MouseEvent): void {
+            if (e.altKey) {
+                this.toggleStickyness();
+                e.preventDefault();
+            } else {
+                this.dismiss(true);
+            }
         }
     }
 </script>
