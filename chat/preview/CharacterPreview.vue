@@ -213,7 +213,7 @@ export default class CharacterPreview extends Vue {
   updateCustoms(): void {
     this.customs = _.orderBy(
       _.map(
-        _.reject(this.character!.character.customs || [], (c) => _.isUndefined(c)) as CustomKink[],
+        _.reject(Object.values(this.character!.character.customs ?? []), (c) => _.isUndefined(c)) as CustomKink[],
         (c: CustomKink) => _.assign(
           {},
           c,
