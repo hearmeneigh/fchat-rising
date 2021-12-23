@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.16.0
+* Upgraded to Electron 14.x
+* Minor security updates
+* Added body type search (credit: [@ButterCheezii](https://github.com/ButterCheezii))
+* Link previews can now be pinned with a trackpad (credit: @ButterCheezii)
+* Fixed character preview lag (credit: @ButterCheezii)
+
 ## 1.15.1
 * Fixed missing ad buttons
 

@@ -49,14 +49,19 @@ export class BlockerIntegration {
 
       log.debug('adblock.load.complete');
 
-      BlockerIntegration.configureBlocker(blocker);
-
-      log.debug('adblock.session.create');
-
       const session = electron.session.fromPartition('persist:adblocked', { cache: true });
 
-      log.debug('adblock.session.attach');
+      log.debug('adblock.session.created');
+
       blocker.enableBlockingInSession(session);
+      // blocker.enableBlockingInSession(electron.session.defaultSession);
+
+      log.debug('adblock.enabled');
+
+      BlockerIntegration.configureBlocker(blocker, session);
+      // BlockerIntegration.configureBlocker(blocker, electron.session.defaultSession);
+
+      log.debug('adblock.session.attached');
 
       return new BlockerIntegration(baseDir, blocker, session);
     } catch (err) {
@@ -67,7 +72,7 @@ export class BlockerIntegration {
     }
   }
 
-  protected static configureBlocker(blocker: ElectronBlocker): void {
+  protected static configureBlocker(blocker: ElectronBlocker, session: electron.Session): void {
     // Temp fix -- manually override adblocker's preload script
     // to point to CJS  that has been copied over with config in webpack.config.js
     // require.resolve('@cliqz/adblocker-electron-preload');
@@ -77,10 +82,12 @@ export class BlockerIntegration {
     // const preloadScript = path.resolve(path.dirname(originPath), 'preload.cjs.js');
     log.debug('adblock.preload.path', { finalPath: preloadScript /*, originPath */ });
 
-    electron.session.defaultSession.setPreloads(
+    log.debug('adblock.preloaders.original', { loaders: session.getPreloads() });
+
+    session.setPreloads(
         _.concat(
             _.filter(
-                electron.session.defaultSession.getPreloads(),
+                session.getPreloads(),
                 (p) => (p.indexOf('adblocker-electron-preload') < 0)
             ),
             [preloadScript]
@@ -89,7 +96,7 @@ export class BlockerIntegration {
 
     blocker.blockFonts();
 
-    log.debug('adblock.preloaders', { loaders: electron.session.defaultSession.getPreloads() });
+    log.debug('adblock.preloaders', { loaders: session.getPreloads() });
 
     blocker.on('request-blocked', (request: Request) => {
         log.debug('adblock.request.blocked', { url: request.url });

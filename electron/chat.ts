@@ -34,10 +34,16 @@
 // // @ts-ignore
 // const dl = new DebugLogger('chat');
 
+import * as electron from 'electron';
+
+import * as remote from '@electron/remote';
+const webContents = remote.getCurrentWebContents();
+
+// tslint:disable-next-line:no-require-imports no-submodule-imports
+require('@electron/remote/main').enable(webContents);
+
 import Axios from 'axios';
 import {exec, execSync} from 'child_process';
-import * as electron from 'electron';
-import * as remote from '@electron/remote';
 import * as path from 'path';
 import * as qs from 'querystring';
 import {getKey} from '../chat/common';
@@ -55,7 +61,6 @@ import * as SlimcatImporter from './importer';
 import Index from './Index.vue';
 import log from 'electron-log'; // tslint:disable-line: match-default-export-name
 import { WordPosSearch } from '../learn/dictionary/word-pos-search';
-
 
 log.debug('init.chat');
 
@@ -107,7 +112,6 @@ function openIncognito(url: string): void {
     exec(`start ${start} ${url}`);
 }
 
-const webContents = remote.getCurrentWebContents();
 const wordPosSearch = new WordPosSearch();
 
 webContents.on('context-menu', (_, props) => {

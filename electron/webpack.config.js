@@ -26,7 +26,7 @@ const mainConfig = {
                 }
             },
             {test: path.join(__dirname, 'package.json'), loader: 'file-loader', options: {name: 'package.json'}, type: 'javascript/auto'},
-            {test: /\.(png|html)$/, loader: 'file-loader', options: {name: '[name].[ext]'}},
+            {test: /\.(png|ico|html)$/, loader: 'file-loader', options: {name: '[name].[ext]'}},
             {test: /\.raw\.js$/, loader: 'raw-loader'}
         ]
     },
@@ -82,7 +82,7 @@ const mainConfig = {
             {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader'},
             {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader'},
             {test: /\.(wav|mp3|ogg)$/, loader: 'file-loader', options: {name: 'sounds/[name].[ext]'}},
-            {test: /\.(png|html)$/, loader: 'file-loader', options: {name: '[name].[ext]'}},
+            {test: /\.(png|ico|html)$/, loader: 'file-loader', options: {name: '[name].[ext]'}},
             {
                 test: /\.vue\.scss/,
                 // loader: ['vue-style-loader', {loader: 'css-loader', options: {esModule: false}},'sass-loader']
@@ -125,6 +125,11 @@ const mainConfig = {
                     },
                     {
                         from: path.resolve(__dirname, '..', 'node_modules', '@cliqz', 'adblocker-electron-preload', 'dist', 'preload.cjs.js').replace(/\\/g, '/'),
+                        to: path.join('preview', 'assets', 'adblocker'),
+                        context: path.resolve(__dirname, '..', 'node_modules', '@cliqz', 'adblocker-electron-preload', 'dist')
+                    },
+                    {
+                        from: path.resolve(__dirname, '..', 'node_modules', '@cliqz', 'adblocker-electron-preload', 'dist', 'preload.es6.js').replace(/\\/g, '/'),
                         to: path.join('preview', 'assets', 'adblocker'),
                         context: path.resolve(__dirname, '..', 'node_modules', '@cliqz', 'adblocker-electron-preload', 'dist')
                     },

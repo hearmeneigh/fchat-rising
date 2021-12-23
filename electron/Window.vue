@@ -39,6 +39,7 @@
     import {Component, Hook} from '@f-list/vue-ts';
     import * as electron from 'electron';
     import * as remote from '@electron/remote';
+
     import * as fs from 'fs';
     import * as path from 'path';
     import * as url from 'url';
@@ -300,12 +301,14 @@
                   nodeIntegration: true,
                   nodeIntegrationInWorker: true,
                   spellcheck: true,
-                  enableRemoteModule: true,
                   contextIsolation: false,
-                  partition: 'persist:fchat'
+                  partition: 'persist:fchat',
                 }
               }
             );
+
+            const remoteMain = remote.require("@electron/remote/main");
+            remoteMain.enable(view.webContents);
 
             // tab devtools
             // view.webContents.openDevTools();
@@ -324,14 +327,16 @@
 
             log.debug('init.window.tab.load');
 
-            await view.webContents.loadURL(url.format({
+            const indexUrl = url.format({
                 pathname: path.join(__dirname, 'index.html'),
                 protocol: 'file:',
                 slashes: true,
                 query: {settings: JSON.stringify(this.settings), hasCompletedUpgrades: JSON.stringify(this.hasCompletedUpgrades)}
-            }));
+            });
 
-            log.debug('init.window.tab.load.complete');
+            await view.webContents.loadURL(indexUrl);
+
+            log.debug('init.window.tab.load.complete', indexUrl);
 
             tab.view.setBounds(getWindowBounds());
             this.lockTab = false;

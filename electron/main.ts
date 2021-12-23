@@ -166,6 +166,8 @@ async function addSpellcheckerItems(menu: electron.Menu): Promise<void> {
 }
 
 function setUpWebContents(webContents: electron.WebContents): void {
+    remoteMain.enable(webContents);
+
     const openLinkExternally = (e: Event, linkUrl: string) => {
         e.preventDefault();
         const profileMatch = linkUrl.match(/^https?:\/\/(www\.)?f-list.net\/c\/([^/#]+)\/?#?/);
@@ -186,8 +188,21 @@ function createWindow(): electron.BrowserWindow | undefined {
     if(tabCount >= 3) return;
     const lastState = windowState.getSavedWindowState();
 
+    const pngIcon = electron.nativeImage.createFromPath(
+        //tslint:disable-next-line:no-require-imports no-unsafe-any
+        path.join(__dirname, <string>require('./build/icon.png').default)
+    );
+
+    const winIcon = electron.nativeImage.createFromPath(
+        //tslint:disable-next-line:no-require-imports no-unsafe-any
+        path.join(__dirname, <string>require('./build/icon.ico').default)
+    );
+
     const windowProperties: electron.BrowserWindowConstructorOptions & {maximized: boolean} = {
-        ...lastState, center: lastState.x === undefined, show: false,
+        ...lastState,
+        center: lastState.x === undefined,
+        show: false,
+        icon: process.platform === 'win32' ? winIcon : pngIcon,
         webPreferences: {
           webviewTag: true, nodeIntegration: true, nodeIntegrationInWorker: true, spellcheck: true,
           enableRemoteModule: true, contextIsolation: false, partition: 'persist:fchat'
@@ -202,7 +217,17 @@ function createWindow(): electron.BrowserWindow | undefined {
     }
 
     const window = new electron.BrowserWindow(windowProperties);
+
+    remoteMain.enable(window.webContents);
+
     windows.push(window);
+
+    window.webContents.on('will-attach-webview', () => {
+          const all = electron.webContents.getAllWebContents();
+          all.forEach((item) => {
+            remoteMain.enable(item);
+         });
+    });
 
     updateSupportedLanguages(electron.session.defaultSession.availableSpellCheckerLanguages);
 
@@ -226,8 +251,6 @@ function createWindow(): electron.BrowserWindow | undefined {
             }
         }
     );
-
-    // console.log('GOT HERE');
 
     // tslint:disable-next-line:no-floating-promises
     window.loadFile(
@@ -386,6 +409,7 @@ function onReady(): void {
     if(process.env.NODE_ENV !== 'production')
         viewItem.submenu.unshift({role: 'reload'}, {role: 'forceReload'}, {role: 'toggleDevTools'}, {type: 'separator'});
     const spellcheckerMenu = new electron.Menu();
+
     //tslint:disable-next-line:no-floating-promises
     addSpellcheckerItems(spellcheckerMenu);
     const themes = fs.readdirSync(path.join(__dirname, 'themes')).filter((x) => x.substr(-4) === '.css').map((x) => x.slice(0, -4));
@@ -566,8 +590,10 @@ function onReady(): void {
             ]
         }
     ]));
+
     electron.ipcMain.on('tab-added', (_event: Event, id: number) => {
         const webContents = electron.webContents.fromId(id);
+
         setUpWebContents(webContents);
         ++tabCount;
         if(tabCount === 3)
