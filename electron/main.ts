@@ -60,6 +60,12 @@ const pck = require('./package.json');
 // Module to control application life.
 const app = electron.app;
 
+// tslint:disable-next-line:no-require-imports
+const pngIcon = path.join(__dirname, <string>require('./build/icon.png').default);
+
+// tslint:disable-next-line:no-require-imports
+const winIcon = path.join(__dirname, <string>require('./build/icon.ico').default);
+
 remoteMain.initialize();
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -188,15 +194,7 @@ function createWindow(): electron.BrowserWindow | undefined {
     if(tabCount >= 3) return;
     const lastState = windowState.getSavedWindowState();
 
-    const pngIcon = electron.nativeImage.createFromPath(
-        //tslint:disable-next-line:no-require-imports no-unsafe-any
-        path.join(__dirname, <string>require('./build/icon.png').default)
-    );
-
-    const winIcon = electron.nativeImage.createFromPath(
-        //tslint:disable-next-line:no-require-imports no-unsafe-any
-        path.join(__dirname, <string>require('./build/icon.ico').default)
-    );
+    console.log('ICon is', process.platform === 'win32' ? winIcon : pngIcon);
 
     const windowProperties: electron.BrowserWindowConstructorOptions & {maximized: boolean} = {
         ...lastState,
@@ -221,6 +219,8 @@ function createWindow(): electron.BrowserWindow | undefined {
     remoteMain.enable(window.webContents);
 
     windows.push(window);
+
+    // window.setIcon(process.platform === 'win32' ? winIcon : pngIcon);
 
     window.webContents.on('will-attach-webview', () => {
           const all = electron.webContents.getAllWebContents();

@@ -66,7 +66,7 @@
 
         selectStatus(): void {
             if (this.selectedSearch !== null) {
-                this.callback(_.merge({species: []}, this.history[this.selectedSearch]) as ExtendedSearchData);
+                this.callback(_.merge({species: [], bodytypes: []}, this.history[this.selectedSearch]) as ExtendedSearchData);
             }
         }
 

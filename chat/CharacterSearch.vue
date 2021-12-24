@@ -542,7 +542,7 @@
 
             const filteredHistory = _.map(
                 _.reject(history, (h: SearchData) => (JSON.stringify(h, null, 0) === dataStr)),
-              (h) => _.merge({ species: [] }, h)
+              (h) => _.merge({ species: [], bodytypes: [] }, h)
             ) as ExtendedSearchData[];
 
             const newHistory: ExtendedSearchData[] = _.take(_.concat([data], filteredHistory), 15);

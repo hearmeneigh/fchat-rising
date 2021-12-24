@@ -1,6 +1,6 @@
 {
   "name": "f-list-rising",
-  "version": "1.15.1",
+  "version": "1.16.0",
   "author": "The F-List Team and and Mister Stallion (Esq.)",
   "description": "A heavily modded F-Chat 3.0 client for F-List",
   "license": "MIT",
@@ -27,7 +27,7 @@
     "date-fns": "^2.16.1",
     "electron": "^14.2.3",
     "electron-log": "^4.4.3",
-    "electron-packager": "~15.1.0",
+    "electron-packager": "^15.4.0",
     "electron-rebuild": "^3.2.5",
     "extract-loader": "^5.1.0",
     "file-loader": "^6.2.0",
