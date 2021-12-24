@@ -307,7 +307,7 @@
               }
             );
 
-            const remoteMain = remote.require("@electron/remote/main");
+            const remoteMain = require("@electron/remote/main");
             remoteMain.enable(view.webContents);
 
             // tab devtools
