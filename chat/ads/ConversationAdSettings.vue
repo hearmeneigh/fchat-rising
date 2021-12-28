@@ -32,6 +32,7 @@
     import l from '../localize';
     import {Editor} from '../bbcode';
     import core from '../core';
+    import { Dialog } from '../../helpers/dialog';
 
     @Component({
         components: {modal: Modal, editor: Editor}
@@ -72,13 +73,12 @@
             this.ads.push('');
         }
 
-
         removeAd(index: number): void {
-            if (confirm('Are you sure you wish to remove this ad?')) {
+            // if (confirm('Are you sure you wish to remove this ad?')) {
+            if (Dialog.confirmDialog('Are you sure you wish to remove this ad?')) {
                 this.ads.splice(index, 1);
             }
         }
-
 
         moveAdUp(index: number): void {
             const ad = this.ads.splice(index, 1);

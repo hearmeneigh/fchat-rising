@@ -27,6 +27,7 @@
     import core from './core';
     import { BBCodeView } from '../bbcode/view';
     import * as _ from 'lodash';
+    import { Dialog } from '../helpers/dialog';
 
     @Component({
         components: {modal: Modal, bbcode: BBCodeView(core.bbCodeParser)}
@@ -75,7 +76,7 @@
 
 
         async removeStatusHistoryEntry(index: number): Promise<void> {
-          if(confirm('Are you sure you want to remove this status message?')) {
+          if(Dialog.confirmDialog('Are you sure you want to remove this status message?')) {
               this.history.splice(index, 1);
 
               await core.settingsStore.set('statusHistory', this.history);

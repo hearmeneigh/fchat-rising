@@ -194,8 +194,6 @@ function createWindow(): electron.BrowserWindow | undefined {
     if(tabCount >= 3) return;
     const lastState = windowState.getSavedWindowState();
 
-    console.log('ICon is', process.platform === 'win32' ? winIcon : pngIcon);
-
     const windowProperties: electron.BrowserWindowConstructorOptions & {maximized: boolean} = {
         ...lastState,
         center: lastState.x === undefined,

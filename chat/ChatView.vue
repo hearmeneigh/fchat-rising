@@ -129,6 +129,7 @@
     import PrivateConversation = Conversation.PrivateConversation;
     import * as _ from 'lodash';
     import NoteStatus from '../site/NoteStatus.vue';
+    import { Dialog } from '../helpers/dialog';
     // import { EventBus } from './preview/event-bus';
 
     const unreadClasses = {
@@ -317,7 +318,7 @@
         }
 
         logOut(): void {
-            if(confirm(l('chat.confirmLeave'))) core.connection.close();
+            if(Dialog.confirmDialog(l('chat.confirmLeave'))) core.connection.close();
         }
 
         showSettings(): void {

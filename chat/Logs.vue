@@ -73,6 +73,7 @@
     import l from './localize';
     import MessageView from './message_view';
     import Zip from './zip';
+    import { Dialog } from '../helpers/dialog';
 
     function formatDate(this: void, date: Date): string {
         return format(date, 'yyyy-MM-dd');
@@ -195,7 +196,7 @@
 
         downloadDay(): void {
             if(this.selectedConversation === undefined || this.selectedDate === undefined || this.messages.length === 0) return;
-            const html = confirm(l('logs.html'));
+            const html = Dialog.confirmDialog(l('logs.html'));
             const name = `${this.selectedConversation.name}-${formatDate(new Date(this.selectedDate))}.${html ? 'html' : 'txt'}`;
             this.download(name, `data:${encodeURIComponent(name)},${encodeURIComponent(getLogs(this.messages, html))}`);
         }
@@ -203,7 +204,7 @@
         async downloadConversation(): Promise<void> {
             if(this.selectedConversation === undefined) return;
             const zip = new Zip();
-            const html = confirm(l('logs.html'));
+            const html = Dialog.confirmDialog(l('logs.html'));
             for(const date of this.dates) {
                 const messages = await core.logs.getLogs(this.selectedCharacter, this.selectedConversation.key, date);
                 zip.addFile(`${formatDate(date)}.${html ? 'html' : 'txt'}`, getLogs(messages, html));
@@ -212,9 +213,9 @@
         }
 
         async downloadCharacter(): Promise<void> {
-            if(this.selectedCharacter === '' || !confirm(l('logs.confirmExport', this.selectedCharacter))) return;
+            if(this.selectedCharacter === '' || !Dialog.confirmDialog(l('logs.confirmExport', this.selectedCharacter))) return;
             const zip = new Zip();
-            const html = confirm(l('logs.html'));
+            const html = Dialog.confirmDialog(l('logs.html'));
             for(const conv of this.conversations) {
                 zip.addFile(`${conv.name}/`, '');
                 const dates = await core.logs.getLogDates(this.selectedCharacter, conv.key);
