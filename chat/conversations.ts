@@ -641,14 +641,6 @@ export default function(this: any): Interfaces.State {
         queuedJoin(state.pinned.channels.slice());
     });
     core.channels.onEvent(async(type, channel, member) => {
-        if (type === 'leave') {
-            const conv = state.channelMap[channel.id];
-
-            if (conv) {
-                conv.adManager.stop();
-            }
-        }
-
         if(type === 'join')
             if(member === undefined) {
                 const conv = new ChannelConversation(channel);

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.16.2
+* Fixed broken auto-ads
+
 ## 1.16.1
 * Fixed ad fields becoming uneditable after an ad is removed
 * Fixed ads attempting to send after leaving a channel

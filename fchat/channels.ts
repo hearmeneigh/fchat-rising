@@ -1,5 +1,6 @@
 import {decodeHTML} from './common';
 import {Channel as Interfaces, Character, Connection} from './interfaces';
+import core from '../chat/core';
 
 interface SortableMember extends Interfaces.Member {
     rank: Interfaces.Rank,
@@ -202,6 +203,12 @@ export default function(this: void, connection: Connection, characters: Characte
         if(channel === undefined) return;
         const item = state.getChannelItem(data.channel);
         if(data.character === connection.character) {
+            const conv = core.conversations.channelConversations.find((c) =>  c.channel.id === channel.id);
+
+            if (conv) {
+                conv.adManager.stop();
+            }
+
             state.joinedChannels.splice(state.joinedChannels.indexOf(channel), 1);
             delete state.joinedMap[channel.id];
             for(const handler of state.handlers) await handler('leave', channel);
