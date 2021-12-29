@@ -199,6 +199,13 @@
                 </label>
             </div>
 
+            <div class="form-group">
+                <label class="control-label" for="risingDisableWindowsHighContrast">
+                    <input type="checkbox" id="risingDisableWindowsHighContrast" v-model="risingDisableWindowsHighContrast"/>
+                    Disable high-contrast mode (Windows)
+                </label>
+            </div>
+
         </div>
         <div v-show="selectedTab === '3'">
             <template v-if="hidden.length">
@@ -268,6 +275,7 @@
 
         risingShowUnreadOfflineCount!: boolean;
         risingColorblindMode!: boolean;
+        risingDisableWindowsHighContrast!: boolean;
 
 
         async load(): Promise<void> {
@@ -305,6 +313,7 @@
             this.risingShowUnreadOfflineCount = settings.risingShowUnreadOfflineCount;
 
             this.risingColorblindMode = settings.risingColorblindMode;
+            this.risingDisableWindowsHighContrast = settings.risingDisableWindowsHighContrast;
         }
 
         async doImport(): Promise<void> {
@@ -359,7 +368,8 @@
                 risingComparisonInSearch: this.risingComparisonInSearch,
                 risingShowUnreadOfflineCount: this.risingShowUnreadOfflineCount,
 
-                risingColorblindMode: this.risingColorblindMode
+                risingColorblindMode: this.risingColorblindMode,
+                risingDisableWindowsHighContrast: this.risingDisableWindowsHighContrast
             };
             if(this.notifications) await core.notifications.requestPermission();
         }

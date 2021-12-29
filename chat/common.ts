@@ -54,6 +54,7 @@ export class Settings implements ISettings {
 
     risingShowUnreadOfflineCount = true;
     risingColorblindMode = false;
+    risingDisableWindowsHighContrast: false;
 }
 
 

@@ -221,6 +221,7 @@ export namespace Settings {
 
         readonly risingShowUnreadOfflineCount: boolean;
         readonly risingColorblindMode: boolean;
+        readonly risingDisableWindowsHighContrast: boolean;
     }
 }
 
