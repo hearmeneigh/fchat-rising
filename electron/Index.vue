@@ -494,9 +494,9 @@
             // Hack!
             if (process.platform === 'win32') {
               if (core.state.generalSettings?.risingDisableWindowsHighContrast) {
-                document.querySelector('html').classList.add('disableWindowsHighContrast');
+                document.querySelector('html')?.classList.add('disableWindowsHighContrast');
               } else {
-                document.querySelector('html').classList.remove('disableWindowsHighContrast');
+                document.querySelector('html')?.classList.remove('disableWindowsHighContrast');
               }
             }
 

@@ -48,7 +48,6 @@
     import {GeneralSettings} from './common';
     import { getSafeLanguages, updateSupportedLanguages } from './language';
     import log from 'electron-log';
-    import core from '../chat/core';
 
     const browserWindow = remote.getCurrentWindow();
 
@@ -389,9 +388,9 @@
             // Hack!
             if (process.platform === 'win32') {
               if (this.settings?.risingDisableWindowsHighContrast) {
-                document.querySelector('html').classList.add('disableWindowsHighContrast');
+                document.querySelector('html')?.classList.add('disableWindowsHighContrast');
               } else {
-                document.querySelector('html').classList.remove('disableWindowsHighContrast');
+                document.querySelector('html')?.classList.remove('disableWindowsHighContrast');
               }
             }
 
