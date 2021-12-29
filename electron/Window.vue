@@ -48,7 +48,6 @@
     import {GeneralSettings} from './common';
     import { getSafeLanguages, updateSupportedLanguages } from './language';
     import log from 'electron-log';
-    import core from '../chat/core'; // tslint:disable-line: match-default-export-name
 
     const browserWindow = remote.getCurrentWindow();
 
@@ -147,6 +146,8 @@
             log.debug('init.window.languages');
 
             electron.ipcRenderer.on('settings', (_e: Event, settings: GeneralSettings) => {
+                log.debug('settings.update.window');
+
                 this.settings = settings;
 
                 log.transports.file.level = settings.risingSystemLogLevel;
@@ -381,10 +382,12 @@
         }
 
         getThemeClass() {
+          // console.log('getThemeClassWindow', this.settings?.risingDisableWindowsHighContrast);
+
           try {
             return {
               ['platform-' + this.platform]: true,
-              disableWindowsHighContrast: core.state.generalSettings?.risingDisableWindowsHighContrast || false
+              disableWindowsHighContrast: this.settings?.risingDisableWindowsHighContrast || false
             };
           } catch (err) {
             return {

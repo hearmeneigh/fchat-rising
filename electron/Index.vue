@@ -296,8 +296,10 @@
 
             Vue.set(core.state, 'generalSettings', this.settings);
 
-            electron.ipcRenderer.on('settings',
-                (_e: Event, settings: GeneralSettings) => core.state.generalSettings = this.settings = settings);
+            electron.ipcRenderer.on('settings', (_e: Event, settings: GeneralSettings) => {
+              log.debug('settings.update.index');
+              core.state.generalSettings = this.settings = settings;
+            });
 
             electron.ipcRenderer.on('open-profile', (_e: Event, name: string) => {
                 const profileViewer = <Modal>this.$refs['profileViewer'];
@@ -486,6 +488,8 @@
 
 
         getThemeClass(): Record<string, boolean> {
+          // console.log('getThemeClassIndex', core.state.generalSettings?.risingDisableWindowsHighContrast);
+
           try {
             return {
               [`theme-${this.settings.theme}`]: true,
