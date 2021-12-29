@@ -491,6 +491,15 @@
           // console.log('getThemeClassIndex', core.state.generalSettings?.risingDisableWindowsHighContrast);
 
           try {
+            // Hack!
+            if (process.platform === 'win32') {
+              if (core.state.generalSettings?.risingDisableWindowsHighContrast) {
+                document.querySelector('html').classList.add('disableWindowsHighContrast');
+              } else {
+                document.querySelector('html').classList.remove('disableWindowsHighContrast');
+              }
+            }
+
             return {
               [`theme-${this.settings.theme}`]: true,
               colorblindMode: core.state.settings.risingColorblindMode,
