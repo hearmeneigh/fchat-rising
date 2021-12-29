@@ -519,6 +519,16 @@ function onReady(): void {
                                     type: <'radio'>'radio'
                                 }
                             ))
+                        },
+                        {
+                            visible: process.platform === 'win32',
+                            label: 'Disable Windows high-contrast mode',
+                            type: 'checkbox',
+                            checked: settings.risingDisableWindowsHighContrast,
+                            click: (item: electron.MenuItem) => {
+                                settings.risingDisableWindowsHighContrast = item.checked;
+                                setGeneralSettings(settings);
+                            }
                         }
                     ]
                 },

@@ -4,7 +4,7 @@
 * Fixed ad fields becoming uneditable after an ad is removed
 * Fixed ads attempting to send after leaving a channel
 * Linux users now get automatic updates
-* Added configuration option to opt out from Windows High Contrast setting 
+* Added configuration option to opt out from Windows high-contrast setting (Menu > F-Chat > Rising > Disable high-contrast mode)
 
 ## 1.16.0
 * Upgraded to Electron 14.x

@@ -490,7 +490,7 @@
             return {
               [`theme-${this.settings.theme}`]: true,
               colorblindMode: core.state.settings.risingColorblindMode,
-              disableWindowsHighContrast: core.state.settings.risingDisableWindowsHighContrast
+              disableWindowsHighContrast: core.state.generalSettings.risingDisableWindowsHighContrast
             };
           } catch(err) {
             return { [`theme-${this.settings.theme}`]: true };
@@ -728,5 +728,9 @@
           }
         }
       }
+    }
+
+    .disableWindowsHighContrast, .disableWindowsHighContrast * {
+      forced-color-adjust: none;
     }
 </style>

@@ -28,6 +28,7 @@ export class GeneralSettings {
     hwAcceleration = true;
     risingCacheExpiryDays = 30;
     risingSystemLogLevel: log.LevelOption = 'info';
+    risingDisableWindowsHighContrast =  false;
 }
 
 //tslint:disable

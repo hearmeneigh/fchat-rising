@@ -1,5 +1,5 @@
 <template>
-    <div style="display: flex;flex-direction:column;height:100%" :class="'platform-' + platform" @auxclick.prevent>
+    <div style="display: flex;flex-direction:column;height:100%" :class="getThemeClass()" @auxclick.prevent>
         <div v-html="styling"></div>
         <div style="display:flex;align-items:stretch;border-bottom-width:1px" class="border-bottom" id="window-tabs">
             <h4 style="padding:2px 0">F-Chat</h4>
@@ -47,7 +47,8 @@
     import l from '../chat/localize';
     import {GeneralSettings} from './common';
     import { getSafeLanguages, updateSupportedLanguages } from './language';
-    import log from 'electron-log'; // tslint:disable-line: match-default-export-name
+    import log from 'electron-log';
+    import core from '../chat/core'; // tslint:disable-line: match-default-export-name
 
     const browserWindow = remote.getCurrentWindow();
 
@@ -378,6 +379,19 @@
         openMenu(): void {
             remote.Menu.getApplicationMenu()!.popup({});
         }
+
+        getThemeClass() {
+          try {
+            return {
+              ['platform-' + this.platform]: true,
+              disableWindowsHighContrast: core.state.generalSettings.risingDisableWindowsHighContrast
+            };
+          } catch (err) {
+            return {
+              ['platform-' + this.platform]: true
+            };
+          }
+        }
     }
 </script>
 
@@ -450,5 +464,9 @@
                 padding-bottom: 6px;
             }
         }
+    }
+
+    .disableWindowsHighContrast, .disableWindowsHighContrast * {
+      forced-color-adjust: none;
     }
 </style>
