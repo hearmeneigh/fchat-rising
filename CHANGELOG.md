@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.16.1
+* Fixed ad fields becoming uneditable after an ad is removed
+* Fixed ads attempting to send after leaving a channel
+* Linux users now get automatic updates
+* Added configuration option to opt out from Windows High Contrast setting 
+
 ## 1.16.0
 * Upgraded to Electron 14.x
 * Minor security updates

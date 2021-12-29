@@ -35,6 +35,7 @@ This repository contains a heavily customized version of the mainline F-Chat 3.0
     *    Hover cursor over any character name to see a preview of the character
     *    Middle click any `[url]` to turn the preview into a sticky / interactive mode
     *    Link preview has an ad-blocker to minimize page load times and protect against unfriendly scripts 
+    *    Use alt/option key + mouse click to pin the link preview
 *   Profile
     *    Kinks are auto-compared when viewing character profile
     *    Custom kink explanations can be expanded inline
@@ -56,6 +57,7 @@ This repository contains a heavily customized version of the mainline F-Chat 3.0
     *    Current search filters are listed in the search dialog
     *    Search filters can be reset
     *    Search results can be filtered by species
+    *    Search results can be filtered by body type
     *    Last 15 searches are stored and can be accessed from the 'Character search' dialog
 *   Character Status Message
     *    Last 10 status messages are stored and can be accessed from the 'Set status' dialog
@@ -67,6 +69,7 @@ This repository contains a heavily customized version of the mainline F-Chat 3.0
     *    Use `Ctrl+Tab`, `Ctrl+Shift+Tab`, `Ctrl+PgDown`, and `Ctrl+PgUp` to switch between character tabs
     *    Show number of unread notes and messages in the bottom right corner
     *    Colorblind mode
+    *    Option to disable Windows high contrast mode
     *    Right click any word and select 'Look up...' to see its dictionary definition
 *   Technical Details for Nerds
     *    Upgraded to Electron 10.x
