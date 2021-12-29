@@ -490,7 +490,7 @@
             return {
               [`theme-${this.settings.theme}`]: true,
               colorblindMode: core.state.settings.risingColorblindMode,
-              disableWindowsHighContrast: core.state.generalSettings.risingDisableWindowsHighContrast
+              disableWindowsHighContrast: core.state.generalSettings?.risingDisableWindowsHighContrast
             };
           } catch(err) {
             return { [`theme-${this.settings.theme}`]: true };
