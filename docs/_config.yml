@@ -50,7 +50,7 @@ theme: jekyll-theme-slate
 changelog: https://github.com/mrstallion/fchat-rising/blob/master/CHANGELOG.md
 
 download:
-  version: 1.16.0
+  version: 1.16.1
 
   url: https://github.com/mrstallion/fchat-rising/releases/download/v%VERSION%/F-Chat-Rising-%VERSION%-%PLATFORM_TAIL%
 
@@ -58,16 +58,16 @@ download:
     - type: win
       name: Windows
       tail: win.exe
-      size: 75 MB
+      size: 85 MB
 
     - type: mac
       name: MacOS
       tail: macos.dmg
-      size: 76 MB
+      size: 82 MB
       instructions: ./macos-install
 
     - type: linux
       name: Linux
       tail: linux.AppImage
-      size: 76 MB
+      size: 82 MB
 
