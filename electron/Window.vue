@@ -384,7 +384,7 @@
           try {
             return {
               ['platform-' + this.platform]: true,
-              disableWindowsHighContrast: core.state.generalSettings?.risingDisableWindowsHighContrast
+              disableWindowsHighContrast: core.state.generalSettings?.risingDisableWindowsHighContrast || false
             };
           } catch (err) {
             return {
