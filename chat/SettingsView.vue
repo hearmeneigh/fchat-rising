@@ -1,7 +1,7 @@
 <template>
     <modal :action="l('settings.action')" @submit="submit" @open="load()" id="settings" dialogClass="w-100">
         <tabs style="flex-shrink:0;margin-bottom:10px" v-model="selectedTab"
-            :tabs="[l('settings.tabs.general'), l('settings.tabs.notifications'), 'F-Chat Rising 🦄', l('settings.tabs.hideAds'), l('settings.tabs.import')]"></tabs>
+            :tabs="[l('settings.tabs.general'), l('settings.tabs.notifications'), 'F-Chat Rising 🦄', 'Identity Politics 🦄', l('settings.tabs.hideAds'), l('settings.tabs.import')]"></tabs>
         <div v-show="selectedTab === '0'">
             <div class="form-group">
                 <label class="control-label" for="disallowedTags">{{l('settings.disallowedTags')}}</label>
@@ -200,7 +200,83 @@
             </div>
 
         </div>
+
         <div v-show="selectedTab === '3'">
+            <h5>Visibility</h5>
+
+            <div class="form-group filters">
+                <label class="control-label" for="risingFilter.hideAds">
+                    <input type="checkbox" id="risingFilter.hideAds" v-model="risingFilter.hideAds"/>
+                    Hide <b>ads</b> from matching characters
+                </label>
+
+                <label class="control-label" for="risingFilter.hideSearchResults">
+                    <input type="checkbox" id="risingFilter.hideSearchResults" v-model="risingFilter.hideSearchResults"/>
+                    Hide matching characters from <b>search results</b>
+                </label>
+
+                <label class="control-label" for="risingFilter.hideChannelMembers">
+                    <input type="checkbox" id="risingFilter.hideChannelMembers" v-model="risingFilter.hideChannelMembers"/>
+                    Hide matching characters from <b>channel members lists</b>
+                </label>
+
+                <label class="control-label" for="risingFilter.hidePublicChannelMessages">
+                    <input type="checkbox" id="risingFilter.hidePublicChannelMessages" v-model="risingFilter.hidePublicChannelMessages"/>
+                    Hide <b>public channel messages</b> from matching characters
+                </label>
+
+                <label class="control-label" for="risingFilter.hidePrivateChannelMessages">
+                    <input type="checkbox" id="risingFilter.hidePrivateChannelMessages" v-model="risingFilter.hidePrivateChannelMessages"/>
+                    Hide <b>private channel messages</b> from matching characters
+                </label>
+
+                <label class="control-label" for="risingFilter.hidePrivateMessages">
+                    <input type="checkbox" id="risingFilter.hidePrivateMessages" v-model="risingFilter.hidePrivateMessages"/>
+                    Hide <b>private messages</b> (PMs) from matching characters
+                </label>
+
+                <label class="control-label" for="risingFilter.penalizeMatches">
+                    <input type="checkbox" id="risingFilter.penalizeMatches" v-model="risingFilter.penalizeMatches"/>
+                    Penalize <b>match scores</b> for matching characters
+                </label>
+            </div>
+
+            <div class="form-group filters">
+                <label class="control-label" for="risingFilter.autoReply">
+                    <input type="checkbox" id="risingFilter.autoReply" v-model="risingFilter.autoReply"/>
+                    Send an automatic 'no thank you' response to matching characters if they message you
+                </label>
+            </div>
+
+            <h5>Character Age Match</h5>
+            <div class="form-group">Leave empty for no limit.</div>
+
+            <div class="form-group">
+                <label class="control-label" for="risingFilter.minAge">Characters younger than</label>
+                <input id="risingFilter.minAge" type="number" class="form-control" v-model="risingFilter.minAge"/>
+
+                <label class="control-label" for="risingFilter.maxAge">Characters older than</label>
+                <input id="risingFilter.maxAge" type="number" class="form-control" v-model="risingFilter.maxAge"/>
+            </div>
+
+            <h5>Type Match</h5>
+            <div class="form-group filters" >
+                <label class="control-label" :for="'risingFilter.smartFilters.' + key" v-for="(value, key) in smartFilterTypes">
+                    <input type="checkbox" :id="'risingFilter.smartFilters.' + key" v-bind:checked="getSmartFilter(key)" @change="(v) => setSmartFilter(key, v)"/>
+                    {{value.name}}
+                </label>
+            </div>
+
+            <h5>Exception List</h5>
+            <div class="form-group">Filters are not applied to these character names. Separate names with a linefeed.</div>
+
+            <div class="form-group">
+                <textarea class="form-control" :value="getExceptionList()" @change="(v) => setExceptionList(v)"></textarea>
+            </div>
+        </div>
+
+
+        <div v-show="selectedTab === '4'">
             <template v-if="hidden.length">
                 <div v-for="(user, i) in hidden">
                     <span class="fa fa-times" style="cursor:pointer" @click.stop="hidden.splice(i, 1)"></span>
@@ -209,7 +285,7 @@
             </template>
             <template v-else>{{l('settings.hideAds.empty')}}</template>
         </div>
-        <div v-show="selectedTab === '4'" style="display:flex;padding-top:10px">
+        <div v-show="selectedTab === '5'" style="display:flex;padding-top:10px">
             <select id="import" class="form-control" v-model="importCharacter" style="flex:1;margin-right:10px">
                 <option value="">{{l('settings.import.selectCharacter')}}</option>
                 <option v-for="character in availableImports" :value="character">{{character}}</option>
@@ -227,6 +303,10 @@
     import core from './core';
     import {Settings as SettingsInterface} from './interfaces';
     import l from './localize';
+    import { SmartFilterSettings, SmartFilterSelection } from '../learn/filter/types';
+    import { smartFilterTypes as smartFilterTypesOrigin } from '../learn/filter/types';
+    import _ from 'lodash';
+    import { matchesSmartFilters } from '../learn/filter/smart-filter';
 
     @Component({
         components: {modal: Modal, tabs: Tabs}
@@ -269,6 +349,9 @@
         risingShowUnreadOfflineCount!: boolean;
         risingColorblindMode!: boolean;
 
+        risingFilter!: SmartFilterSettings = {} as any;
+
+        smartFilterTypes = smartFilterTypesOrigin;
 
         async load(): Promise<void> {
             const settings = core.state.settings;
@@ -305,6 +388,7 @@
             this.risingShowUnreadOfflineCount = settings.risingShowUnreadOfflineCount;
 
             this.risingColorblindMode = settings.risingColorblindMode;
+            this.risingFilter = settings.risingFilter;
         }
 
         async doImport(): Promise<void> {
@@ -325,8 +409,14 @@
         }
 
         async submit(): Promise<void> {
+            const oldRisingFilter = JSON.parse(JSON.stringify(core.state.settings.risingFilter));
+
             const idleTimer = parseInt(this.idleTimer, 10);
             const fontSize = parseFloat(this.fontSize);
+
+            const minAge = this.getAsNumber(this.risingFilter.minAge);
+            const maxAge = this.getAsNumber(this.risingFilter.maxAge);
+
             core.state.settings = {
                 playSound: this.playSound,
                 clickOpensMessage: this.clickOpensMessage,
@@ -360,8 +450,62 @@
                 risingShowUnreadOfflineCount: this.risingShowUnreadOfflineCount,
 
                 risingColorblindMode: this.risingColorblindMode,
+                risingFilter: {
+                  ...this.risingFilter,
+                  minAge: (minAge !== null && maxAge !== null) ? Math.min(minAge, maxAge) : minAge,
+                  maxAge: (minAge !== null && maxAge !== null) ? Math.max(minAge, maxAge) : maxAge
+                }
             };
+
+            console.log('SETTINGS', minAge, maxAge, core.state.settings);
+
+            const newRisingFilter = JSON.parse(JSON.stringify(core.state.settings.risingFilter));
+
+            if (!_.isEqual(oldRisingFilter, newRisingFilter)) {
+              this.rebuildFilters();
+            }
+
             if(this.notifications) await core.notifications.requestPermission();
+        }
+
+        rebuildFilters() {
+          core.cache.profileCache.onEachInMemory(
+              (c) => {
+                const oldFiltered = c.match.isFiltered;
+
+                c.match.isFiltered = matchesSmartFilters(c.character.character, core.state.settings.risingFilter);
+
+                if (oldFiltered !== c.match.isFiltered) {
+                  core.cache.populateAllConversationsWithScore(c.character.character.name, c.match.matchScore, c.match.isFiltered);
+                }
+              }
+          );
+        }
+
+        getAsNumber(input: any): number | null {
+          if (_.isNil(input) || input === '') {
+            return null;
+          }
+
+          const n = parseInt(input, 10);
+
+          return !Number.isNaN(n) && Number.isFinite(n) ? n : null;
+        }
+
+        getExceptionList(): string {
+          return _.join(this.risingFilter.exceptionNames, '\n');
+        }
+
+        setExceptionList(v: any): void {
+          this.risingFilter.exceptionNames = _.map(_.split(v.target.value), (v) => _.trim(v));
+        }
+
+        getSmartFilter(key: keyof SmartFilterSelection): boolean {
+          return !!this.risingFilter.smartFilters?.[key];
+        }
+
+        setSmartFilter(key: keyof SmartFilterSelection , value: any): void {
+          this.risingFilter.smartFilters[key] = value.target.checked;
         }
     }
 </script>
@@ -370,5 +514,12 @@
     #settings .form-group {
         margin-left: 0;
         margin-right: 0;
+    }
+
+    #settings .form-group.filters label {
+      display: list-item;
+      margin: 0;
+      margin-left: 5px;
+      list-style: none;
     }
 </style>

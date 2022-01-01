@@ -449,15 +449,25 @@
 
         /* tslint:disable */
         getMessageWrapperClasses(): any {
+            const filter = core.state.settings.risingFilter;
+            const classes:any = {};
+
+            if (this.isPrivate(this.conversation)) {
+              classes['filter-channel-messages'] = filter.hidePrivateMessages;
+              return classes;
+            }
+
             if (!this.isChannel(this.conversation)) {
                 return {};
             }
 
             const conv = <Conversation.ChannelConversation>this.conversation;
-            const classes:any = {};
 
             classes['messages-' + conv.mode] = true;
             classes['hide-non-matching'] = !this.showNonMatchingAds;
+
+            classes['filter-ads'] = filter.hideAds;
+            classes['filter-channel-messages'] = conv.channel.owner !== '' ? filter.hidePrivateChannelMessages : filter.hidePublicChannelMessages;
 
             return classes;
         }
@@ -839,10 +849,24 @@
     }
 
 
-    .messages.hide-non-matching .message.message-score {
+    .messages.hide-non-matching .message.message-score,
+     {
         &.mismatch {
             display: none;
         }
+    }
+
+    .messages.filter-ads {
+      .message.filter-match.message-ad {
+        display: none;
+      }
+    }
+
+    .messages.filter-channel-messages {
+      .message.filter-match.message-message,
+      .message.filter-match.message-action {
+        display: none;
+      }
     }
 
     .message {

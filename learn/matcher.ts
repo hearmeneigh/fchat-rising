@@ -1235,9 +1235,17 @@ export class Matcher {
             + _.values(m.them.scores).length;
     }
 
+    static age(c: Character): number | null {
+        const rawAge = Matcher.getTagValue(TagId.Age, c);
+        const age = ((rawAge) && (rawAge.string)) ? parseInt(rawAge.string, 10) : null;
+
+        return age && !Number.isNaN(age) && Number.isFinite(age) ? age : null;
+    }
+
     static calculateSearchScoreForMatch(
         score: Scoring,
-        match: MatchReport
+        match: MatchReport,
+        penalty: number
     ): number {
         const totalScoreDimensions = match ? Matcher.countScoresTotal(match) : 0;
         const dimensionsAtScoreLevel = match ? (Matcher.countScoresAtLevel(match, score) || 0) : 0;
@@ -1289,10 +1297,11 @@ export class Matcher {
                 dimensionsAboveScoreLevel,
                 dimensionsAtScoreLevel,
                 theirAtLevelDimensions,
-                theirAboveLevelDimensions
+                theirAboveLevelDimensions,
+                penalty
             }
         );
 
-        return (atLevelScore + aboveLevelScore);
+        return (atLevelScore + aboveLevelScore + penalty);
     }
 }

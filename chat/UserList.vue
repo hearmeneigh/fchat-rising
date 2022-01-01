@@ -61,9 +61,26 @@
         }
 
         get filteredMembers(): ReadonlyArray<Channel.Member> {
-            if(this.filter.length === 0) return this.channel.sortedMembers;
-            const filter = new RegExp(this.filter.replace(/[^\w]/gi, '\\$&'), 'i');
-            return this.channel.sortedMembers.filter((member) => filter.test(member.character.name));
+          const members = this.prefilterMembers();
+
+          if (!core.state.settings.risingFilter.hideChannelMembers) {
+            return members;
+          }
+
+          return members.filter((m) => {
+            const p = core.cache.profileCache.getSync(m.character.name);
+
+            return !p || !p.match.isFiltered;
+          });
+        }
+
+        prefilterMembers(): ReadonlyArray<Channel.Member> {
+          if(this.filter.length === 0)
+            return this.channel.sortedMembers;
+
+          const filter = new RegExp(this.filter.replace(/[^\w]/gi, '\\$&'), 'i');
+
+          return this.channel.sortedMembers.filter((member) => filter.test(member.character.name));
         }
     }
 </script>

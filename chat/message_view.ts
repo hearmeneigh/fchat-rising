@@ -33,7 +33,8 @@ const userPostfix: {[key: number]: string | undefined} = {
         let classes = `message message-${Conversation.Message.Type[message.type].toLowerCase()}` + (separators ? ' message-block' : '') +
             (message.type !== Conversation.Message.Type.Event && message.sender.name === core.connection.character ? ' message-own' : '') +
             ((this.classes !== undefined) ? ` ${this.classes}` : '') +
-            ` ${this.scoreClasses}`;
+            ` ${this.scoreClasses}` +
+            ` ${this.filterClasses}`;
         if(message.type !== Conversation.Message.Type.Event) {
             children.push(
                 (message.type === Conversation.Message.Type.Action) ? createElement('i', { class: 'message-pre fas fa-star' }) : '',
@@ -71,6 +72,7 @@ export default class MessageView extends Vue {
     readonly logs?: true;
 
     scoreClasses = this.getMessageScoreClasses(this.message);
+    filterClasses = this.getMessageFilterClasses(this.message);
 
     scoreWatcher: (() => void) | null = ((this.message.type === Conversation.Message.Type.Ad) && (this.message.score === 0))
         ? this.$watch('message.score', () => this.scoreUpdate())
@@ -91,11 +93,13 @@ export default class MessageView extends Vue {
 
     // @Watch('message.score')
     scoreUpdate(): void {
-        const oldClasses = this.scoreClasses;
+        const oldScoreClasses = this.scoreClasses;
+        const oldFilterClasses = this.filterClasses;
 
         this.scoreClasses = this.getMessageScoreClasses(this.message);
+        this.filterClasses = this.getMessageFilterClasses(this.message);
 
-        if (this.scoreClasses !== oldClasses) {
+        if (this.scoreClasses !== oldScoreClasses || this.filterClasses !== oldFilterClasses) {
            this.$forceUpdate();
         }
 
@@ -115,4 +119,11 @@ export default class MessageView extends Vue {
         return `message-score ${Score.getClasses(message.score as Scoring)}`;
     }
 
+    getMessageFilterClasses(message: Conversation.Message): string {
+        if (!message.filterMatch) {
+            return '';
+        }
+
+        return 'filter-match';
+    }
 }

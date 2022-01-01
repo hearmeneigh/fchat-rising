@@ -54,6 +54,41 @@ export class Settings implements ISettings {
 
     risingShowUnreadOfflineCount = true;
     risingColorblindMode = false;
+
+    risingFilter = {
+        hideAds: false,
+        hideSearchResults: false,
+        hideChannelMembers: false,
+        hidePublicChannelMessages: false,
+        hidePrivateChannelMessages: false,
+        hidePrivateMessages: false,
+        penalizeMatches: false,
+        autoReply: true,
+        minAge: null,
+        maxAge: null,
+        smartFilters: {
+            ageplay: false,
+            anthro: false,
+            feral: false,
+            human: false,
+            hyper: false,
+            incest: false,
+            microMacro: false,
+            obesity: false,
+            pokemon: false,
+            pregnancy: false,
+            rape: false,
+            scat: false,
+            std: false,
+            taur: false,
+            gore: false,
+            vore: false,
+            unclean: false,
+            watersports: false,
+            zoophilia: false
+        },
+        exceptionNames: []
+    };
 }
 
 
@@ -114,6 +149,7 @@ export class Message implements Conversation.ChatMessage {
     isHighlight = false;
 
     score = 0;
+    filterMatch = false;
 
     constructor(readonly type: Conversation.Message.Type, readonly sender: Character, readonly text: string,
                 readonly time: Date = new Date()) {
@@ -126,6 +162,7 @@ export class EventMessage implements Conversation.EventMessage {
     readonly type = Conversation.Message.Type.Event;
 
     readonly score = 0;
+    filterMatch = false;
 
     constructor(readonly text: string, readonly time: Date = new Date()) {
     }

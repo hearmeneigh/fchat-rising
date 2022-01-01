@@ -7,6 +7,7 @@ import { Matcher, MatchReport } from './matcher';
 import { PermanentIndexedStore } from './store/types';
 import { CharacterImage, SimpleCharacter } from '../interfaces';
 import { Scoring } from './matcher-types';
+import { matchesSmartFilters } from './filter/smart-filter';
 
 
 export interface MetaRecord {
@@ -30,6 +31,8 @@ export interface CharacterMatchSummary {
     // dimensionsAboveScoreLevel: number;
     // totalScoreDimensions: number;
     searchScore: number;
+    isFiltered: boolean;
+    autoResponded?: boolean;
 }
 
 export interface CharacterCacheRecord {
@@ -49,6 +52,11 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
 
     setStore(store: PermanentIndexedStore): void {
         this.store = store;
+    }
+
+
+    onEachInMemory(cb: (c: CharacterCacheRecord, key: string) => void): void {
+        _.each(this.cache, cb);
     }
 
 
@@ -153,8 +161,13 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
         // const totalScoreDimensions = match ? Matcher.countScoresTotal(match) : 0;
         // const dimensionsAtScoreLevel = match ? (Matcher.countScoresAtLevel(match, score) || 0) : 0;
         // const dimensionsAboveScoreLevel = match ? (Matcher.countScoresAboveLevel(match, Math.max(score, Scoring.WEAK_MATCH))) : 0;
-        const searchScore = match ? Matcher.calculateSearchScoreForMatch(score, match) : 0;
-        const matchDetails = { matchScore: score, searchScore };
+        const isFiltered = matchesSmartFilters(c.character, core.state.settings.risingFilter);
+
+        const searchScore = match
+            ? Matcher.calculateSearchScoreForMatch(score, match, isFiltered && core.state.settings.risingFilter.penalizeMatches ? -2 : 0)
+            : 0;
+
+        const matchDetails = { matchScore: score, searchScore, isFiltered };
 
         if ((this.store) && (!skipStore)) {
             await this.store.storeProfile(c);

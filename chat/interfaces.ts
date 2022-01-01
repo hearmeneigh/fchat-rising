@@ -3,6 +3,7 @@ import {Connection} from '../fchat';
 
 import {Channel, Character} from '../fchat/interfaces';
 import { AdManager } from './ads/ad-manager';
+import { SmartFilterSettings } from '../learn/filter/types';
 export {Connection, Channel, Character} from '../fchat/interfaces';
 export const userStatuses: ReadonlyArray<Character.Status> = ['online', 'looking', 'away', 'busy', 'dnd'];
 export const channelModes: ReadonlyArray<Channel.Mode> = ['chat', 'ads', 'both'];
@@ -15,6 +16,7 @@ export namespace Conversation {
         readonly time: Date
 
         score: number;
+        filterMatch: boolean;
     }
 
     export interface EventMessage extends BaseMessage {
@@ -221,6 +223,8 @@ export namespace Settings {
 
         readonly risingShowUnreadOfflineCount: boolean;
         readonly risingColorblindMode: boolean;
+
+        readonly risingFilter: SmartFilterSettings;
     }
 }
 

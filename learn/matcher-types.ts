@@ -87,6 +87,22 @@ export enum BodyType {
     Taur = 145
 }
 
+export enum Build {
+    Lithe = 12,
+    Thin = 14,
+    Slim = 15,
+    Average = 16,
+    Toned = 17,
+    Muscular = 18,
+    Buff = 19,
+    Herculean = 20,
+    Tubby = 21,
+    Obese = 22,
+    Curvy = 129,
+    Chubby = 200,
+    Varies = 201
+}
+
 export enum KinkPreference {
     Favorite = 1,
     Yes = 0.5,
@@ -113,7 +129,119 @@ export enum Kink {
     AnthroCharacters = 587,
     Humans = 609,
 
-    Mammals = 224
+    Mammals = 224,
+
+    Abrasions = 1,
+    Bloodplay = 4,
+    Branding = 492,
+    BreastNippleTorture = 36,
+    Burning = 21,
+    Castration = 20,
+    Death = 28,
+    Emasculation = 508,
+    ExecutionMurder = 717,
+    GenitalTorture = 276,
+    Gore = 689,
+    Impalement = 270,
+    Menses = 99,
+    Mutilation = 96,
+    Necrophilia = 308,
+    NonsexualPain = 486,
+    NonsexualTorture = 103,
+    Nullification = 334,
+    Piercing = 479,
+    SexualTorture  = 174,
+    SwallowingBlood = 202,
+    ToothRemoval = 690,
+    WoundFucking = 691,
+
+    HyperScat = 415,
+    Scat=  164,
+    ScatTorture = 369,
+    Soiling = 509,
+    SwallowingFeces = 201,
+
+    HyperWatersports = 414,
+    PissEnemas = 533,
+    SwallowingUrine = 203,
+    Watersports = 59,
+    Wetting = 371,
+
+    BelchingBurping = 709,
+    DirtyFeet = 706,
+    ExtremeMusk = 335,
+    Farting = 549,
+    Filth = 707,
+    Messy = 89,
+    Slob = 570,
+    Smegma = 708,
+    SwallowingVomit = 560,
+    UnwashedMusk = 705,
+    Vomiting = 184,
+
+    Absorption = 239,
+    AlternativeVore = 244,
+    AnalVore = 209,
+    Cannibalism = 714,
+    CockVore = 208,
+    CookingVore = 716,
+    Digestion = 238,
+    Disposal = 241,
+    HardVore = 66,
+    RealisticVore = 242,
+    SoftVore = 73,
+    Unbirthing = 210,
+    UnrealisticVore = 243,
+    VoreBeingPredator = 422,
+    VoreBeingPrey = 423,
+
+    AlternativePregnancy = 702,
+    AnalPregnancy = 704,
+    Birthing = 461,
+    ExtremePregnancy = 272,
+    MalePregnancy = 198,
+    Pregnancy = 154,
+
+    STDs = 656,
+
+    PseudoRape = 522,
+    DubConsensual = 657,
+    Nonconsensual = 100,
+
+    Incest = 127,
+    IncestParental = 646,
+    IncestSiblings = 647,
+    ParentChildPlay = 304,
+    ForcedIncest = 53,
+
+    AgeProgression = 622,
+    AgeRegression = 621,
+    Infantilism = 497,
+
+    Zoophilia = 218,
+    AnimalsFerals = 487,
+    Quadrupeds = 382,
+
+    HyperAsses = 595,
+    HyperBalls = 233,
+    HyperBreasts = 594,
+    HyperCocks = 60,
+    HyperFat = 377,
+    HyperMuscle = 376,
+    HyperVaginas = 593,
+    HyperVoluptous = 378,
+    HyperMuscleGrowth = 389,
+
+    MacroAsses = 596,
+    MacroBalls = 550,
+    MacroBreasts = 91,
+    MacroCocks = 61,
+    Macrophilia = 285,
+    MegaMacro = 374,
+    Microphilia = 286,
+    SizeDifferencesMicroMacro = 502,
+    GrowthMacro = 384,
+    ShrinkingMicro = 387
 }
 
 export enum FurryPreference {

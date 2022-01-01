@@ -8,6 +8,7 @@ import {Channel, Character, Connection, Conversation, Logs, Notifications, Setti
 import { AdCoordinatorGuest } from './ads/ad-coordinator-guest';
 import { GeneralSettings } from '../electron/common';
 import { SiteSession } from '../site/site-session';
+import _ from 'lodash';
 
 function createBBCodeParser(): BBCodeParser {
     const parser = new BBCodeParser();
@@ -73,7 +74,14 @@ const data = {
         vue.$watch(getter, callback);
     },
     async reloadSettings(): Promise<void> {
-        state._settings = Object.assign(new SettingsImpl(), await core.settingsStore.get('settings'));
+        const s = await core.settingsStore.get('settings');
+
+        state._settings = _.mergeWith(new SettingsImpl(), s, (oVal, sVal) => {
+            if (_.isArray(oVal) && _.isArray(sVal)) {
+                return sVal;
+            }
+        });
+
         const hiddenUsers = await core.settingsStore.get('hiddenUsers');
         state.hiddenUsers = hiddenUsers !== undefined ? hiddenUsers : [];
     }

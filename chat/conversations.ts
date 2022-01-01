@@ -4,14 +4,16 @@ import {decodeHTML} from '../fchat/common';
 import { AdManager } from './ads/ad-manager';
 import { characterImage, ConversationSettings, EventMessage, Message, messageToString } from './common';
 import core from './core';
-import {Channel, Character, Conversation as Interfaces} from './interfaces';
+import { Channel, Character, Conversation as Interfaces } from './interfaces';
 import l from './localize';
 import {CommandContext, isAction, isCommand, isWarn, parse as parseCommand} from './slash_commands';
 import MessageType = Interfaces.Message.Type;
 import {EventBus} from './preview/event-bus';
 import throat from 'throat';
 import Bluebird from 'bluebird';
-import log from 'electron-log'; //tslint:disable-line:match-default-export-name
+import log from 'electron-log';
+import isChannel = Interfaces.isChannel;
+import isPrivate = Interfaces.isPrivate; //tslint:disable-line:match-default-export-name
 
 function createMessage(this: any, type: MessageType, sender: Character, text: string, time?: Date): Message {
     if(type === MessageType.Message && isAction(text)) {
@@ -45,7 +47,7 @@ abstract class Conversation implements Interfaces.Conversation {
     // private loadedMore = false;
     adManager: AdManager;
 
-    protected static readonly conversationThroat = throat(1); // make sure user posting and ad posting won't get in each others' way
+    public static readonly conversationThroat = throat(1); // make sure user posting and ad posting won't get in each others' way
 
     constructor(readonly key: string, public _isPinned: boolean) {
         this.adManager = new AdManager(this);
@@ -161,7 +163,7 @@ abstract class Conversation implements Interfaces.Conversation {
 
     protected static readonly POST_DELAY = 1250;
 
-    protected static async testPostDelay(): Promise<void> {
+    public static async testPostDelay(): Promise<void> {
         const lastPostDelta = Date.now() - core.cache.getLastPost().getTime();
 
         // console.log('Last Post Delta', lastPostDelta, ((lastPostDelta < Conversation.POST_DELAY) && (lastPostDelta > 0)));
@@ -691,9 +693,41 @@ export default function(this: any): Interfaces.State {
         const conversation = state.channelMap[data.channel.toLowerCase()];
         if(conversation === undefined) return core.channels.leave(data.channel);
         if(char.isIgnored) return;
+
         const message = createMessage(MessageType.Message, char, decodeHTML(data.message), time);
         EventBus.$emit('channel-message', { message, channel: conversation });
         await conversation.addMessage(message);
+// message.type === MessageType.Message
+        if (
+            (isPrivate(conversation) && core.state.settings.risingFilter.hidePrivateMessages) ||
+            (isChannel(conversation) && conversation.channel.owner === '' && core.state.settings.risingFilter.hidePublicChannelMessages) ||
+            (isChannel(conversation) && conversation.channel.owner !== '' && core.state.settings.risingFilter.hidePrivateChannelMessages)
+        ) {
+            const cachedProfile = core.cache.profileCache.getSync(char.name) || await core.cache.profileCache.get(char.name);
+
+            if (cachedProfile && isPrivate(conversation) && core.state.settings.risingFilter.autoReply && !cachedProfile.match.autoResponded) {
+                cachedProfile.match.autoResponded = true;
+
+                log.debug('filter.autoresponse', { name: char.name });
+
+                void Conversation.conversationThroat(
+                  async() => {
+                        await Conversation.testPostDelay();
+
+                      // tslint:disable-next-line:prefer-template
+                        const m = '[Automated message] Sorry, the player of this character has indicated that they are not interested in characters matching your profile. They will not see your message.\n\n' +
+                            'Need a filter for yourself? Try out [url=https://mrstallion.github.io/fchat-rising/]F-Chat Rising[/url]';
+
+                        core.connection.send('PRI', {recipient: char.name, message: m});
+                        core.cache.markLastPostTime();
+                      }
+                );
+            }
+
+            if (cachedProfile && cachedProfile.match.isFiltered) {
+                return;
+            }
+        }
 
         const words = conversation.settings.highlightWords.slice();
         if(conversation.settings.defaultHighlights) words.push(...core.state.settings.highlightWords);

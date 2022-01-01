@@ -270,7 +270,7 @@
             core.connection.onMessage('FKS', async (data) => {
                 const results = data.characters.map((x) => ({ character: core.characters.get(x), profile: null }))
                     .filter((x) => core.state.hiddenUsers.indexOf(x.character.name) === -1 && !x.character.isIgnored)
-                    .filter((x) => this.isSpeciesMatch(x) && this.isBodyTypeMatch(x))
+                    .filter((x) => this.isSpeciesMatch(x) && this.isBodyTypeMatch(x) && this.isSmartFilterMatch(x))
                     .sort(sort);
 
                 // pre-warm cache
@@ -397,6 +397,14 @@
 
             const bodytype = options!.listitems.filter(x => x.name === 'bodytype').find(x => +x.id === bodytypeId)
             return this.data.bodytypes.indexOf(bodytype!.value) > -1
+        }
+
+        isSmartFilterMatch(result: SearchResult) {
+          if (!core.state.settings.risingFilter.hideSearchResults) {
+            return true;
+          }
+
+          return result.profile ? !result.profile?.match.isFiltered : true;
         }
 
         getSpeciesOptions(): SearchSpecies[] {

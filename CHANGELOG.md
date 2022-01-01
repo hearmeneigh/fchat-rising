@@ -1,5 +1,8 @@
 # Changelog
 
+## Canary
+* Added a way to hide/filter out characters, messages, and ads (Settings > Identity Politics)
+
 ## 1.16.2
 * Fixed broken auto-ads
 

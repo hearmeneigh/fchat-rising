@@ -78,7 +78,7 @@ export class CacheManager {
             const c = await this.profileCache.get(name);
 
             if (c) {
-                this.updateAdScoringForProfile(c.character, c.match.matchScore);
+                this.updateAdScoringForProfile(c.character, c.match.matchScore, c.match.isFiltered);
                 return;
             }
         }
@@ -111,7 +111,7 @@ export class CacheManager {
             const c = await methods.characterData(name, -1, true);
             const r = await this.profileCache.register(c);
 
-            this.updateAdScoringForProfile(c, r.match.matchScore);
+            this.updateAdScoringForProfile(c, r.match.matchScore, r.match.isFiltered);
 
             return c;
         } catch (err) {
@@ -122,7 +122,7 @@ export class CacheManager {
     }
 
 
-    updateAdScoringForProfile(c: ComplexCharacter, score: number): void {
+    updateAdScoringForProfile(c: ComplexCharacter, score: number, isFiltered: boolean): void {
         EventBus.$emit(
             'character-score',
             {
@@ -131,7 +131,7 @@ export class CacheManager {
             }
         );
 
-        this.populateAllConversationsWithScore(c.character.name, score);
+        this.populateAllConversationsWithScore(c.character.name, score, isFiltered);
     }
 
 
@@ -446,9 +446,10 @@ export class CacheManager {
           // }
 
           msg.score = p.match.matchScore;
+          msg.filterMatch = p.match.isFiltered;
 
           if (populateAll) {
-            this.populateAllConversationsWithScore(char.name, p.match.matchScore);
+            this.populateAllConversationsWithScore(char.name, p.match.matchScore, p.match.isFiltered);
           }
       }
 
@@ -457,7 +458,7 @@ export class CacheManager {
 
 
     // tslint:disable-next-line: prefer-function-over-method
-    protected populateAllConversationsWithScore(characterName: string, score: number): void {
+    public populateAllConversationsWithScore(characterName: string, score: number, isFiltered: boolean): void {
         _.each(
             core.conversations.channelConversations,
             (ch: ChannelConversation) => {
@@ -467,6 +468,7 @@ export class CacheManager {
                             // console.log('Update score', score, ch.name, m.sender.name, m.text, m.id);
 
                             m.score = score;
+                            m.filterMatch = isFiltered;
                         }
                     }
                 );
