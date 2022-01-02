@@ -270,7 +270,7 @@
             core.connection.onMessage('FKS', async (data) => {
                 const results = data.characters.map((x) => ({ character: core.characters.get(x), profile: null }))
                     .filter((x) => core.state.hiddenUsers.indexOf(x.character.name) === -1 && !x.character.isIgnored)
-                    .filter((x) => this.isSpeciesMatch(x) && this.isBodyTypeMatch(x) && this.isSmartFilterMatch(x))
+                    .filter((x) => this.isSpeciesMatch(x) && this.isBodyTypeMatch(x) && !this.isSmartFiltered(x))
                     .sort(sort);
 
                 // pre-warm cache
@@ -348,7 +348,7 @@
         private resort(results = this.results) {
           this.results = (_.filter(
               results,
-              (x) => this.isSpeciesMatch(x) && this.isBodyTypeMatch(x)
+              (x) => this.isSpeciesMatch(x) && this.isBodyTypeMatch(x) && !this.isSmartFiltered(x)
           ) as SearchResult[]).sort(sort);
         }
 
@@ -399,12 +399,12 @@
             return this.data.bodytypes.indexOf(bodytype!.value) > -1
         }
 
-        isSmartFilterMatch(result: SearchResult) {
+        isSmartFiltered(result: SearchResult) {
           if (!core.state.settings.risingFilter.hideSearchResults) {
-            return true;
+            return false;
           }
 
-          return result.profile ? !result.profile?.match.isFiltered : true;
+          return !!result.profile?.match.isFiltered;
         }
 
         getSpeciesOptions(): SearchSpecies[] {

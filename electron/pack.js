@@ -53,7 +53,8 @@ require('electron-packager')({
     icon: path.join(__dirname, 'build', 'icon'),
     ignore: ['\.map$'],
     osxSign: process.argv.length > 2 ? {identity: process.argv[2]} : false,
-    prune: false
+    prune: false,
+    arch: process.platform === 'darwin' ? ['x64', 'arm64'] : undefined
 }).then((appPaths) => {
     if (process.env.SKIP_INSTALLER) {
         return;
@@ -84,33 +85,38 @@ require('electron-packager')({
         }).catch((e) => console.error(`Error while creating installer: ${e.message}`));
     } else if(process.platform === 'darwin') {
         console.log('Creating Mac DMG');
-        const target = path.join(distDir, `F-Chat Rising.dmg`);
-        if(fs.existsSync(target)) fs.unlinkSync(target);
-        const appPath = path.join(appPaths[0], 'F-Chat.app');
-        if(process.argv.length <= 2) console.warn('Warning: Creating unsigned DMG');
-        require('appdmg')({
-            basepath: appPaths[0],
-            target,
-            specification: {
-                title: 'F-Chat Rising',
-                icon: path.join(__dirname, 'build', 'icon.png'),
-                background: path.join(__dirname, 'build', 'dmg.png'),
-                contents: [{x: 555, y: 345, type: 'link', path: '/Applications'}, {x: 555, y: 105, type: 'file', path: appPath}],
-                'code-sign': process.argv.length > 2 ? {
-                    'signing-identity': process.argv[2]
-                } : undefined
-            }
-        }).on('error', console.error);
-        const zipName = `F-Chat_Rising_${pkg.version}.zip`;
-        const zipPath = path.join(distDir, zipName);
-        if(fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
-        const child = child_process.spawn('zip', ['-r', '-y', '-9', zipPath, 'F-Chat.app'], {cwd: appPaths[0]});
-        child.stdout.on('data', () => {});
-        child.stderr.on('data', (data) => console.error(data.toString()));
-        fs.writeFileSync(path.join(distDir, 'updates.json'), JSON.stringify({
-            releases: [{version: pkg.version, updateTo: {url: 'https://client.f-list.net/darwin/' + zipName}}],
-            currentRelease: pkg.version
-        }));
+
+        _.each([{ name: 'Intel', path: appPaths[0] }, { name: 'M1', path: appPaths[1] }], (arch) => {
+            console.log(arch.name, arch.path);
+
+            const target = path.join(distDir, `F-Chat Rising ${arch.name}.dmg`);
+            if(fs.existsSync(target)) fs.unlinkSync(target);
+            const appPath = path.join(arch.path, 'F-Chat.app');
+            if(process.argv.length <= 2) console.warn('Warning: Creating unsigned DMG');
+            require('appdmg')({
+                basepath: arch.path,
+                target,
+                specification: {
+                    title: 'F-Chat Rising',
+                    icon: path.join(__dirname, 'build', 'icon.png'),
+                    background: path.join(__dirname, 'build', 'dmg.png'),
+                    contents: [{x: 555, y: 345, type: 'link', path: '/Applications'}, {x: 555, y: 105, type: 'file', path: appPath}],
+                    'code-sign': process.argv.length > 2 ? {
+                        'signing-identity': process.argv[2]
+                    } : undefined
+                }
+            }).on('error', console.error);
+            const zipName = `F-Chat_Rising_${arch.name}_${pkg.version}.zip`;
+            const zipPath = path.join(distDir, zipName);
+            if(fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
+            const child = child_process.spawn('zip', ['-r', '-y', '-9', zipPath, 'F-Chat.app'], {cwd: arch.path});
+            child.stdout.on('data', () => {});
+            child.stderr.on('data', (data) => console.error(data.toString()));
+            fs.writeFileSync(path.join(distDir, 'updates.json'), JSON.stringify({
+                releases: [{version: pkg.version, updateTo: {url: 'https://client.f-list.net/darwin/' + zipName}}],
+                currentRelease: pkg.version
+            }));
+        });
     } else {
         console.log('Creating Linux AppImage');
         fs.renameSync(path.join(appPaths[0], 'F-Chat'), path.join(appPaths[0], 'AppRun'));

@@ -1,7 +1,7 @@
 <template>
     <modal :action="l('settings.action')" @submit="submit" @open="load()" id="settings" dialogClass="w-100">
         <tabs style="flex-shrink:0;margin-bottom:10px" v-model="selectedTab"
-            :tabs="[l('settings.tabs.general'), l('settings.tabs.notifications'), 'F-Chat Rising 🦄', 'Identity Politics 🦄', l('settings.tabs.hideAds'), l('settings.tabs.import')]"></tabs>
+            :tabs="[l('settings.tabs.general'), l('settings.tabs.notifications'), 'F-Chat Rising 🦄', 'Smart Filters 🦄', l('settings.tabs.hideAds'), l('settings.tabs.import')]"></tabs>
         <div v-show="selectedTab === '0'">
             <div class="form-group">
                 <label class="control-label" for="disallowedTags">{{l('settings.disallowedTags')}}</label>
@@ -202,6 +202,14 @@
         </div>
 
         <div v-show="selectedTab === '3'">
+            <div class="warning">
+              <h5>Danger Zone!</h5>
+              <div>By activating filtering, you may no longer be able to see or receive all messages from F-Chat.
+              Filters do not apply to friends or bookmarked characters.</div>
+
+              <div>Beta version. Some of these features and behaviors may be removed or significantly changed in the future.</div>
+            </div>
+
             <h5>Visibility</h5>
 
             <div class="form-group filters">
@@ -235,9 +243,9 @@
                     Hide <b>private messages</b> (PMs) from matching characters
                 </label>
 
-                <label class="control-label" for="risingFilter.penalizeMatches">
-                    <input type="checkbox" id="risingFilter.penalizeMatches" v-model="risingFilter.penalizeMatches"/>
-                    Penalize <b>match scores</b> for matching characters
+                <label class="control-label" for="risingFilter.showFilterIcon">
+                    <input type="checkbox" id="risingFilter.showFilterIcon" v-model="risingFilter.showFilterIcon"/>
+                    Show <b>filter icon</b> on matching characters
                 </label>
             </div>
 
@@ -246,17 +254,27 @@
                     <input type="checkbox" id="risingFilter.autoReply" v-model="risingFilter.autoReply"/>
                     Send an automatic 'no thank you' response to matching characters if they message you
                 </label>
+
+                <label class="control-label" for="risingFilter.penalizeMatches">
+                    <input type="checkbox" id="risingFilter.penalizeMatches" v-model="risingFilter.penalizeMatches"/>
+                    Penalize <b>match scores</b> for matching characters
+                </label>
+
+                <label class="control-label" for="risingFilter.rewardNonMatches">
+                    <input type="checkbox" id="risingFilter.rewardNonMatches" v-model="risingFilter.rewardNonMatches"/>
+                    Increase <b>match scores</b> for non-matching characters
+                </label>
             </div>
 
             <h5>Character Age Match</h5>
             <div class="form-group">Leave empty for no limit.</div>
 
             <div class="form-group">
-                <label class="control-label" for="risingFilter.minAge">Characters younger than</label>
-                <input id="risingFilter.minAge" type="number" class="form-control" v-model="risingFilter.minAge"/>
+                <label class="control-label" for="risingFilter.minAge">Characters younger than (years)</label>
+                <input id="risingFilter.minAge" type="number" class="form-control" v-model="risingFilter.minAge" placeholder="Enter age" />
 
-                <label class="control-label" for="risingFilter.maxAge">Characters older than</label>
-                <input id="risingFilter.maxAge" type="number" class="form-control" v-model="risingFilter.maxAge"/>
+                <label class="control-label" for="risingFilter.maxAge">Characters older than (years)</label>
+                <input id="risingFilter.maxAge" type="number" class="form-control" v-model="risingFilter.maxAge" placeholder="Enter age" />
             </div>
 
             <h5>Type Match</h5>
@@ -271,7 +289,7 @@
             <div class="form-group">Filters are not applied to these character names. Separate names with a linefeed.</div>
 
             <div class="form-group">
-                <textarea class="form-control" :value="getExceptionList()" @change="(v) => setExceptionList(v)"></textarea>
+                <textarea class="form-control" :value="getExceptionList()" @change="(v) => setExceptionList(v)" placeholder="Enter names"></textarea>
             </div>
         </div>
 
@@ -510,7 +528,7 @@
     }
 </script>
 
-<style>
+<style lang="scss">
     #settings .form-group {
         margin-left: 0;
         margin-right: 0;
@@ -521,5 +539,24 @@
       margin: 0;
       margin-left: 5px;
       list-style: none;
+    }
+
+    #settings .warning {
+      border: 1px solid var(--warning);
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 3px;
+
+      div {
+        margin-top: 10px;
+      }
+    }
+
+    #settings .form-group.filters.age label {
+      padding-top: 10px;
+    }
+
+    #settings .form-group.filters.age  input {
+      margin-left: 5px;
     }
 </style>

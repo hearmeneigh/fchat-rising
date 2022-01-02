@@ -26,6 +26,14 @@
 
         <match-tags v-if="match" :match="match"></match-tags>
 
+        <div class="filter-matches" v-if="smartFilterIsFiltered">
+          <h4>Smart Filter Matches</h4>
+
+          <span class="tags">
+            <span v-for="filterName in smartFilterDetails" class="smart-filter-tag" :class="filterName">{{ (smartFilterLabels[filterName] || {}).name }}</span>
+          </span>
+        </div>
+
 <!--        <div v-if="customs">-->
 <!--          <span v-for="c in customs" :class="Score.getClasses(c.score)">{{c.name}}</span>-->
 <!--        </div>-->
@@ -72,6 +80,8 @@ import {
 import { BBCodeView } from '../../bbcode/view';
 import { EventBus } from './event-bus';
 import { Character, CustomKink } from '../../interfaces';
+import { matchesSmartFilters, testSmartFilters } from '../../learn/filter/smart-filter';
+import { smartFilterTypes } from '../../learn/filter/types';
 
 interface CustomKinkWithScore extends CustomKink {
   score: number;
@@ -96,6 +106,15 @@ export default class CharacterPreview extends Vue {
   statusClasses?: StatusClasses;
   latestAd?: AdCachedPosting;
   statusMessage?: string;
+
+  smartFilterIsFiltered?: boolean;
+  smartFilterDetails?: string[];
+
+  smartFilterLabels: Record<string, { name: string }> = {
+    ...smartFilterTypes,
+    ageMin: { name: 'Min age' },
+    ageMax: { name: 'Max age' }
+  };
 
   age?: string;
   sexualOrientation?: string;
@@ -170,6 +189,9 @@ export default class CharacterPreview extends Vue {
     this.customs = undefined;
     this.ownCharacter = core.characters.ownProfile;
 
+    this.smartFilterIsFiltered = false;
+    this.smartFilterDetails = [];
+
     this.updateOnlineStatus();
     this.updateAdStatus();
 
@@ -177,9 +199,34 @@ export default class CharacterPreview extends Vue {
       this.character = await this.getCharacterData(characterName);
       this.match = Matcher.identifyBestMatchReport(this.ownCharacter!.character, this.character!.character);
 
+      this.updateSmartFilterReport();
       this.updateCustoms();
       this.updateDetails();
     }, 0);
+  }
+
+  updateSmartFilterReport() {
+      if (!this.character) {
+        return;
+      }
+
+      this.smartFilterIsFiltered = matchesSmartFilters(this.character.character, core.state.settings.risingFilter);
+      this.smartFilterDetails = [];
+
+      if (!this.smartFilterIsFiltered) {
+        return;
+      }
+
+      const results = testSmartFilters(this.character.character, core.state.settings.risingFilter);
+
+      if (!results) {
+        return;
+      }
+
+      this.smartFilterDetails = [
+          ..._.map(_.filter(_.toPairs(results.ageCheck), (v) => v[1]), (v) => v[0]),
+          ..._.map(_.filter(_.toPairs(results.filters), (v) => v[1].isFiltered), (v: any) => v[0])
+      ];
   }
 
   updateOnlineStatus(): void {
@@ -384,12 +431,30 @@ export default class CharacterPreview extends Vue {
     }
 
     .status-message,
-    .latest-ad-message {
+    .latest-ad-message,
+    .filter-matches {
       display: block;
       background-color: rgba(0,0,0,0.2);
       padding: 10px;
       border-radius: 5px;
       margin-top: 1.3rem;
+    }
+
+    .filter-matches {
+      .tags {
+        margin-top: 10px;
+        display: block;
+      }
+
+      .smart-filter-tag {
+          display: inline-block;
+          color: var(--messageTimeFgColor);
+          margin-right: 4px;
+          background-color: var(--messageTimeBgColor);
+          border-radius: 2px;
+          padding-left: 3px;
+          padding-right: 3px;
+      }
     }
 
     .character-avatar {

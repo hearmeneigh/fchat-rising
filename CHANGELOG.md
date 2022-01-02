@@ -1,7 +1,8 @@
 # Changelog
 
-## Canary
-* Added a way to hide/filter out characters, messages, and ads (Settings > Identity Politics)
+## 1.17.0
+* Added a way to hide/filter out characters, messages, and ads (Settings > Smart Filters)
+* Added MacOS M1 build
 
 ## 1.16.2
 * Fixed broken auto-ads

@@ -161,10 +161,11 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
         // const totalScoreDimensions = match ? Matcher.countScoresTotal(match) : 0;
         // const dimensionsAtScoreLevel = match ? (Matcher.countScoresAtLevel(match, score) || 0) : 0;
         // const dimensionsAboveScoreLevel = match ? (Matcher.countScoresAboveLevel(match, Math.max(score, Scoring.WEAK_MATCH))) : 0;
-        const isFiltered = matchesSmartFilters(c.character, core.state.settings.risingFilter);
+        const risingFilter = core.state.settings.risingFilter;
+        const isFiltered = matchesSmartFilters(c.character, risingFilter);
 
         const searchScore = match
-            ? Matcher.calculateSearchScoreForMatch(score, match, isFiltered && core.state.settings.risingFilter.penalizeMatches ? -2 : 0)
+            ? Matcher.calculateSearchScoreForMatch(score, match, (isFiltered && risingFilter.penalizeMatches) ? -2 : (!isFiltered && risingFilter.rewardNonMatches) ? 1 : 0)
             : 0;
 
         const matchDetails = { matchScore: score, searchScore, isFiltered };

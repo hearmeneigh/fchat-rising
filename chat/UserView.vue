@@ -1,5 +1,5 @@
 <!-- Linebreaks inside this template will break BBCode views -->
-<template><span :class="userClass" v-bind:bbcodeTag.prop="'user'" v-bind:character.prop="character" v-bind:channel.prop="channel" @mouseover.prevent="show()" @mouseenter.prevent="show()" @mouseleave.prevent="dismiss()" @click.middle.prevent.stop="toggleStickyness()" @click.right.passive="dismiss(true)" @click.left.passive="dismiss(true)"><span v-if="!!statusClass" :class="statusClass"></span><span v-if="!!rankIcon" :class="rankIcon"></span>{{character.name}}<span v-if="!!matchClass" :class="matchClass">{{getMatchScoreTitle(matchScore)}}</span></span></template>
+<template><span :class="userClass" v-bind:bbcodeTag.prop="'user'" v-bind:character.prop="character" v-bind:channel.prop="channel" @mouseover.prevent="show()" @mouseenter.prevent="show()" @mouseleave.prevent="dismiss()" @click.middle.prevent.stop="toggleStickyness()" @click.right.passive="dismiss(true)" @click.left.passive="dismiss(true)"><span v-if="!!statusClass" :class="statusClass"></span><span v-if="!!rankIcon" :class="rankIcon"></span><span v-if="!!smartFilterIcon" :class="smartFilterIcon"></span>{{character.name}}<span v-if="!!matchClass" :class="matchClass">{{getMatchScoreTitle(matchScore)}}</span></span></template>
 
 
 <script lang="ts">
@@ -36,6 +36,7 @@ export function getStatusIcon(status: Character.Status): string {
 
 export interface StatusClasses {
   rankIcon: string | null;
+  smartFilterIcon: string | null;
   statusClass: string | null;
   matchClass: string | null;
   matchScore: number | string | null;
@@ -54,6 +55,7 @@ export function getStatusClasses(
     let statusClass = null;
     let matchClass = null;
     let matchScore = null;
+    let smartFilterIcon: string | null = null;
 
     if(character.isChatOp) {
         rankIcon = 'far fa-gem';
@@ -68,21 +70,28 @@ export function getStatusClasses(
     if ((showStatus) || (character.status === 'crown'))
         statusClass = `fa-fw ${getStatusIcon(character.status)}`;
 
-    if ((core.state.settings.risingAdScore) && (showMatch)) {
-        const cache = core.cache.profileCache.getSync(character.name);
+    const cache = ((showMatch) && ((core.state.settings.risingAdScore) || (core.state.settings.risingFilter.showFilterIcon)))
+      ? core.cache.profileCache.getSync(character.name)
+      : undefined;
 
-        if (cache) {
-            if ((cache.match.searchScore >= kinkMatchWeights.unicornThreshold) && (cache.match.matchScore === Scoring.MATCH)) {
-              matchClass = 'match-found unicorn';
-              matchScore = 'unicorn';
-            } else {
-              matchClass = `match-found ${Score.getClasses(cache.match.matchScore)}`;
-              matchScore = cache.match.matchScore;
-            }
+    // undefined == not interested
+    // null == no cache hit
+    if (cache === null) {
+        void core.cache.addProfile(character.name);
+    }
+
+    if ((core.state.settings.risingAdScore) && (showMatch) && (cache)) {
+        if ((cache.match.searchScore >= kinkMatchWeights.unicornThreshold) && (cache.match.matchScore === Scoring.MATCH)) {
+          matchClass = 'match-found unicorn';
+          matchScore = 'unicorn';
         } else {
-            /* tslint:disable-next-line no-floating-promises */
-            core.cache.addProfile(character.name);
+          matchClass = `match-found ${Score.getClasses(cache.match.matchScore)}`;
+          matchScore = cache.match.matchScore;
         }
+    }
+
+    if (core.state.settings.risingFilter.showFilterIcon && cache?.match.isFiltered) {
+      smartFilterIcon = 'user-filter fas fa-filter';
     }
 
     const gender = character.gender !== undefined ? character.gender.toLowerCase() : 'none';
@@ -98,6 +107,7 @@ export function getStatusClasses(
       matchClass,
       matchScore,
       userClass,
+      smartFilterIcon,
       isBookmark
     };
 }
@@ -130,6 +140,7 @@ export default class UserView extends Vue {
     userClass = '';
 
     rankIcon: string | null = null;
+    smartFilterIcon: string | null = null;
     statusClass: string | null = null;
     matchClass: string | null = null;
     matchScore: number | string | null = null;
@@ -198,6 +209,7 @@ export default class UserView extends Vue {
       const res = getStatusClasses(this.character, this.channel, !!this.showStatus, !!this.bookmark, !!this.match);
 
       this.rankIcon = res.rankIcon;
+      this.smartFilterIcon = res.smartFilterIcon;
       this.statusClass = res.statusClass;
       this.matchClass = res.matchClass;
       this.matchScore = res.matchScore;

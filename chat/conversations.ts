@@ -13,7 +13,6 @@ import throat from 'throat';
 import Bluebird from 'bluebird';
 import log from 'electron-log';
 import isChannel = Interfaces.isChannel;
-import isPrivate = Interfaces.isPrivate; //tslint:disable-line:match-default-export-name
 
 function createMessage(this: any, type: MessageType, sender: Character, text: string, time?: Date): Message {
     if(type === MessageType.Message && isAction(text)) {
@@ -536,10 +535,16 @@ class State implements Interfaces.State {
             this.channelConversations.some((x) => x.unread === Interfaces.UnreadState.Mention);
     }
 
-    getPrivate(character: Character): PrivateConversation {
+    getPrivate(character: Character): PrivateConversation;
+    getPrivate(character: Character, noCreate: boolean = false): PrivateConversation | undefined {
         const key = character.name.toLowerCase();
         let conv = state.privateMap[key];
         if(conv !== undefined) return conv;
+
+        if (noCreate) {
+            return;
+        }
+
         conv = new PrivateConversation(character);
         this.privateConversations.push(conv);
         this.privateMap[key] = conv;
@@ -613,6 +618,55 @@ function isOfInterest(this: any, character: Character): boolean {
     return character.isFriend || character.isBookmarked || state.privateMap[character.name.toLowerCase()] !== undefined;
 }
 
+async function testSmartFilterForPrivateMessage(fromChar: Character.Character): Promise<boolean> {
+    const cachedProfile = core.cache.profileCache.getSync(fromChar.name) || await core.cache.profileCache.get(fromChar.name);
+
+    if (
+        cachedProfile &&
+        cachedProfile.match.isFiltered &&
+        core.state.settings.risingFilter.autoReply &&
+        !cachedProfile.match.autoResponded
+    ) {
+        cachedProfile.match.autoResponded = true;
+
+        log.debug('filter.autoresponse', { name: fromChar.name });
+
+        void Conversation.conversationThroat(
+          async() => {
+                await Conversation.testPostDelay();
+
+              // tslint:disable-next-line:prefer-template
+                const m = '[Automated message] Sorry, the player of this character has indicated that they are not interested in characters matching your profile. They will not see your message.\n\n' +
+                    'Need a filter for yourself? Try out [url=https://mrstallion.github.io/fchat-rising/]F-Chat Rising[/url]';
+
+                core.connection.send('PRI', {recipient: fromChar.name, message: m});
+                core.cache.markLastPostTime();
+              }
+        );
+    }
+
+    if (cachedProfile && cachedProfile.match.isFiltered && core.state.settings.risingFilter.hidePrivateMessages) {
+        return true;
+    }
+
+    return false;
+}
+
+async function testSmartFilterForChannel(fromChar: Character.Character, conversation: ChannelConversation): Promise<boolean> {
+    if (
+        (isChannel(conversation) && conversation.channel.owner === '' && core.state.settings.risingFilter.hidePublicChannelMessages) ||
+        (isChannel(conversation) && conversation.channel.owner !== '' && core.state.settings.risingFilter.hidePrivateChannelMessages)
+    ) {
+        const cachedProfile = core.cache.profileCache.getSync(fromChar.name) || await core.cache.profileCache.get(fromChar.name);
+
+        if (cachedProfile && cachedProfile.match.isFiltered && !fromChar.isChatOp) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 export default function(this: any): Interfaces.State {
     state = new State();
     window.addEventListener('focus', () => {
@@ -679,12 +733,17 @@ export default function(this: any): Interfaces.State {
             await conv.addMessage(new EventMessage(text));
         }
     });
-
     connection.onMessage('PRI', async(data, time) => {
         const char = core.characters.get(data.character);
         if(char.isIgnored) return connection.send('IGN', {action: 'notify', character: data.character});
         const message = createMessage(MessageType.Message, char, decodeHTML(data.message), time);
+
+        if (await testSmartFilterForPrivateMessage(char) === true) {
+            return;
+        }
+
         EventBus.$emit('private-message', { message });
+
         const conv = state.getPrivate(char);
         await conv.addMessage(message);
     });
@@ -695,39 +754,13 @@ export default function(this: any): Interfaces.State {
         if(char.isIgnored) return;
 
         const message = createMessage(MessageType.Message, char, decodeHTML(data.message), time);
-        EventBus.$emit('channel-message', { message, channel: conversation });
-        await conversation.addMessage(message);
-// message.type === MessageType.Message
-        if (
-            (isPrivate(conversation) && core.state.settings.risingFilter.hidePrivateMessages) ||
-            (isChannel(conversation) && conversation.channel.owner === '' && core.state.settings.risingFilter.hidePublicChannelMessages) ||
-            (isChannel(conversation) && conversation.channel.owner !== '' && core.state.settings.risingFilter.hidePrivateChannelMessages)
-        ) {
-            const cachedProfile = core.cache.profileCache.getSync(char.name) || await core.cache.profileCache.get(char.name);
 
-            if (cachedProfile && isPrivate(conversation) && core.state.settings.risingFilter.autoReply && !cachedProfile.match.autoResponded) {
-                cachedProfile.match.autoResponded = true;
-
-                log.debug('filter.autoresponse', { name: char.name });
-
-                void Conversation.conversationThroat(
-                  async() => {
-                        await Conversation.testPostDelay();
-
-                      // tslint:disable-next-line:prefer-template
-                        const m = '[Automated message] Sorry, the player of this character has indicated that they are not interested in characters matching your profile. They will not see your message.\n\n' +
-                            'Need a filter for yourself? Try out [url=https://mrstallion.github.io/fchat-rising/]F-Chat Rising[/url]';
-
-                        core.connection.send('PRI', {recipient: char.name, message: m});
-                        core.cache.markLastPostTime();
-                      }
-                );
-            }
-
-            if (cachedProfile && cachedProfile.match.isFiltered) {
-                return;
-            }
+        if (await testSmartFilterForChannel(char, conversation) === true) {
+            return;
         }
+
+        await conversation.addMessage(message);
+        EventBus.$emit('channel-message', { message, channel: conversation });
 
         const words = conversation.settings.highlightWords.slice();
         if(conversation.settings.defaultHighlights) words.push(...core.state.settings.highlightWords);

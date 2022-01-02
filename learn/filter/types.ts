@@ -1,15 +1,14 @@
-// <!--                [Automated message] Sorry, the player of this character has indicated that they are not interested in characters matching your profile.-->
-// <!--                Need a filter for yourself? Try out [F-Chat Rising](https://mrstallion.github.io/fchat-rising/)!-->
-
-
 export const smartFilterTypes = {
   ageplay: { name: 'Ageplay' },
   anthro: { name: 'Anthros' },
+  female: { name: 'Females' },
   feral: { name: 'Ferals' },
   gore: { name: 'Gore/torture/death' },
   human: { name: 'Humans' },
   hyper: { name: 'Hyper' },
   incest: { name: 'Incest' },
+  intersex: { name: 'Intersex' },
+  male: { name: 'Males' },
   microMacro: { name: 'Micro/macro' },
   obesity: { name: 'Obesity' },
   pokemon: { name: 'Pokemons/Digimons' },
@@ -36,7 +35,9 @@ export interface SmartFilterSettings {
   hidePrivateChannelMessages: boolean;
   hidePrivateMessages: boolean;
   penalizeMatches: boolean;
+  rewardNonMatches: boolean;
   autoReply: boolean;
+  showFilterIcon: boolean;
 
   minAge: number | null;
   maxAge: number | null;
