@@ -1,7 +1,8 @@
 # Download
-[Windows](https://github.com/mrstallion/fchat-rising/releases/download/v1.17.0/F-Chat-Rising-1.17.0-win.exe) (75 MB)
-| [MacOS](https://github.com/mrstallion/fchat-rising/releases/download/v1.17.0/F-Chat-Rising-1.17.0-macos.dmg) (76 MB)
-| [Linux](https://github.com/mrstallion/fchat-rising/releases/download/v1.17.0/F-Chat-Rising-1.17.0-linux.AppImage) (76 MB)
+[Windows](https://github.com/mrstallion/fchat-rising/releases/download/v1.17.0/F-Chat-Rising-1.17.0-win.exe) (82 MB)
+| [MacOS Intel](https://github.com/mrstallion/fchat-rising/releases/download/v1.17.0/F-Chat-Rising-1.17.0-macos.dmg) (82 MB)
+| [MacOS M1](https://github.com/mrstallion/fchat-rising/releases/download/v1.17.0/F-Chat-Rising-1.17.0-macos.dmg) (84 MB)
+| [Linux](https://github.com/mrstallion/fchat-rising/releases/download/v1.17.0/F-Chat-Rising-1.17.0-linux.AppImage) (82 MB)
 
 
 # F-Chat Rising
@@ -59,6 +60,9 @@ This repository contains a heavily customized version of the mainline F-Chat 3.0
     *    Search results can be filtered by species
     *    Search results can be filtered by body type
     *    Last 15 searches are stored and can be accessed from the 'Character search' dialog
+*   Smart Filters
+    *    Filter out ads, channel posts, and PMs from characters based on filters such as age or kink preferences 
+    *    Auto-respond to PMs with a 'no thanks' when character profile matches with your smart filters
 *   Character Status Message
     *    Last 10 status messages are stored and can be accessed from the 'Set status' dialog
 *   General
