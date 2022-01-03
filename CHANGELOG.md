@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.17.1
+* Fixes to smart filters
+
 ## 1.17.0
 * Added a way to hide/filter out characters, messages, and ads (Settings > Smart Filters)
 * Added MacOS M1 build

@@ -74,7 +74,7 @@ export class SmartFilter {
 
     const build = Matcher.getTagValueList(TagId.Build, c);
 
-    return !!build && !!_.find(this.opts.builds || [], build);
+    return build !== null && _.findIndex(this.opts.builds || [], (b) => b === build) >= 0;
   }
 
   testGenders(c: Character): boolean {
@@ -84,7 +84,7 @@ export class SmartFilter {
 
     const gender = Matcher.getTagValueList(TagId.Gender, c);
 
-    return !!gender && !!_.find(this.opts.genders || [], gender);
+    return gender !== null && _.findIndex(this.opts.genders || [], (g) => g === gender) >= 0;
   }
 
   testBodyTypes(c: Character): boolean {
@@ -94,7 +94,7 @@ export class SmartFilter {
 
     const bodyType = Matcher.getTagValueList(TagId.BodyType, c);
 
-    return !!bodyType && !!_.find(this.opts.bodyTypes || [], bodyType);
+    return bodyType !== null && _.findIndex(this.opts.bodyTypes || [], (b) => b === bodyType) >= 0;
   }
 
   testSpecies(c: Character): boolean {
@@ -104,7 +104,7 @@ export class SmartFilter {
 
     const species = Matcher.species(c);
 
-    return !!species && !!_.find(this.opts.species || [], species);
+    return species !== null && _.findIndex(this.opts.species || [], (s) => s === species) >= 0;
   }
 
   testIsHuman(c: Character): boolean {

@@ -70,13 +70,13 @@ export function getStatusClasses(
     if ((showStatus) || (character.status === 'crown'))
         statusClass = `fa-fw ${getStatusIcon(character.status)}`;
 
-    const cache = ((showMatch) && ((core.state.settings.risingAdScore) || (core.state.settings.risingFilter.showFilterIcon)))
+    const cache = (((showMatch) && (core.state.settings.risingAdScore)) || (core.state.settings.risingFilter.showFilterIcon))
       ? core.cache.profileCache.getSync(character.name)
       : undefined;
 
     // undefined == not interested
     // null == no cache hit
-    if (cache === null) {
+    if ((cache === null) && (showMatch)) {
         void core.cache.addProfile(character.name);
     }
 

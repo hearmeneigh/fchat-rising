@@ -395,6 +395,8 @@
             this.bbCodeBar = settings.bbCodeBar;
             this.availableImports = (await core.settingsStore.getAvailableCharacters()).filter((x) => x !== core.connection.character);
 
+            // settings.rising
+
             this.risingAdScore = settings.risingAdScore;
             this.risingLinkPreview = settings.risingLinkPreview;
             this.risingAutoCompareKinks = settings.risingAutoCompareKinks;
