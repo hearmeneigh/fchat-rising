@@ -181,3 +181,6 @@ Note: Adding *and upgrading* dependencies should only be done with prior conside
 That's why `yarn.lock` exists and is version controlled.
 
 To upgrade NPM dependencies, run `yarn upgrade` locally. Run `yarn outdated` to see pending upgrades.
+
+If you encounter error 'Could not detect abi for version X.X.X and runtime electron', try running
+`npx uuaw node-abi`

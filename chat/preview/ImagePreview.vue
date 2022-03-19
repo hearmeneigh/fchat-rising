@@ -57,7 +57,7 @@
       CharacterPreviewHelper, RenderStyle
     } from './helper';
 
-    import {Point, WebviewTag} from 'electron';
+    import {Point} from 'electron';
     import * as remote from '@electron/remote';
 
     import Timer = NodeJS.Timer;
@@ -614,8 +614,8 @@
         }
 
 
-        getWebview(): WebviewTag {
-            return this.$refs.imagePreviewExt as WebviewTag;
+        getWebview(): Electron.WebviewTag {
+            return this.$refs.imagePreviewExt as Electron.WebviewTag;
         }
 
 

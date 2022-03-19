@@ -16,7 +16,6 @@
 </template>
 <script lang="ts">
 import Vue from 'vue';
-import { WebviewTag } from 'electron';
 import { Component, Hook, Prop } from '@f-list/vue-ts';
 import { EventBusEvent } from '../../chat/preview/event-bus';
 
@@ -93,8 +92,8 @@ export default class WordDefinition extends Vue {
   }
 
 
-  protected getWebview(): WebviewTag {
-      return this.$refs.definitionPreview as WebviewTag;
+  protected getWebview(): Electron.WebviewTag {
+      return this.$refs.definitionPreview as Electron.WebviewTag;
   }
 
 
