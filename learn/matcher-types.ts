@@ -447,7 +447,7 @@ export const likelyHuman: SpeciesMap = {
         'male', 'female', 'shemale',
         'dothraki', 'amazon', 'african[ -]?american', 'amazonian', 'latina', 'latino',
 
-        'aasimar', 'astartes', 'saiyan', 'echani', 'cathar', 'shikaisen', 'hyur', 'mid[ -]?lander', 'high[ -]?lander', 'arkanian',
+        'astartes', 'saiyan', 'echani', 'cathar', 'shikaisen', 'hyur', 'mid[ -]?lander', 'high[ -]?lander', 'arkanian',
         'exalted', 'leftherian'
     ]
 };
@@ -469,8 +469,6 @@ export const speciesMapping: SpeciesMap = {
 
     [Species.Human]: ['human', 'homo sapiens', 'human.*', 'homo[ -]?sapi[ea]ns?', 'woman', 'hy?[uo]+m[aie]n', 'humaine?',
         'meat[ -]?popsicle',
-        // where should these go?
-        'angel', 'neph[ai]l[ei]m', 'arch[ -]?angel'
         ],
 
     [Species.Elf]: ['drow', 'draenei', 'dunmer', 'draenai', 'blutelf[e]?', 'elf.*', 'drow.*', 'e[ -]l[ -]f', 'sin\'?dorei',
@@ -538,7 +536,7 @@ export const speciesMapping: SpeciesMap = {
         'vaporeon', 'reshiram', 'quilava', 'decidueye', 'marshadow', 'weavile', 'zubat', 'buizel', 'latias', 'nidorina',
         'chandelur(e|ia)', 'sneasel', 'rockruff', 'lugia', 'komala', 'meowstic', 'leafeon', 'purrloin', 'pokemorph',
         'houndour', 'zoroark', 'mightyena', 'mew', 'nidoqueen', 'zangoose', 'goodra', 'flygon', 'dialga', 'pansear',
-        'bibarel', 'charmeleon', 'lapras',
+        'bibarel', 'charmeleon', 'lapras', 'hatteren[ea]',
 
         // digimon
         'gatomon', 'impmon', 'guilmon'
@@ -638,11 +636,12 @@ export const speciesMapping: SpeciesMap = {
         'tengu', gen('(devil|demon)'), 'd[a]?emonette', 'cambion', 'amanojaku', 'tanar[\']?ri', 'balor', 'marilith', 'lilith', '.*demon',
         'd[äa]mon([ie]n)?.*', 'ifrit', 'efree?t', 'afa?rit', 'demonic'],
 
-    [Species.Divinity]: ['god', 'goddess', 'divinity', 'demi[ -]?god', 'demi[ -]?goddess'],
+    [Species.Divinity]: ['god', 'goddess', 'divinity', 'demi[ -]?god', 'demi[ -]?goddess', 'angel', 'neph[ai]l[ei]m', 'arch[ -]?angel', 'seraph([ie]m)?', 'ophan([ie]m)?', 'cherub(im)?'],
+
     [Species.Fae]: ['fairy', 'fae', 'imp', 'elemental', 'fey', 'pixie', 'nymph', 'faerie'],
 
     [Species.Humanoid]: ['satyr', 'gnome', 'dwarf', 'halfling', 'havlin', 't[h]?(ie|ei)fling', 'dwarves', 'humanoid', 'yordle', 'hylian', 'lalafell',
-        'zwerg', 'draph', 'dryad', 'homunculus', 'githyanki'],
+        'zwerg', 'draph', 'dryad', 'homunculus', 'githyanki', 'tiefling', 'aasimar'],
 
     [Species.Minotaur]: ['minotaur', 'tauren', 'minotaurus', 'm[iy]n[ao]t(uo|ou|o|u)ru?s?', 'minotaure'],
 

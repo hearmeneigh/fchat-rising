@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.18.0
+* Upgraded to Electron 18
+* Fixed MacOS M1 incompatibilities
+* Improved age detection
+
 ## 1.17.1
 * Fixes to smart filters
 

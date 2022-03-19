@@ -72,7 +72,7 @@ export class CacheManager {
             return;
         }
 
-        log.info('profile.cache.queue', { name, skipCacheCheck, channelId });
+        log.debug('profile.cache.queue', { name, skipCacheCheck, channelId });
 
         if (!skipCacheCheck) {
             const c = await this.profileCache.get(name);

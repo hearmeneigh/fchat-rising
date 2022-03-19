@@ -1242,13 +1242,27 @@ export class Matcher {
             return null;
         }
 
-        const ageStr = rawAge.string.toLowerCase().trim();
+        const ageStr = rawAge.string.toLowerCase().replace(/[,.]/g, '').trim();
 
-        if ((ageStr.indexOf('shota') >= 0) || (ageStr.indexOf('loli') >= 0) || (ageStr.indexOf('lolli') >= 0)) {
+        if ((ageStr.indexOf('shota') >= 0) || (ageStr.indexOf('loli') >= 0) || (ageStr.indexOf('lolli') >= 0) || (ageStr.indexOf('pup') >= 0)) {
             return 10;
         }
 
-        const age = parseInt(rawAge.string, 10);
+        let age: number | null = null;
+
+        const exactMatch = /^[0-9]+$/.exec(ageStr);
+        const rangeMatch = exactMatch ? null : ageStr.match(/^([0-9]+)-([0-9]+)$/);
+
+        if (exactMatch) {
+            // '18'
+            age = parseInt(rawAge.string, 10);
+        } else if (rangeMatch) {
+            // '18-22'
+            const v1 = parseInt(rangeMatch[1], 10);
+            const v2 = parseInt(rangeMatch[2], 10);
+
+            age = Math.min(v1, v2);
+        }
 
         return age && !Number.isNaN(age) && Number.isFinite(age) ? age : null;
     }
@@ -1260,7 +1274,7 @@ export class Matcher {
             return null;
         }
 
-        const ageStr = rawAge.string.trim().toLowerCase();
+        const ageStr = rawAge.string.toLowerCase().replace(/[,.]/g, '').trim();
 
         if (ageStr === '') {
             return null;
@@ -1283,7 +1297,7 @@ export class Matcher {
             return { min: Math.min(v1, v2), max: Math.max(v1, v2) };
         }
 
-        if ((ageStr.indexOf('shota') >= 0) || (ageStr.indexOf('loli') >= 0) || (ageStr.indexOf('lolli') >= 0)) {
+        if ((ageStr.indexOf('shota') >= 0) || (ageStr.indexOf('loli') >= 0) || (ageStr.indexOf('lolli') >= 0) || (ageStr.indexOf('pup') >= 0)) {
             return { min: 10, max: 10 };
         }
 
