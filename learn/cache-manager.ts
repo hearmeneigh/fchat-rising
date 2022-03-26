@@ -21,7 +21,8 @@ import { PermanentIndexedStore } from './store/types';
 import * as path from 'path';
 // import * as electron from 'electron';
 
-import log from 'electron-log'; //tslint:disable-line:match-default-export-name
+import log from 'electron-log';
+import { testSmartFilterForPrivateMessage } from '../chat/conversations'; //tslint:disable-line:match-default-export-name
 
 
 export interface ProfileCacheQueueEntry {
@@ -132,8 +133,21 @@ export class CacheManager {
         );
 
         this.populateAllConversationsWithScore(c.character.name, score, isFiltered);
+        void this.respondToPendingRejections(c);
     }
 
+    // Manage rejections in case we didn't have a score at the time we received the message
+    async respondToPendingRejections(c: ComplexCharacter): Promise<void> {
+      const char = core.characters.get(c.character.name);
+
+      if (char && char.status !== 'offline') {
+        const conv = core.conversations.getPrivate(char, true);
+
+        if (conv && conv.messages.length > 0 && Date.now() - _.last(conv.messages)!.time.getTime() < 3 * 60 * 1000) {
+          await testSmartFilterForPrivateMessage(char);
+        }
+      }
+    }
 
     async addProfile(character: string | ComplexCharacter): Promise<void> {
         if (typeof character === 'string') {

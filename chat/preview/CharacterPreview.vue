@@ -43,6 +43,15 @@
           <bbcode :text="statusMessage"></bbcode>
         </div>
 
+        <div class="conversation" v-if="conversation && conversation.length > 0">
+          <h4>Latest Messages</h4>
+
+          <template v-for="message in conversation">
+              <message-view :message="message" :key="message.id">
+              </message-view>
+          </template>
+        </div>
+
         <div class="latest-ad-message" v-if="latestAd && (latestAd.message !== statusMessage)">
           <h4>Latest Ad <span class="message-time">{{formatTime(latestAd.datePosted)}}</span></h4>
           <bbcode :text="latestAd.message"></bbcode>
@@ -82,6 +91,8 @@ import { EventBus } from './event-bus';
 import { Character, CustomKink } from '../../interfaces';
 import { matchesSmartFilters, testSmartFilters } from '../../learn/filter/smart-filter';
 import { smartFilterTypes } from '../../learn/filter/types';
+import { Conversation } from '../interfaces';
+import MessageView from '../message_view';
 
 interface CustomKinkWithScore extends CustomKink {
   score: number;
@@ -91,7 +102,8 @@ interface CustomKinkWithScore extends CustomKink {
 @Component({
     components: {
       'match-tags': MatchTags,
-      bbcode: BBCodeView(core.bbCodeParser)
+      bbcode: BBCodeView(core.bbCodeParser),
+      'message-view': MessageView
     }
 })
 export default class CharacterPreview extends Vue {
@@ -131,6 +143,8 @@ export default class CharacterPreview extends Vue {
 
   scoreWatcher: ((event: any) => void) | null = null;
   customs?: CustomKinkWithScore[];
+
+  conversation?: Conversation.Message[];
 
 
   @Hook('mounted')
@@ -189,6 +203,8 @@ export default class CharacterPreview extends Vue {
     this.customs = undefined;
     this.ownCharacter = core.characters.ownProfile;
 
+    this.conversation = undefined;
+
     this.smartFilterIsFiltered = false;
     this.smartFilterDetails = [];
 
@@ -198,6 +214,8 @@ export default class CharacterPreview extends Vue {
     setTimeout(async () => {
       this.character = await this.getCharacterData(characterName);
       this.match = Matcher.identifyBestMatchReport(this.ownCharacter!.character, this.character!.character);
+
+      void this.updateConversationStatus();
 
       this.updateSmartFilterReport();
       this.updateCustoms();
@@ -227,6 +245,25 @@ export default class CharacterPreview extends Vue {
           ..._.map(_.filter(_.toPairs(results.ageCheck), (v) => v[1]), (v) => v[0]),
           ..._.map(_.filter(_.toPairs(results.filters), (v) => v[1].isFiltered), (v: any) => v[0])
       ];
+  }
+
+  async updateConversationStatus(): Promise<void> {
+    const char = core.characters.get(this.characterName!);
+
+    if (char) {
+      const messages = await core.logs.getLogs(core.characters.ownCharacter.name, char.name.toLowerCase(), new Date());
+      const matcher = /\[AUTOMATED MESSAGE]/;
+
+      this.conversation = _.map(
+        _.takeRight(_.filter(messages, (m) => !matcher.exec(m.text)), 3),
+          (m) => ({
+            ...m,
+            text: m.text.length > 512 ? m.text.substr(0, 512) + '…' : m.text
+          })
+      );
+
+      // this.conversation = core.conversations.getPrivate(char, true);
+    }
   }
 
   updateOnlineStatus(): void {
@@ -432,6 +469,7 @@ export default class CharacterPreview extends Vue {
 
     .status-message,
     .latest-ad-message,
+    .conversation,
     .filter-matches {
       display: block;
       background-color: rgba(0,0,0,0.2);

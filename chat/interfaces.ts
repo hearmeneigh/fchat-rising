@@ -92,7 +92,9 @@ export namespace Conversation {
         readonly selectedConversation: Conversation
         readonly hasNew: boolean;
         byKey(key: string): Conversation | undefined
-        getPrivate(character: Character): PrivateConversation
+
+        getPrivate(character: Character): PrivateConversation;
+        getPrivate(character: Character, noCreate: boolean): PrivateConversation | undefined;
     }
 
     export enum Setting {

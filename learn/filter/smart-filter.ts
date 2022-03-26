@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { Matcher } from '../matcher';
 import { BodyType, Build, Gender, Kink, Species, TagId } from '../matcher-types';
 import { SmartFilterSelection, SmartFilterSettings } from './types';
@@ -26,6 +26,10 @@ export interface SmartFilterTestResult {
   isAnthro: boolean;
   isHuman: boolean;
   kinks: boolean;
+}
+
+function getBaseLog(base: number, x: number): number {
+  return Math.log(x) / Math.log(base);
 }
 
 export class SmartFilter {
@@ -64,7 +68,10 @@ export class SmartFilter {
       return curScore;
     }, { score: 0, matches: 0 });
 
-    return score.matches >= 1 && score.score >= 1.0 + (Math.log((this.opts.kinks?.length || 0) + 1) / 2);
+    const baseLog = getBaseLog(5, (this.opts.kinks?.length || 0) + 1);
+    const threshold = (baseLog * baseLog) + 1;
+
+    return score.matches >= 1 && score.score >= threshold;
   }
 
   testBuilds(c: Character): boolean {

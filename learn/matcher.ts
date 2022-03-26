@@ -10,7 +10,7 @@ import anyAscii from 'any-ascii';
 import { Store } from '../site/character_page/data_store';
 
 import {
-    BodyType,
+    BodyType, bodyTypeKinkMapping,
     fchatGenderMap,
     FurryPreference,
     Gender,
@@ -151,6 +151,7 @@ export class CharacterAnalysis {
     readonly subDomRole: SubDomRole | null;
     readonly position: Position | null;
     readonly postLengthPreference: PostLengthPreference | null;
+    readonly bodyType: BodyType | null;
 
     readonly isAnthro: boolean | null;
     readonly isHuman: boolean | null;
@@ -166,10 +167,9 @@ export class CharacterAnalysis {
         this.subDomRole = Matcher.getTagValueList(TagId.SubDomRole, c);
         this.position = Matcher.getTagValueList(TagId.Position, c);
         this.postLengthPreference = Matcher.getTagValueList(TagId.PostLength, c);
+        this.bodyType = Matcher.getTagValueList(TagId.BodyType, c);
 
-        const ageTag = Matcher.getTagValue(TagId.Age, c);
-
-        this.age = ((ageTag) && (ageTag.string)) ? parseInt(ageTag.string, 10) : null;
+        this.age = Matcher.age(c);
 
         this.isAnthro = Matcher.isAnthro(c);
         this.isHuman = Matcher.isHuman(c);
@@ -405,7 +405,8 @@ export class Matcher {
                 [TagId.SubDomRole]: this.resolveSubDomScore(),
                 [TagId.Kinks]: this.resolveKinkScore(pronoun),
                 [TagId.PostLength]: this.resolvePostLengthScore(),
-                [TagId.Position]: this.resolvePositionScore()
+                [TagId.Position]: this.resolvePositionScore(),
+                [TagId.BodyType]: this.resolveBodyTypeScore()
             },
 
             info: {
@@ -723,6 +724,19 @@ export class Matcher {
         return new Score(Scoring.NEUTRAL);
     }
 
+    private resolveBodyTypeScore(): Score {
+        const theirBodyType = Matcher.getTagValueList(TagId.BodyType, this.them);
+
+        if (theirBodyType && theirBodyType in bodyTypeKinkMapping) {
+            const bodyTypePreference = Matcher.getKinkPreference(this.you, bodyTypeKinkMapping[theirBodyType]);
+
+            if (bodyTypePreference !== null) {
+                return Matcher.formatKinkScore(bodyTypePreference, `{BodyType[theirBodyType].toLowerCase()}s`);
+            }
+        }
+
+        return new Score(Scoring.NEUTRAL);
+    }
 
     private resolveSubDomScore(): Score {
         const you = this.you;
@@ -954,7 +968,6 @@ export class Matcher {
         return result;
     }
 
-
     // private countKinksByBucket(kinks: { [key: number]: KinkChoice }): { favorite: number, yes: number, maybe: number, no: number } {
     //     return _.reduce(
     //       kinks,
@@ -970,7 +983,6 @@ export class Matcher {
     //       }
     //     );
     // }
-
 
     private getAllStandardKinks(c: Character): { [key: number]: KinkChoice } {
         const kinks = _.pickBy(c.kinks, _.isString);
@@ -1244,7 +1256,8 @@ export class Matcher {
 
         const ageStr = rawAge.string.toLowerCase().replace(/[,.]/g, '').trim();
 
-        if ((ageStr.indexOf('shota') >= 0) || (ageStr.indexOf('loli') >= 0) || (ageStr.indexOf('lolli') >= 0) || (ageStr.indexOf('pup') >= 0)) {
+        if ((ageStr.indexOf('shota') >= 0) || (ageStr.indexOf('loli') >= 0)
+            || (ageStr.indexOf('lolli') >= 0) || (ageStr.indexOf('pup') >= 0)) {
             return 10;
         }
 
@@ -1297,7 +1310,8 @@ export class Matcher {
             return { min: Math.min(v1, v2), max: Math.max(v1, v2) };
         }
 
-        if ((ageStr.indexOf('shota') >= 0) || (ageStr.indexOf('loli') >= 0) || (ageStr.indexOf('lolli') >= 0) || (ageStr.indexOf('pup') >= 0)) {
+        if ((ageStr.indexOf('shota') >= 0) || (ageStr.indexOf('loli') >= 0)
+            || (ageStr.indexOf('lolli') >= 0) || (ageStr.indexOf('pup') >= 0)) {
             return { min: 10, max: 10 };
         }
 

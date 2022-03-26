@@ -63,7 +63,7 @@
         }
 
         yourInterestIsRelevant(id: number): boolean {
-            return ((id === TagId.Gender) || (id === TagId.Age) || (id === TagId.Species));
+            return ((id === TagId.Gender) || (id === TagId.Age) || (id === TagId.Species) || (id === TagId.BodyType));
         }
 
         get contactLink(): string | undefined {

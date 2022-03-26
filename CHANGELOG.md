@@ -1,9 +1,14 @@
 # Changelog
 
 ## 1.18.0
-* Upgraded to Electron 18
+* Upgraded to Electron 17
 * Fixed MacOS M1 incompatibilities
 * Improved age detection
+* Taur and feral body types are now matched against kink preferences
+* Filtered messages are now accessible in the conversation history
+* Rejection messages are now also sent to filtered characters whose profiles have not been scored at the time they message you
+* Slightly relaxed filter scoring
+* Character preview now shows last messages from conversation history 
 
 ## 1.17.1
 * Fixes to smart filters

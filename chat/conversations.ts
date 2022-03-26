@@ -618,8 +618,23 @@ function isOfInterest(this: any, character: Character): boolean {
     return character.isFriend || character.isBookmarked || state.privateMap[character.name.toLowerCase()] !== undefined;
 }
 
-async function testSmartFilterForPrivateMessage(fromChar: Character.Character): Promise<boolean> {
+async function withNeutralVisibilityPrivateConversation(
+    character: Character.Character,
+    cb: (p: PrivateConversation, c: Character.Character) => Promise<void>
+): Promise<void> {
+    const isVisibleConversation = !!(state.getPrivate as any)(character, true);
+    const conv = state.getPrivate(character);
+
+    await cb(conv, character);
+
+    if (!isVisibleConversation) {
+        await conv.close();
+    }
+}
+
+export async function testSmartFilterForPrivateMessage(fromChar: Character.Character, originalMessage?: Message): Promise<boolean> {
     const cachedProfile = core.cache.profileCache.getSync(fromChar.name) || await core.cache.profileCache.get(fromChar.name);
+    const firstTime = cachedProfile && !cachedProfile.match.autoResponded;
 
     if (
         cachedProfile &&
@@ -629,23 +644,51 @@ async function testSmartFilterForPrivateMessage(fromChar: Character.Character): 
     ) {
         cachedProfile.match.autoResponded = true;
 
-        log.debug('filter.autoresponse', { name: fromChar.name });
-
         void Conversation.conversationThroat(
           async() => {
+                log.debug('filter.autoresponse', { name: fromChar.name });
+
                 await Conversation.testPostDelay();
 
-              // tslint:disable-next-line:prefer-template
-                const m = '[Automated message] Sorry, the player of this character has indicated that they are not interested in characters matching your profile. They will not see your message.\n\n' +
-                    'Need a filter for yourself? Try out [url=https://mrstallion.github.io/fchat-rising/]F-Chat Rising[/url]';
+                // tslint:disable-next-line:prefer-template
+                const message = {
+                    recipient: fromChar.name,
+                    message: '\n[sub][color=orange][b][AUTOMATED MESSAGE][/b][/color][/sub]\n' +
+                      'Sorry, the player of this character is not interested in characters matching your profile.' +
+                      `${core.state.settings.risingFilter.hidePrivateMessages ? ' They did not see your message. To bypass this warning, send your message again.' : ''}\n` +
+                      '\n' +
+                      '🦄 Need a filter for yourself? Try out [url=https://mrstallion.github.io/fchat-rising/]F-Chat Rising[/url]'
+                };
 
-                core.connection.send('PRI', {recipient: fromChar.name, message: m});
+                core.connection.send('PRI', message);
                 core.cache.markLastPostTime();
+
+                if (core.state.settings.logMessages) {
+                    const logMessage = createMessage(Interfaces.Message.Type.Message, core.characters.ownCharacter,
+                        message.message, new Date());
+
+                    await withNeutralVisibilityPrivateConversation(
+                      fromChar,
+                      async(p) => core.logs.logMessage(p, logMessage)
+                    );
+                }
               }
         );
     }
 
-    if (cachedProfile && cachedProfile.match.isFiltered && core.state.settings.risingFilter.hidePrivateMessages) {
+    if (
+        cachedProfile &&
+        cachedProfile.match.isFiltered &&
+        core.state.settings.risingFilter.hidePrivateMessages &&
+        firstTime // subsequent messages bypass this filter on purpose
+    ) {
+        if (core.state.settings.logMessages && originalMessage) {
+            await withNeutralVisibilityPrivateConversation(
+              fromChar,
+              async(p) => core.logs.logMessage(p, originalMessage)
+            );
+        }
+
         return true;
     }
 
@@ -738,7 +781,7 @@ export default function(this: any): Interfaces.State {
         if(char.isIgnored) return connection.send('IGN', {action: 'notify', character: data.character});
         const message = createMessage(MessageType.Message, char, decodeHTML(data.message), time);
 
-        if (await testSmartFilterForPrivateMessage(char) === true) {
+        if (await testSmartFilterForPrivateMessage(char, message) === true) {
             return;
         }
 

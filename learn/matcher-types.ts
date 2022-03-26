@@ -241,7 +241,9 @@ export enum Kink {
     Microphilia = 286,
     SizeDifferencesMicroMacro = 502,
     GrowthMacro = 384,
-    ShrinkingMicro = 387
+    ShrinkingMicro = 387,
+
+    Taurs = 68
 }
 
 export enum FurryPreference {
@@ -339,6 +341,16 @@ export const genderKinkMapping: GenderKinkIdMap = {
     [Gender.MaleHerm]: Kink.MaleHerms,
     [Gender.Shemale]: Kink.Shemales,
     [Gender.Transgender]: Kink.Transgenders
+};
+
+
+export interface BodyTypeKinkIdMap {
+    [key: number]: Kink
+}
+
+export const bodyTypeKinkMapping: BodyTypeKinkIdMap = {
+    [BodyType.Feral]: Kink.AnimalsFerals,
+    [BodyType.Taur]: Kink.Taurs
 };
 
  // if no species and 'no furry characters', === human
@@ -468,7 +480,7 @@ export const speciesMapping: SpeciesMap = {
         ],
 
     [Species.Human]: ['human', 'homo sapiens', 'human.*', 'homo[ -]?sapi[ea]ns?', 'woman', 'hy?[uo]+m[aie]n', 'humaine?',
-        'meat[ -]?popsicle',
+        'meat[ -]?popsicle'
         ],
 
     [Species.Elf]: ['drow', 'draenei', 'dunmer', 'draenai', 'blutelf[e]?', 'elf.*', 'drow.*', 'e[ -]l[ -]f', 'sin\'?dorei',
