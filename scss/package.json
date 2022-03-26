@@ -7,9 +7,13 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
     "bootstrap": "^4.5.3",
-    "node-sass": "^7.0.1"
+    "node-sass": "^7.0.1",
+    "@snyk/protect": "latest"
   },
   "scripts": {
-    "build": "node-sass --importer=./importer --output css"
-  }
+    "build": "node-sass --importer=./importer --output css",
+    "prepare": "yarn run snyk-protect",
+    "snyk-protect": "snyk-protect"
+  },
+  "snyk": true
 }
