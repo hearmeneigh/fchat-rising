@@ -248,22 +248,24 @@ export default class CharacterPreview extends Vue {
   }
 
   async updateConversationStatus(): Promise<void> {
-    const char = core.characters.get(this.characterName!);
+    const ownName = core.characters.ownCharacter.name;
+    const logKey = this.characterName!.toLowerCase();
+    const logDates = await core.logs.getLogDates(ownName, logKey);
 
-    if (char) {
-      const messages = await core.logs.getLogs(core.characters.ownCharacter.name, char.name.toLowerCase(), new Date());
-      const matcher = /\[AUTOMATED MESSAGE]/;
-
-      this.conversation = _.map(
-        _.takeRight(_.filter(messages, (m) => !matcher.exec(m.text)), 3),
-          (m) => ({
-            ...m,
-            text: m.text.length > 512 ? m.text.substr(0, 512) + '…' : m.text
-          })
-      );
-
-      // this.conversation = core.conversations.getPrivate(char, true);
+    if (logDates.length === 0) {
+      return;
     }
+
+    const messages = await core.logs.getLogs(ownName, logKey, _.last(logDates) as Date);
+    const matcher = /\[AUTOMATED MESSAGE]/;
+
+    this.conversation = _.map(
+      _.takeRight(_.filter(messages, (m) => !matcher.exec(m.text)), 3),
+        (m) => ({
+          ...m,
+          text: m.text.length > 512 ? m.text.substr(0, 512) + '…' : m.text
+        })
+    );
   }
 
   updateOnlineStatus(): void {
