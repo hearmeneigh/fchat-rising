@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.18.1
+* Minor smart filtering fixes
+
 ## 1.18.0
 * Upgraded to Electron 17
 * Fixed MacOS M1 incompatibilities
