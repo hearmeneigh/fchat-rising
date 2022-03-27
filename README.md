@@ -16,6 +16,7 @@ This repository contains a heavily customized version of the mainline F-Chat 3.0
 1. **Automatic ad posting** repeatedly posts and rotates ads on selected channels.
 1. **Link previews** popup shows a preview of an image / video when you hover your mouse over a link.
 1. **Caching** speeds up profile loads and other actions.
+1. **Smart filters** let you choose what kind of ads and posts you see in the chat.
 
 
 ### More Detailed Differences
