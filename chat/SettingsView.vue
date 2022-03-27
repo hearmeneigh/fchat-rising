@@ -286,7 +286,7 @@
             </div>
 
             <h5>Exception List</h5>
-            <div class="form-group">Filters are not applied to these character names. Separate names with a linefeed.</div>
+            <div class="form-group">Filters are not applied to these character names. Separate names with a linefeed. Friends and bookmarked characters bypass filtering automatically.</div>
 
             <div class="form-group">
                 <textarea class="form-control" :value="getExceptionList()" @change="(v) => setExceptionList(v)" placeholder="Enter names"></textarea>

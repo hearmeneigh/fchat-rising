@@ -644,7 +644,7 @@ export async function testSmartFilterForPrivateMessage(fromChar: Character.Chara
     ) {
         cachedProfile.match.autoResponded = true;
 
-        void Conversation.conversationThroat(
+        await Conversation.conversationThroat(
           async() => {
                 log.debug('filter.autoresponse', { name: fromChar.name });
 
