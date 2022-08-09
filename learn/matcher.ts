@@ -731,7 +731,7 @@ export class Matcher {
             const bodyTypePreference = Matcher.getKinkPreference(this.you, bodyTypeKinkMapping[theirBodyType]);
 
             if (bodyTypePreference !== null) {
-                return Matcher.formatKinkScore(bodyTypePreference, `{BodyType[theirBodyType].toLowerCase()}s`);
+                return Matcher.formatKinkScore(bodyTypePreference, `${BodyType[theirBodyType].toLowerCase()}s`);
             }
         }
 
