@@ -66,7 +66,7 @@
                 <div class="progress-bar" :style="{width: importProgress * 100 + '%'}"></div>
             </div>
         </modal>
-        <modal :buttons="false" ref="profileViewer" dialogClass="profile-viewer">
+        <modal :buttons="false" ref="profileViewer" dialogClass="profile-viewer" >
             <character-page :authenticated="true" :oldApi="true" :name="profileName" :image-preview="true" ref="characterPage"></character-page>
             <template slot="title">
                 {{profileName}}
@@ -75,6 +75,8 @@
                 <a class="btn" @click="reloadCharacter"><i class="fa fa-sync" /></a>
 
                 <i class="fas fa-circle-notch fa-spin profileRefreshSpinner" v-show="isRefreshingProfile()"></i>
+
+                <bbcode :text="profileStatus" v-show="!!profileStatus" class="status-text"></bbcode>
 
                 <div class="profile-title-right">
                   <button class="btn" @click="prevProfile" :disabled="!prevProfileAvailable()"><i class="fas fa-arrow-left"></i></button>
@@ -138,6 +140,7 @@
     import { EventBus } from '../chat/preview/event-bus';
 
     import BBCodeTester from '../bbcode/Tester.vue';
+    import { BBCodeView } from '../bbcode/view';
 
     // import ImagePreview from '../chat/preview/ImagePreview.vue';
     // import Bluebird from 'bluebird';
@@ -196,7 +199,8 @@
           characterPage: CharacterPage,
           logs: Logs,
           'word-definition': WordDefinition,
-          BBCodeTester: BBCodeTester
+          BBCodeTester: BBCodeTester,
+          bbcode: BBCodeView(core.bbCodeParser)
         }
     })
     export default class Index extends Vue {
@@ -213,6 +217,7 @@
         hasCompletedUpgrades!: boolean;
         importProgress = 0;
         profileName = '';
+        profileStatus = '';
         adName = '';
         fixCharacters: ReadonlyArray<string> = [];
         fixCharacter = '';
@@ -303,7 +308,9 @@
 
             electron.ipcRenderer.on('open-profile', (_e: Event, name: string) => {
                 const profileViewer = <Modal>this.$refs['profileViewer'];
-                this.profileName = name;
+
+                this.openProfile(name);
+
                 profileViewer.show();
             });
 
@@ -321,7 +328,7 @@
                   return;
                 }
 
-                this.profileName = name;
+                this.openProfile(name);
                 profileViewer.show();
               }
             });
@@ -516,7 +523,8 @@
           }
 
           this.profilePointer++;
-          this.profileName = this.profileNameHistory[this.profilePointer];
+
+          this.openProfile(this.profileNameHistory[this.profilePointer]);
         }
 
 
@@ -531,7 +539,8 @@
           }
 
           this.profilePointer--;
-          this.profileName = this.profileNameHistory[this.profilePointer];
+
+          this.openProfile(this.profileNameHistory[this.profilePointer]);
         }
 
 
@@ -539,6 +548,13 @@
           return (this.profilePointer > 0);
         }
 
+        openProfile(name: string) {
+          this.profileName = name;
+
+          const character = core.characters.get(name);
+
+          this.profileStatus = character.statusText || '';
+        }
 
         get styling(): string {
             try {
@@ -617,9 +633,14 @@
 
         .profile-title-right {
           float: right;
-          bottom: 7px;
+          top: -7px;
           right: 0;
           position: absolute;
+        }
+
+        .status-text {
+          font-size: 12pt;
+          display: block;
         }
       }
     }
