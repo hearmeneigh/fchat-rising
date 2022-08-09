@@ -27,10 +27,8 @@
         <match-tags v-if="match" :match="match"></match-tags>
 
         <div class="filter-matches" v-if="smartFilterIsFiltered">
-          <h4>Smart Filter Matches</h4>
-
-          <span class="tags">
-            <span v-for="filterName in smartFilterDetails" class="smart-filter-tag" :class="filterName">{{ (smartFilterLabels[filterName] || {}).name }}</span>
+          <span class="matched-tags">
+            <span v-for="filterName in smartFilterDetails" class="mismatch smart-filter-tag" :class="filterName"><i class="fas fa-solid fa-filter"></i> {{ (smartFilterLabels[filterName] || {}).name }}</span>
           </span>
         </div>
 
@@ -471,8 +469,7 @@ export default class CharacterPreview extends Vue {
 
     .status-message,
     .latest-ad-message,
-    .conversation,
-    .filter-matches {
+    .conversation {
       display: block;
       background-color: rgba(0,0,0,0.2);
       padding: 10px;
@@ -481,20 +478,7 @@ export default class CharacterPreview extends Vue {
     }
 
     .filter-matches {
-      .tags {
-        margin-top: 10px;
-        display: block;
-      }
-
-      .smart-filter-tag {
-          display: inline-block;
-          color: var(--messageTimeFgColor);
-          margin-right: 4px;
-          background-color: var(--messageTimeBgColor);
-          border-radius: 2px;
-          padding-left: 3px;
-          padding-right: 3px;
-      }
+      margin-top: 0.75em;
     }
 
     .character-avatar {

@@ -545,6 +545,8 @@ class State implements Interfaces.State {
             return;
         }
 
+        void core.cache.queueForFetching(character.name);
+
         conv = new PrivateConversation(character);
         this.privateConversations.push(conv);
         this.privateMap[key] = conv;

@@ -798,7 +798,9 @@ export const kinkComparisonSwaps: Record<any, number> = {
     513: 515, // cunnilingus giving -> receiving
     515: 513, // cunnilingus receiving -> giving
     141: 158, // oral sex giving -> receiving
-    158: 141 // oral sex receiving -> giving
+    158: 141, // oral sex receiving -> giving
+    512: 514, // fellatio performing -> fellatio receiving
+    514: 512 // fellatio receiving -> fellatio performing
 };
 
 

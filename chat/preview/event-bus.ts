@@ -14,7 +14,7 @@ import { NoteCheckerCount } from '../../site/note-checker';
  * 'imagepreview-show': {url: string}
  * 'imagepreview-toggle-stickyness': {url: string}
  * 'character-data': {character: Character}
- * 'character-score': {character: Character, score: number}
+ * 'character-score': {character: Character, score: number, isFiltered: boolean}
  * 'private-message': {message: Message}
  * 'channel-ad': {message: Message, channel: Conversation, profile: ComplexCharacter | undefined}
  * 'channel-message': {message: Message, channel: Conversation}

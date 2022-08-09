@@ -128,7 +128,8 @@ export class CacheManager {
             'character-score',
             {
                 character: c,
-                score
+                score,
+                isFiltered
             }
         );
 
@@ -144,7 +145,11 @@ export class CacheManager {
         const conv = core.conversations.getPrivate(char, true);
 
         if (conv && conv.messages.length > 0 && Date.now() - _.last(conv.messages)!.time.getTime() < 3 * 60 * 1000) {
-          await testSmartFilterForPrivateMessage(char);
+          const allMessagesFromThem = _.every(conv.messages, (m) => ('sender' in m)  && m.sender.name === conv.character.name);
+
+          if (allMessagesFromThem) {
+            await testSmartFilterForPrivateMessage(char);
+          }
         }
       }
     }
