@@ -31,6 +31,7 @@
                                 <span>Images <span class="tab-count">({{ character.character.image_count }})</span></span>
                                 <span v-if="character.settings.guestbook">Guestbook <span class="tab-count" v-if="guestbook !== null">({{ guestbook.posts.length }})</span></span>
                                 <span v-if="character.is_self || character.settings.show_friends">Friends <span class="tab-count" v-if="friends !== null">({{ friends.length }})</span></span>
+                                <span>Recon</span>
                             </tabs>
                         </div>
                         <div class="card-body">
@@ -58,6 +59,9 @@
                                 </div>
                                 <div v-if="character.is_self || character.settings.show_friends" role="tabpanel" v-show="tab === '5'" id="friends">
                                     <character-friends :character="character" ref="tab5"></character-friends>
+                                </div>
+                                <div role="tabpanel" v-show="tab === '6'">
+                                    <character-recon :character="character" ref="tab6"></character-recon>
                                 </div>
                             </div>
                         </div>
@@ -90,6 +94,7 @@
     import ImagesView from './images.vue';
     import InfotagsView from './infotags.vue';
     import CharacterKinksView from './kinks.vue';
+    import ReconView from './recon.vue';
     import Sidebar from './sidebar.vue';
     import core from '../../chat/core';
     import { Matcher, MatchReport } from '../../learn/matcher';
@@ -115,6 +120,7 @@
             'character-infotags': InfotagsView,
             'character-images': ImagesView,
             'character-kinks': CharacterKinksView,
+            'character-recon': ReconView,
             'match-report': MatchReportView,
             bbcode: BBCodeView(standardParser)
         }
