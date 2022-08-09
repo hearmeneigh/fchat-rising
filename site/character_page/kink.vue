@@ -23,6 +23,7 @@
     import { Component, Prop, Watch } from '@f-list/vue-ts';
     import Vue from 'vue';
     import { DisplayKink } from './interfaces';
+    import { kinkComparisonSwaps } from '../../learn/matcher-types';
 
     @Component({ name: 'kink' })
     export default class KinkView extends Vue {
@@ -74,9 +75,11 @@
             classes[`kink-id-${this.kink.key}`] = true;
             classes[`kink-group-${this.kink.group}`] = true;
 
-            if(!this.kink.isCustom && typeof this.comparisons[this.kink.id] !== 'undefined') {
+            const theirKinkId = (this.kink.id in kinkComparisonSwaps) ? kinkComparisonSwaps[this.kink.id] : this.kink.id;
+
+            if(!this.kink.isCustom && typeof this.comparisons[theirKinkId] !== 'undefined') {
                 classes['comparison-result'] = true;
-                classes[`comparison-${this.comparisons[this.kink.id]}`] = true;
+                classes[`comparison-${this.comparisons[theirKinkId]}`] = true;
             }
 
             return classes;
