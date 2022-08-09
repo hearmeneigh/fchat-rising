@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.19.0
+* Fixed formatting for body type comparison
+* Fixed auto-responder failing to send a message in certain cases
+* Fixed profile kink highlights so that 'receiving' and 'giving' types of the same kink are handled correctly
+* Added character status text to character profile
+* Added 'Recon' tab to character profile
+* Added a button for sorting channel member list by name (default), status, gender
+
 ## 1.18.1
 * Minor smart filtering fixes
 
