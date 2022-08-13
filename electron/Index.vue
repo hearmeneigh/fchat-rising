@@ -344,6 +344,14 @@
                 // log.info('INDEXVUE ZOOM UPDATE', zoomLevel);
             });
 
+            electron.ipcRenderer.on('active-tab', () => {
+                core.cache.setTabActive(true);
+            });
+
+            electron.ipcRenderer.on('inactive-tab', () => {
+                core.cache.setTabActive(false);
+            });
+
             window.addEventListener('keydown', (e) => {
                 const key = getKey(e);
 
@@ -641,6 +649,8 @@
         .status-text {
           font-size: 12pt;
           display: block;
+          max-height: 3em;
+          overflow: auto;
         }
       }
     }

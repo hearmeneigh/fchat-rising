@@ -42,7 +42,7 @@ export interface CharacterDataEvent {
 
 
 export interface SelectConversationEvent extends EventBusEvent {
-    conversation: Conversation;
+    conversation: Conversation | null;
 }
 
 export type EventCallback = (data: any) => void | Promise<void>;

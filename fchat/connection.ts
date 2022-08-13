@@ -277,7 +277,7 @@ export default class Connection implements Interfaces.Connection {
         if(this.socket !== undefined && this.socket.readyState === WebSocketConnection.ReadyState.OPEN) {
             const msg = <string>command + (data !== undefined ? ` ${JSON.stringify(data)}` : '');
 
-            log.debug('socket.send', { data: msg });
+            log.silly('socket.send', { data: msg });
 
             this.socket.send(msg);
         }

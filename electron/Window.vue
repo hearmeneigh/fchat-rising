@@ -35,6 +35,7 @@
 
 <script lang="ts">
     import Sortable from 'sortablejs';
+    import _ from 'lodash';
 
     import {Component, Hook} from '@f-list/vue-ts';
     import * as electron from 'electron';
@@ -350,6 +351,11 @@
             browserWindow.setBrowserView(tab.view);
             tab.view.setBounds(getWindowBounds());
             tab.view.webContents.focus();
+
+            // tab.view.webContents.send('active-tab', { webContentsId: tab.view.webContents.id });
+            _.each(this.tabs, (t) => t.view.webContents.send(t === tab ? 'active-tab' : 'inactive-tab'));
+
+            // electron.ipcRenderer.send('active-tab', { webContentsId: tab.view.webContents.id });
         }
 
         remove(tab: Tab, shouldConfirm: boolean = true): void {

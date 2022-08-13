@@ -60,6 +60,18 @@ export class CacheManager {
     protected fetchLog: Record<string, number> = {};
     protected ongoingLog: Record<string, true> = {};
 
+    protected isActiveTab = false;
+
+    setTabActive(isActive: boolean): void {
+      this.isActiveTab = isActive;
+
+      if (this.isActiveTab) {
+        void this.onSelectConversation({ conversation: core.conversations.selectedConversation });
+      } else {
+        void this.onSelectConversation({ conversation: null! });
+      }
+    }
+
     markLastPostTime(): void {
         this.lastPost = new Date();
     }
@@ -369,7 +381,11 @@ export class CacheManager {
             }
         );
 
-        if ((!data.profile) && (core.conversations.selectedConversation === data.channel)) {
+        if (
+          (!data.profile) &&
+          (core.conversations.selectedConversation === data.channel) &&
+          (this.isActiveTab)
+        ) {
             await this.queueForFetching(message.sender.name, true, data.channel.channel.id);
         }
 
@@ -384,6 +400,7 @@ export class CacheManager {
 
     async onSelectConversation(data: SelectConversationEvent): Promise<void> {
         const conversation = data.conversation;
+
         const channel = _.get(conversation, 'channel') as (Channel.Channel | undefined);
         const channelId = _.get(channel, 'id', '<missing>');
 
@@ -399,7 +416,7 @@ export class CacheManager {
             // Add fetchers for unknown profiles in ads
             await Bluebird.each(
               _.filter(
-                conversation.messages,
+                conversation!.messages,
                 (m) => {
                   if (m.type !== Message.Type.Ad) {
                     return false;

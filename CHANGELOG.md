@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.19.1
+* Performance improvement for players who connect multiple characters at the same time
+* Limit max height of the status message banner on character profile 
+
 ## 1.19.0
 * Fixed formatting for body type comparison
 * Fixed auto-responder failing to send a message in certain cases
