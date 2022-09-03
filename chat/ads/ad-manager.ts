@@ -110,7 +110,7 @@ export class AdManager {
 
         this.nextPostDue = new Date(Math.max(
           Date.now() + nextInMs,
-          chanConv.settings.adSettings.lastAdTimestamp + (core.connection.vars.lfrp_flood * 1000)
+          (chanConv.settings.adSettings.lastAdTimestamp || 0) + (core.connection.vars.lfrp_flood * 1000)
         ));
 
         // tslint:disable-next-line: no-unnecessary-type-assertion
@@ -172,7 +172,7 @@ export class AdManager {
 
         this.nextPostDue = new Date(Math.max(
             Date.now() + initialWait,
-            this.conversation.settings.adSettings.lastAdTimestamp + (core.connection.vars.lfrp_flood * 1000)
+            (this.conversation.settings.adSettings.lastAdTimestamp || 0) + (core.connection.vars.lfrp_flood * 1000)
         ));
 
         this.expireDue = new Date(Date.now() + AdManager.POSTING_PERIOD);
