@@ -113,7 +113,7 @@ export namespace Conversation {
     export interface AdSettings {
         readonly ads: string[];
         readonly randomOrder: boolean;
-        lastAdTimestamp: number;
+        readonly lastAdTimestamp: number;
     }
 
     export const enum UnreadState { None, Unread, Mention }

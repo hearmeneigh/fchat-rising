@@ -432,8 +432,18 @@ class ChannelConversation extends Conversation implements Interfaces.ChannelConv
                     createMessage(isAd ? MessageType.Ad : MessageType.Message, core.characters.ownCharacter, message, new Date())
                 );
 
-                if(isAd)
+                if(isAd) {
                     this.nextAd = Date.now() + core.connection.vars.lfrp_flood * 1000;
+
+                    // enforces property setter
+                    this.settings = {
+                        ...this.settings,
+                        adSettings: {
+                          ...this.settings.adSettings,
+                          lastAdTimestamp: Date.now()
+                      }
+                    };
+                }
           }
         );
     }
@@ -485,7 +495,14 @@ class ChannelConversation extends Conversation implements Interfaces.ChannelConv
 
                 this.nextAd = Date.now() + core.connection.vars.lfrp_flood * 1000;
 
-                this.settings.adSettings.lastAdTimestamp = Date.now();
+                // enforces property setter
+                this.settings = {
+                    ...this.settings,
+                    adSettings: {
+                      ...this.settings.adSettings,
+                      lastAdTimestamp: Date.now()
+                  }
+                };
             }
         );
     }
