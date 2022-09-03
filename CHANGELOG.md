@@ -1,7 +1,7 @@
 # Changelog
 
 ## 1.19.2
-* Fixed a bug that could lead to ad flooding if the client experienced frequent connection drops
+* Fixed a bug that could lead to ad-flooding if the client experiences frequent connection drops
 
 ## 1.19.1
 * Performance improvement for players who connect multiple characters at the same time
