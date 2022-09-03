@@ -284,11 +284,11 @@ export class AdManager {
 
         adManager.adIndex = ra.index;
         adManager.firstPost = ra.firstPost;
-        adManager.nextPostDue = ra.nextPostDue || new Date();
+        adManager.nextPostDue = adManager.nextPostDue || ra.nextPostDue || new Date();
         adManager.expireDue = ra.expireDue;
 
         adManager.forceTimeout(
-            Date.now() - adManager.nextPostDue.getTime()
+            Math.max(0, adManager.nextPostDue.getTime() - Date.now())
         );
 
         AdManager.recoverableAds = _.filter(AdManager.recoverableAds, (r) => (r.channel !== ra.channel));
