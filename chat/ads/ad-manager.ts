@@ -107,7 +107,11 @@ export class AdManager {
             Math.random() * AdManager.POST_VARIANCE;
 
         this.adIndex = this.adIndex + 1;
-        this.nextPostDue = new Date(Date.now() + nextInMs);
+
+        this.nextPostDue = new Date(Math.max(
+          Date.now() + nextInMs,
+          chanConv.settings.adSettings.lastAdTimestamp + (core.connection.vars.lfrp_flood * 1000)
+        ));
 
         // tslint:disable-next-line: no-unnecessary-type-assertion
         this.interval = setTimeout(
@@ -165,7 +169,12 @@ export class AdManager {
 
         this.adIndex = 0;
         this.active = true;
-        this.nextPostDue = new Date(Date.now() + initialWait);
+
+        this.nextPostDue = new Date(Math.max(
+            Date.now() + initialWait,
+            this.conversation.settings.adSettings.lastAdTimestamp + (core.connection.vars.lfrp_flood * 1000)
+        ));
+
         this.expireDue = new Date(Date.now() + AdManager.POSTING_PERIOD);
         this.adMap = this.generateAdMap();
 

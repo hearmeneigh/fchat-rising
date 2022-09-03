@@ -484,6 +484,8 @@ class ChannelConversation extends Conversation implements Interfaces.ChannelConv
                 );
 
                 this.nextAd = Date.now() + core.connection.vars.lfrp_flood * 1000;
+
+                this.settings.adSettings.lastAdTimestamp = Date.now();
             }
         );
     }

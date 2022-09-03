@@ -62,8 +62,9 @@
                 ...this.conversation.settings,
 
                 adSettings: {
-                    ads: this.ads.map((ad: string) => ad.trim()).filter((ad: string) => (ad.length > 0)),
-                    randomOrder: this.randomOrder
+                  ...this.conversation.settings.adSettings,
+                  ads: this.ads.map((ad: string) => ad.trim()).filter((ad: string) => (ad.length > 0)),
+                  randomOrder: this.randomOrder
                 }
             };
         }

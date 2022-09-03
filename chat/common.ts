@@ -100,6 +100,7 @@ export class Settings implements ISettings {
 export class AdSettings implements Conversation.AdSettings {
     ads: string[] = [];
     randomOrder = false;
+    lastAdTimestamp = 0;
 }
 
 
@@ -109,7 +110,7 @@ export class ConversationSettings implements Conversation.Settings {
     highlightWords: string[] = [];
     joinMessages = Conversation.Setting.Default;
     defaultHighlights = true;
-    adSettings: Conversation.AdSettings = { ads: [], randomOrder: false };
+    adSettings: Conversation.AdSettings = { ads: [], randomOrder: false, lastAdTimestamp: 0 };
 }
 
 function pad(num: number): string | number {
