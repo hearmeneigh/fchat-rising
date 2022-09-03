@@ -131,7 +131,7 @@ async function toggleDictionary(lang: string): Promise<void> {
         newLangs = activeLangs;
     }
 
-    settings.spellcheckLang = newLangs;
+    settings.spellcheckLang = _.uniq(newLangs);
 
     setGeneralSettings(settings);
 
