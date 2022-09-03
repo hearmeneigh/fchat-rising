@@ -169,7 +169,7 @@ export class AdManager {
         const initialWait = Math.max(
           Math.random() * AdManager.START_VARIANCE,
           (chanConv.nextAd - Date.now()) * 1.1,
-          (this.conversation.settings.adSettings.lastAdTimestamp || 0) + (core.connection.vars.lfrp_flood * 1000)
+          ((this.conversation.settings.adSettings.lastAdTimestamp || 0) + (core.connection.vars.lfrp_flood * 1000)) - Date.now()
         );
 
         this.adIndex = 0;
