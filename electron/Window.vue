@@ -137,6 +137,10 @@
             // top bar devtools
             // browserWindow.webContents.openDevTools({ mode: 'detach' });
 
+            if (remote.process.argv.includes('--devtools')) {
+              browserWindow.webContents.openDevTools({ mode: 'detach' });
+            }
+
             updateSupportedLanguages(browserWindow.webContents.session.availableSpellCheckerLanguages);
 
             log.debug('init.window.languages.supported');
@@ -315,6 +319,10 @@
 
             // tab devtools
             // view.webContents.openDevTools();
+
+            if (remote.process.argv.includes('--devtools')) {
+              view.webContents.openDevTools({ mode: 'detach' });
+            }
 
             // console.log('ADD TAB LANGUAGES', getSafeLanguages(this.settings.spellcheckLang), this.settings.spellcheckLang);
             view.webContents.session.setSpellCheckerLanguages(getSafeLanguages(this.settings.spellcheckLang));
