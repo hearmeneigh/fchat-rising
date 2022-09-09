@@ -7,7 +7,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
     "bootstrap": "^4.5.3",
-    "node-sass": "^7.0.1"
+    "node-sass": "^7.0.2"
   },
   "scripts": {
     "build": "node-sass --importer=./importer --output css"
