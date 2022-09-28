@@ -18,6 +18,8 @@ This repository contains a heavily customized version of the mainline F-Chat 3.0
 1. **Caching** speeds up profile loads and other actions.
 1. **Smart filters** let you choose what kind of ads and posts you see in the chat.
 
+!!! 4chat-rising is planned to, in addition to the various changes fchat-rising brings, tweak various pieces of logic in the systems based around compatability testing, kink and interest comparison and other general design decisions which can cause issues when they are forced upon the user.
+
 
 ### More Detailed Differences
 
