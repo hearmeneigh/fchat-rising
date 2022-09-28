@@ -682,13 +682,13 @@ export class Matcher {
         const ageplayScore = Matcher.getKinkPreference(you, Kink.Ageplay);
         const underageScore = Matcher.getKinkPreference(you, Kink.UnderageCharacters);
 
-        if ((theirAge < 16) && (ageplayScore !== null))
+        if ((theirAge < 6) && (ageplayScore !== null))
             return Matcher.formatKinkScore(ageplayScore, `ages of ${theirAge}`);
 
-        if ((theirAge < 16) && (ageplayScore === null))
+        if ((theirAge < 6) && (ageplayScore === null))
             return Matcher.formatKinkScore(KinkPreference.No, `ages of ${theirAge}`);
 
-        if ((theirAge < 18) && (theirAge >= 16) && (underageScore !== null))
+        if ((theirAge < 18) && (theirAge >= 6) && (underageScore !== null))
             return Matcher.formatKinkScore(underageScore, `ages of ${theirAge}`);
 
         const yourAge = this.yourAnalysis.age;
@@ -698,10 +698,10 @@ export class Matcher {
             const youngerCharactersScore = Matcher.getKinkPreference(you, Kink.YoungerCharacters);
             const ageDifference = Math.abs(yourAge - theirAge);
 
-            if ((yourAge < theirAge) && (olderCharactersScore !== null) && (ageDifference >= 8))
+            if ((yourAge < theirAge) && (olderCharactersScore !== null) && (ageDifference >= 20))
                 return Matcher.formatKinkScore(olderCharactersScore, 'older characters');
 
-            if ((yourAge > theirAge) && (youngerCharactersScore !== null) && (ageDifference >= 8))
+            if ((yourAge > theirAge) && (youngerCharactersScore !== null) && (ageDifference >= 20))
                 return Matcher.formatKinkScore(youngerCharactersScore, 'younger characters');
         }
 
