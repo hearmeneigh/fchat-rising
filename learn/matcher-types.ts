@@ -475,11 +475,11 @@ function gen(s: string): string {
 
 
 export const speciesMapping: SpeciesMap = {
-    [Species.Anthro]: ['anthro', 'anthropomorphic', 'kemono', 'kemomimi', 'kemonomimi', 'furry', 'erune', 'vastayan?', 'rakshasa',
+    [Species.Anthro]: ['anthro', 'anthropomorphic', 'furry', 'erune', 'vastayan?', 'rakshasa',
         gen('(beast|anthro|furry)')
         ],
 
-    [Species.Human]: ['human', 'homo sapiens', 'human.*', 'homo[ -]?sapi[ea]ns?', 'woman', 'hy?[uo]+m[aie]n', 'humaine?',
+    [Species.Human]: ['human', 'homo sapiens', 'human.*', 'kemono', 'kemomimi', 'kemonomimi', 'homo[ -]?sapi[ea]ns?', 'woman', 'hy?[uo]+m[aie]n', 'humaine?',
         'meat[ -]?popsicle'
         ],
 
@@ -814,4 +814,3 @@ export interface KinkBucketScore {
 export interface MatchResultKinkScores {
     [key: string]: KinkBucketScore;
 }
-
