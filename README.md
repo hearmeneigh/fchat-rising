@@ -1,13 +1,15 @@
 # Download
-[Windows](https://github.com/mrstallion/fchat-rising/releases/download/v1.19.2/F-Chat-Rising-1.19.2-win.exe) (82 MB)
-| [MacOS Intel](https://github.com/mrstallion/fchat-rising/releases/download/v1.19.2/F-Chat-Rising-1.19.2-macos-intel.dmg) (82 MB)
-| [MacOS M1](https://github.com/mrstallion/fchat-rising/releases/download/v1.19.2/F-Chat-Rising-1.19.2-macos-m1.dmg) (84 MB)
-| [Linux](https://github.com/mrstallion/fchat-rising/releases/download/v1.19.2/F-Chat-Rising-1.19.2-linux.AppImage) (82 MB)
+An executable is coming once more changess are made.
 
 
-# F-Chat Rising
+# 4-Chat Rising
 
-This repository contains a heavily customized version of the mainline F-Chat 3.0 client.
+This repository contains a heavily customized version of the mainline F-Chat 3.0 client. It is based on the F-chat rising client written by MrStallion.
+
+Current to-do and wishlist:
+ADJUST FONT SIZE OF CHANNEL NAMES AT TOP OF WINDOW
+IMPLEMENT MULTI-DIMENSIONAL SORT AND FILTER FOR CHANNEL MEMBERS
+INVESTIGATE "minority report" PLUGIN (allegedly there is a plugin/version of rising that allows users to see when another user has opened a conversation/begins typing without having a conversation open on their side) AND REQUEST INTEGRATION
 
 
 ## Key Differences
