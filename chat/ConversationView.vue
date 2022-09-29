@@ -33,7 +33,7 @@
                 <div style="flex: 1;">
                     <span v-show="conversation.channel.id.substr(0, 4) !== 'adh-'" class="fa fa-star" :title="l('channel.official')"
                         style="margin-right:5px;vertical-align:sub"></span>
-                    <h5 style="margin:0;display:inline;vertical-align:middle">{{conversation.name}}</h5>
+                    <h5 style="margin:0;display:inline;vertical-align:middle;font-size:16px;font-weight: bold;">{{conversation.name}}</h5>
                     <a href="#" @click.prevent="descriptionExpanded = !descriptionExpanded" class="btn">
                         <span class="fa" :class="{'fa-chevron-down': !descriptionExpanded, 'fa-chevron-up': descriptionExpanded}"></span>
                         <span class="btn-text">{{l('channel.description')}}</span>
