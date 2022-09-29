@@ -14,6 +14,8 @@ Current to-do and wishlist:
 
 *INVESTIGATE "minority report" PLUGIN (allegedly there is a plugin/version of rising that allows users to see when another user has opened a conversation/begins typing without having a conversation open on their side) AND REQUEST INTEGRATION
 
+*INVESTIGATE IMPLEMENTATION OF A 'NOT INTERESTED' FLAG (when applied, users would be auto-sorted to the bottom of a channels member list)
+
 
 ## Key Differences
 
