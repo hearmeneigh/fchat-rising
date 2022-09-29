@@ -7,9 +7,11 @@ An executable is coming once more changess are made.
 This repository contains a heavily customized version of the mainline F-Chat 3.0 client. It is based on the F-chat rising client written by MrStallion.
 
 Current to-do and wishlist:
-|ADJUST FONT SIZE OF CHANNEL NAMES AT TOP OF WINDOW
-|IMPLEMENT MULTI-DIMENSIONAL SORT AND FILTER FOR CHANNEL MEMBERS
-|INVESTIGATE "minority report" PLUGIN (allegedly there is a plugin/version of rising that allows users to see when another user has opened a conversation/begins typing without having a conversation open on their side) AND REQUEST INTEGRATION
+*ADJUST FONT SIZE OF CHANNEL NAMES AT TOP OF WINDOW
+
+*IMPLEMENT MULTI-DIMENSIONAL SORT AND FILTER FOR CHANNEL MEMBERS
+
+*INVESTIGATE "minority report" PLUGIN (allegedly there is a plugin/version of rising that allows users to see when another user has opened a conversation/begins typing without having a conversation open on their side) AND REQUEST INTEGRATION
 
 
 ## Key Differences
