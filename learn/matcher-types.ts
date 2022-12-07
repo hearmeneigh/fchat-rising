@@ -68,7 +68,7 @@ export enum Orientation {
     Straight = 4,
     Gay = 5,
     Bisexual = 6,
-    Asexual = 7,
+    Asexual = 58,
     Unsure = 59,
     BiMalePreference = 89,
     BiFemalePreference = 90,
