@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.19.3
+* Fixed asexual orientation ID
+* Replaced the action star icon to differentiate with the mod badges
+
 ## 1.19.2
 * Fixed a bug that could lead to ad-flooding if the client experiences frequent connection drops
 
