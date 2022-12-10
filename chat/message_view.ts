@@ -37,7 +37,7 @@ const userPostfix: {[key: number]: string | undefined} = {
             ` ${this.filterClasses}`;
         if(message.type !== Conversation.Message.Type.Event) {
             children.push(
-                (message.type === Conversation.Message.Type.Action) ? createElement('i', { class: 'message-pre fa-solid fa-star-of-life' }) : '',
+                (message.type === Conversation.Message.Type.Action) ? createElement('i', { class: 'message-pre fas fa-star-of-life' }) : '',
                 createElement(UserView, {props: {character: message.sender, channel: this.channel}}),
                 userPostfix[message.type] !== undefined ? createElement('span', { class: 'message-post' }, userPostfix[message.type]) : ' '
             );
