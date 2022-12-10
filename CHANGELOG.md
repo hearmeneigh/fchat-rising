@@ -1,6 +1,7 @@
 # Changelog
 
 ## 1.19.3
+* Added option to have character portrait displayed next to text input
 * Fixed asexual orientation ID
 * Replaced the action star icon to differentiate with the mod badges
 

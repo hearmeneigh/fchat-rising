@@ -199,6 +199,12 @@
                 </label>
             </div>
 
+            <div class="form-group">
+                <label class="control-label" for="risingShowPortraitNearInput">
+                    <input type="checkbox" id="risingShowPortraitNearInput" v-model="risingShowPortraitNearInput"/>
+                    Show character portrait by text input
+                </label>
+            </div>
         </div>
 
         <div v-show="selectedTab === '3'">
@@ -325,6 +331,7 @@
     import { smartFilterTypes as smartFilterTypesOrigin } from '../learn/filter/types';
     import _ from 'lodash';
     import { matchesSmartFilters } from '../learn/filter/smart-filter';
+    import { EventBus } from './preview/event-bus';
 
     @Component({
         components: {modal: Modal, tabs: Tabs}
@@ -367,6 +374,8 @@
         risingShowUnreadOfflineCount!: boolean;
         risingColorblindMode!: boolean;
 
+        risingShowPortraitNearInput!: boolean;
+
         risingFilter!: SmartFilterSettings = {} as any;
 
         smartFilterTypes = smartFilterTypesOrigin;
@@ -408,6 +417,8 @@
             this.risingShowUnreadOfflineCount = settings.risingShowUnreadOfflineCount;
 
             this.risingColorblindMode = settings.risingColorblindMode;
+            this.risingShowPortraitNearInput = settings.risingShowPortraitNearInput;
+
             this.risingFilter = settings.risingFilter;
         }
 
@@ -468,6 +479,7 @@
                 risingComparisonInUserMenu: this.risingComparisonInUserMenu,
                 risingComparisonInSearch: this.risingComparisonInSearch,
                 risingShowUnreadOfflineCount: this.risingShowUnreadOfflineCount,
+                risingShowPortraitNearInput: this.risingShowPortraitNearInput,
 
                 risingColorblindMode: this.risingColorblindMode,
                 risingFilter: {
@@ -486,6 +498,8 @@
             }
 
             if(this.notifications) await core.notifications.requestPermission();
+
+            EventBus.$emit('configuration-update', core.state.settings);
         }
 
         rebuildFilters() {

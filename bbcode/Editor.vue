@@ -8,6 +8,10 @@
         <div class="bbcode-toolbar btn-toolbar" role="toolbar" :style="showToolbar ? {display: 'flex'} : undefined" @mousedown.stop.prevent
             v-if="hasToolbar" style="flex:1 51%">
             <div class="btn-group" style="flex-wrap:wrap">
+                <div v-if="!!characterName" class="character-btn">
+                  <icon :character="characterName"></icon>
+                </div>
+
                 <div class="btn btn-light btn-sm" v-for="button in buttons" :title="button.title" @click.prevent.stop="apply(button)">
                     <i :class="(button.class ? button.class : 'fa ') + button.icon"></i>
                 </div>
@@ -43,8 +47,13 @@
     import {BBCodeElement, CoreBBCodeParser, urlRegex} from './core';
     import {defaultButtons, EditorButton, EditorSelection} from './editor';
     import {BBCodeParser} from './parser';
+    import {default as IconView} from './IconView.vue';
 
-    @Component
+    @Component({
+      components: {
+        'icon': IconView
+      }
+    })
     export default class Editor extends Vue {
         @Prop
         readonly extras?: EditorButton[];
@@ -69,6 +78,9 @@
 
         @Prop({default: false, type: Boolean})
         readonly invalid!: boolean;
+
+        @Prop({default: null})
+        readonly characterName: string | null = null;
 
         preview = false;
         previewWarnings: ReadonlyArray<string> = [];
@@ -311,3 +323,20 @@
         }
     }
 </script>
+<style lang="scss">
+  .bbcode-editor .bbcode-toolbar .character-btn {
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+
+    a {
+      width: 100%;
+      height: 100%;
+
+      img {
+        width: inherit;
+        height: inherit;
+      }
+    }
+  }
+</style>
