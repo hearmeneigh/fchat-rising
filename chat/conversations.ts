@@ -690,7 +690,10 @@ export async function testSmartFilterForPrivateMessage(fromChar: Character.Chara
 
                     await withNeutralVisibilityPrivateConversation(
                       fromChar,
-                      async(p) => core.logs.logMessage(p, logMessage)
+                      async(p) => {
+                        // core.logs.logMessage(p, logMessage)
+                        await p.addMessage(logMessage);
+                      }
                     );
                 }
               }
@@ -703,7 +706,7 @@ export async function testSmartFilterForPrivateMessage(fromChar: Character.Chara
         core.state.settings.risingFilter.hidePrivateMessages &&
         firstTime // subsequent messages bypass this filter on purpose
     ) {
-        if (core.state.settings.logMessages && originalMessage) {
+        if (core.state.settings.logMessages && originalMessage && firstTime) {
             await withNeutralVisibilityPrivateConversation(
               fromChar,
               async(p) => core.logs.logMessage(p, originalMessage)

@@ -10,7 +10,8 @@ import anyAscii from 'any-ascii';
 import { Store } from '../site/character_page/data_store';
 
 import {
-    BodyType, bodyTypeKinkMapping,
+    BodyType,
+    bodyTypeKinkMapping,
     fchatGenderMap,
     FurryPreference,
     Gender,
@@ -29,7 +30,10 @@ import {
     nonAnthroSpecies,
     Orientation,
     Position,
-    PostLengthPreference, postLengthPreferenceMapping, postLengthPreferenceScoreMapping, Scoring,
+    PostLengthPreference,
+    postLengthPreferenceMapping,
+    postLengthPreferenceScoreMapping,
+    Scoring,
     Species,
     SpeciesMap,
     speciesMapping,
@@ -613,6 +617,10 @@ export class Matcher {
         const weighted = scores.favorite.weighted + scores.yes.weighted + scores.maybe.weighted + scores.no.weighted;
 
         log.debug('report.score.kink', this.them.name, this.you.name, scores, weighted);
+
+        if (scores.favorite.count + scores.yes.count + scores.maybe.count + scores.no.count < 10) {
+            return new Score(Scoring.NEUTRAL);
+        }
 
         if (weighted === 0) {
             return new Score(Scoring.NEUTRAL);
