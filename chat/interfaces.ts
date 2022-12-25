@@ -7,6 +7,7 @@ import { SmartFilterSettings } from '../learn/filter/types';
 export {Connection, Channel, Character} from '../fchat/interfaces';
 export const userStatuses: ReadonlyArray<Character.Status> = ['online', 'looking', 'away', 'busy', 'dnd'];
 export const channelModes: ReadonlyArray<Channel.Mode> = ['chat', 'ads', 'both'];
+import { Ad } from './ads/ad-center';
 
 export namespace Conversation {
     interface BaseMessage {
@@ -185,6 +186,7 @@ export namespace Settings {
         searchHistory: (ExtendedSearchData | SearchData)[]
         hideNonMatchingAds: boolean
         hideProfileComparisonSummary: boolean
+        ads: Ad[]
     };
 
     export interface Store {

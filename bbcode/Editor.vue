@@ -5,7 +5,7 @@
             style="border-bottom-left-radius:0;border-bottom-right-radius:0" v-if="hasToolbar">
             <i class="fa fa-code"></i>
         </a>
-        <div class="bbcode-toolbar btn-toolbar" role="toolbar" :style="showToolbar ? {display: 'flex'} : undefined" @mousedown.stop.prevent
+        <div class="bbcode-toolbar btn-toolbar" role="toolbar" :disabled="disabled" :style="showToolbar ? {display: 'flex'} : undefined" @mousedown.stop.prevent
             v-if="hasToolbar" style="flex:1 51%">
             <div class="btn-group" style="flex-wrap:wrap">
                 <div v-if="!!characterName" class="character-btn">

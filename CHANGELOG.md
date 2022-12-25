@@ -1,5 +1,22 @@
 # Changelog
 
+## Todo
+* Settings allow selecting which match comparisons you care about
+* Import/Export ads
+
+## 1.20.0
+* Kink scoring is skipped if characters have only a few shared kinks
+* Kink scoring gives more weight to 'favorite' and 'no' categories
+* Fixed auto-responder not responding to previously unknown characters
+* Fixed re-order tabs
+* Added Ad Editor:
+    * Central ad editor for all ads
+    * Button near 'Console' in the Sidebar
+* Added Post Ads:
+    * Select ads based on your mood, preference, etc. 
+    * Launch ads on multiple channels
+    * Button near 'Console' in the Sidebar
+
 ## 1.19.3
 * Added option to have character portrait displayed next to text input
 * Fixed asexual orientation ID

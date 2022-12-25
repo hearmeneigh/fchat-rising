@@ -2,6 +2,24 @@
     <modal :action="`Ads for ${conversation.name}`" @submit="submit" ref="dialog" @open="load()" dialogClass="w-100"
         :buttonText="l('conversationSettings.save')">
 
+        <div class="phased-out-warning">
+          <h4>Prepare to Move</h4>
+
+          <p>
+            Channel-specific ads are being phased out.
+
+            Use <button class="btn btn-outline-secondary" @click="openAdEditor()">Ad Editor</button>
+            and
+            <button class="btn btn-outline-secondary" @click="openPostAds()">Post Ads</button>
+            instead,
+            always available on the left sidebar.
+          </p>
+
+          <p>
+            <button class="btn btn-outline-secondary" @click="copyAds()">Copy Channel Ads to Ad Editor</button>
+          </p>
+        </div>
+
         <div class="form-group">
             <label class="control-label" for="randomOrder">
                 <input type="checkbox" v-model="randomOrder" id="randomOrder" />
@@ -33,6 +51,8 @@
     import {Editor} from '../bbcode';
     import core from '../core';
     import { Dialog } from '../../helpers/dialog';
+    import AdCenterDialog from './AdCenter.vue';
+    import _ from 'lodash';
 
     @Component({
         components: {modal: Modal, editor: Editor}
@@ -94,6 +114,28 @@
             this.ads.splice(index + 1, 0, ad[0]);
         }
 
+        openAdEditor() {
+          this.hide();
+          (<AdCenterDialog>this.$parent.$parent.$refs['adCenter']).show();
+        }
+
+        openPostAds() {
+          this.hide();
+          (<AdCenterDialog>this.$parent.$parent.$refs['adLauncher']).show();
+        }
+
+        async copyAds(): Promise<void> {
+          await Promise.all(_.map(
+            this.ads,
+            async (ad) => {
+              if (core.adCenter.isMissingFromAdCenter(ad)) {
+                await core.adCenter.add(ad);
+              }
+            }
+          ));
+
+          this.openAdEditor();
+        }
     }
 </script>
 
@@ -138,6 +180,12 @@
         border-radius: 0 5px 5px 5px;
       }
     }
+  }
+
+  .phased-out-warning {
+    border: 1px solid orange;
+    padding: 15px;
+    margin-bottom: 2rem;
   }
 </style>
 

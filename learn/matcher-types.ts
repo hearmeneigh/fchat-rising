@@ -730,8 +730,8 @@ export const kinkMatchScoreMap = {
     favorite: {
         favorite: 1,
         yes: 0.35,
-        maybe: -0.35,
-        no: -1
+        maybe: -0.5,
+        no: -1.5
     },
 
     yes: {
@@ -749,8 +749,8 @@ export const kinkMatchScoreMap = {
     },
 
     no: {
-        favorite: -1,
-        yes: -0.35,
+        favorite: -1.5,
+        yes: -0.5,
         maybe: 0,
         no: 0
     }

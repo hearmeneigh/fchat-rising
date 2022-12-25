@@ -19,6 +19,18 @@
                 {{l('settings.open')}}</a></div>
             <div><a href="#" @click.prevent="showRecent()" class="btn"><span class="fas fa-history"></span>
                 {{l('chat.recentConversations')}}</a></div>
+
+            <div><a href="#" @click.prevent="showAdCenter()" class="btn"><span class="fas fa-ad"></span>
+                Ad Editor</a></div>
+
+            <div><a href="#" @click.prevent="showAdLauncher()" class="btn"><span class="fas fa-play"></span>
+                Post Ads</a>
+
+                <span v-show="adsAreRunning()" class="adControls">
+                  <span aria-label="Stop All Ads" class="fas fa-stop" @click.prevent="stopAllAds()"></span>
+                </span>
+            </div>
+
             <div class="list-group conversation-nav">
                 <a :class="getClasses(conversations.consoleTab)" href="#" @click.prevent="conversations.consoleTab.show()"
                     class="list-group-item list-group-item-action">
@@ -51,6 +63,7 @@
             </div>
             <a href="#" @click.prevent="showChannels()" class="btn"><span class="fas fa-list"></span>
                 {{l('chat.channels')}}</a>
+
             <div class="list-group conversation-nav" ref="channelConversations">
                 <a v-for="conversation in conversations.channelConversations" href="#" @click.prevent="conversation.show()"
                     :class="getClasses(conversation)" class="list-group-item list-group-item-action item-channel" :key="conversation.key"
@@ -92,6 +105,8 @@
         <channels ref="channelsDialog"></channels>
         <status-switcher ref="statusDialog"></status-switcher>
         <character-search ref="searchDialog"></character-search>
+        <adLauncher ref="adLauncher"></adLauncher>
+        <adCenter ref="adCenter"></adCenter>
         <settings ref="settingsDialog"></settings>
         <report-dialog ref="reportDialog"></report-dialog>
         <user-menu ref="userMenu" :reportDialog="$refs['reportDialog']"></user-menu>
@@ -131,6 +146,8 @@
     import NoteStatus from '../site/NoteStatus.vue';
     import { Dialog } from '../helpers/dialog';
     // import { EventBus } from './preview/event-bus';
+    import AdCenterDialog from './ads/AdCenter.vue';
+    import AdLauncherDialog from './ads/AdLauncher.vue';
 
     const unreadClasses = {
         [Conversation.UnreadState.None]: '',
@@ -145,7 +162,9 @@
             'user-menu': UserMenu, 'recent-conversations': RecentConversations,
             'image-preview': ImagePreview,
             'add-pm-partner': PmPartnerAdder,
-            'note-status': NoteStatus
+            'note-status': NoteStatus,
+            adCenter: AdCenterDialog,
+            adLauncher: AdLauncherDialog
         }
     })
     export default class ChatView extends Vue {
@@ -216,6 +235,8 @@
             }, (value) => {
                 this.setFontSize(value);
             });
+
+            void core.adCenter.load();
         }
 
         @Hook('destroyed')
@@ -341,6 +362,14 @@
             (<StatusSwitcher>this.$refs['statusDialog']).show();
         }
 
+        showAdCenter(): void {
+          (<AdCenterDialog>this.$refs['adCenter']).show();
+        }
+
+        showAdLauncher(): void {
+          (<AdLauncherDialog>this.$refs['adLauncher']).show();
+        }
+
         showAddPmPartner(): void {
             (<PmPartnerAdder>this.$refs['addPmPartnerDialog']).show();
         }
@@ -371,6 +400,14 @@
 
         getImagePreview(): ImagePreview | undefined {
           return this.$refs['imagePreview'] as ImagePreview;
+        }
+
+        adsAreRunning(): boolean {
+          return core.adCenter.adsAreRunning();
+        }
+
+        stopAllAds(): void {
+          core.adCenter.stopAllAds();
         }
     }
 </script>
@@ -542,6 +579,21 @@
             .expander {
                 display: none;
             }
+        }
+
+        .adControls {
+          float: right;
+          margin-right: 0.25rem;
+          margin-top: 3px;
+
+          span {
+            color: var(--danger);
+            cursor: pointer;
+
+            &:hover {
+              color: var(--red);
+            }
+          }
         }
     }
 </style>
