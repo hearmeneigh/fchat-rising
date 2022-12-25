@@ -1,9 +1,5 @@
 # Changelog
 
-## Todo
-* Settings allow selecting which match comparisons you care about
-* Import/Export ads
-
 ## 1.20.0
 * Kink scoring is skipped if characters have only a few shared kinks
 * Kink scoring gives more weight to 'favorite' and 'no' categories
