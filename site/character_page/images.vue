@@ -3,9 +3,6 @@
     <div class="character-images">
         <div v-show="((loading) && (images.length === 0))" class="alert alert-info">Loading images.</div>
         <template v-if="!loading">
-            <div class="images-navigate-up">
-                <i class="fa fa-angle-up"></i>
-            </div>
 
             <!-- @click="handleImageClick($event, image)" -->
             <div v-for="image in images" :key="image.id" class="character-image-wrapper">
