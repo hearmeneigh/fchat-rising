@@ -26,7 +26,7 @@ function writeFile(p: fs.PathLike | number, data: string | NodeJS.ArrayBufferVie
     }
 }
 
-export type Message = Conversation.EventMessage | {
+export type Message = Conversation.EventMessage | Conversation.BcastMessage | {
     readonly sender: {readonly name: string}
     readonly text: string
     readonly time: Date

@@ -174,3 +174,13 @@ export class EventMessage implements Conversation.EventMessage {
     constructor(readonly text: string, readonly time: Date = new Date()) {
     }
 }
+
+export class BroadcastMessage implements Conversation.BcastMessage {
+    readonly id = ++messageId;
+    readonly type = Conversation.Message.Type.Bcast;
+
+    readonly score = 0;
+    filterMatch = false;
+
+    constructor(readonly text: string, readonly sender: Character, readonly time: Date = new Date()) {}
+}

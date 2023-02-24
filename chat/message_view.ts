@@ -41,7 +41,7 @@ const userPostfix: {[key: number]: string | undefined} = {
                 createElement(UserView, {props: {character: message.sender, channel: this.channel}}),
                 userPostfix[message.type] !== undefined ? createElement('span', { class: 'message-post' }, userPostfix[message.type]) : ' '
             );
-            if(message.isHighlight) classes += ' message-highlight';
+            if('isHighlight' in message && message.isHighlight) classes += ' message-highlight';
         }
         const isAd = message.type === Conversation.Message.Type.Ad && !this.logs;
         children.push(createElement(BBCodeView(core.bbCodeParser),
