@@ -58,6 +58,10 @@ const previewInitiationTime = Date.now();
                 return;
             }
 
+            if (window.location.href.match(/^https?:\/\/(www\.)?rule34video\.com/)) {
+                return;
+            }
+
             if (window.location.href.match(/^https?:\/\/[a-zA-Z0-9-]+\.tumblr\.com/)) {
                 // Because Tumblr sucks with their iframes
                 const og = document.querySelectorAll('meta[property="og:image"]:not([content=""])');

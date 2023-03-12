@@ -174,6 +174,7 @@ export class ImageDomMutator {
         this.add('xhamster.com', this.getBaseJsMutatorScript(['#photo_slider video', '#photo_slider img', 'video', 'img']));
         this.add('shadbase.com', this.getBaseJsMutatorScript(['#comic video', '#comic img', 'video', 'img']));
         this.add('instagram.com', this.getBaseJsMutatorScript(['article video', 'article img', 'video', 'img']));
+        this.add('rule34video.com', this.getBaseJsMutatorScript(['video'], true, [], false, true));
 
         this.add(
             'pornhub.com',
@@ -236,7 +237,6 @@ export class ImageDomMutator {
             undefined,
             'dom-ready'
         );
-
 
         this.add(
             'hentai-foundry.com',

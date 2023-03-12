@@ -97,13 +97,15 @@
             <word-definition :expression="wordDefinitionLookup" ref="wordDefinitionLookup"></word-definition>
             <template slot="title">
                 {{wordDefinitionLookup}}
-
                 <a class="btn wordDefBtn dictionary" @click="openDefinitionWithDictionary"><i>D</i></a>
                 <a class="btn wordDefBtn thesaurus" @click="openDefinitionWithThesaurus"><i>T</i></a>
                 <a class="btn wordDefBtn urbandictionary" @click="openDefinitionWithUrbanDictionary"><i>UD</i></a>
                 <a class="btn wordDefBtn wikipedia" @click="openDefinitionWithWikipedia"><i>W</i></a>
+
+                <a class="btn" @click="openWordDefinitionInBrowser"><i class="fa fa-external-link-alt"/></a>
             </template>
         </modal>
+
         <logs ref="logsDialog"></logs>
     </div>
 </template>
@@ -133,6 +135,7 @@
     // import { Sqlite3Store } from '../learn/store/sqlite3';
     import CharacterPage from '../site/character_page/character_page.vue';
     import WordDefinition from '../learn/dictionary/WordDefinition.vue';
+    import ProfileAnalysis from '../learn/recommend/ProfileAnalysis.vue';
     import {defaultHost, GeneralSettings, nativeRequire} from './common';
     import { fixLogs /*SettingsStore, Logs as FSLogs*/ } from './filesystem';
     import * as SlimcatImporter from './importer';
@@ -200,7 +203,8 @@
           logs: Logs,
           'word-definition': WordDefinition,
           BBCodeTester: BBCodeTester,
-          bbcode: BBCodeView(core.bbCodeParser)
+          bbcode: BBCodeView(core.bbCodeParser),
+          'profile-analysis': ProfileAnalysis
         }
     })
     export default class Index extends Vue {
@@ -598,6 +602,14 @@
 
         async openDefinitionWithWikipedia(): Promise<void> {
           (this.$refs.wordDefinitionLookup as any).setMode('wikipedia');
+        }
+
+
+        async openWordDefinitionInBrowser(): Promise<void> {
+          await remote.shell.openExternal((this.$refs.wordDefinitionLookup as any).getWebUrl());
+
+          // tslint:disable-next-line: no-any no-unsafe-any
+          (this.$refs.wordDefinitionViewer as any).hide();
         }
 
 

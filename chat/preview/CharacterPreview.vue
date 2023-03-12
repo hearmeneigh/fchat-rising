@@ -36,6 +36,11 @@
 <!--          <span v-for="c in customs" :class="Score.getClasses(c.score)">{{c.name}}</span>-->
 <!--        </div>-->
 
+        <div class="memo" v-if="memo">
+          <h4>Memo</h4>
+          <div>{{ memo }}</div>
+        </div>
+
         <div class="status-message" v-if="statusMessage">
           <h4>Status <span v-if="latestAd && (statusMessage === latestAd.message)">&amp; Latest Ad</span></h4>
           <bbcode :text="statusMessage"></bbcode>
@@ -116,6 +121,7 @@ export default class CharacterPreview extends Vue {
   statusClasses?: StatusClasses;
   latestAd?: AdCachedPosting;
   statusMessage?: string;
+  memo?: string;
 
   smartFilterIsFiltered?: boolean;
   smartFilterDetails?: string[];
@@ -199,6 +205,7 @@ export default class CharacterPreview extends Vue {
     this.match = undefined;
     this.character = undefined;
     this.customs = undefined;
+    this.memo = undefined;
     this.ownCharacter = core.characters.ownProfile;
 
     this.conversation = undefined;
@@ -218,6 +225,7 @@ export default class CharacterPreview extends Vue {
       this.updateSmartFilterReport();
       this.updateCustoms();
       this.updateDetails();
+      this.updateMemo();
     }, 0);
   }
 
@@ -293,6 +301,9 @@ export default class CharacterPreview extends Vue {
     this.latestAd = cache.posts[cache.posts.length - 1];
   }
 
+  updateMemo(): void {
+    this.memo = this.character?.memo?.memo;
+  }
 
   updateCustoms(): void {
     this.customs = _.orderBy(
@@ -469,7 +480,8 @@ export default class CharacterPreview extends Vue {
 
     .status-message,
     .latest-ad-message,
-    .conversation {
+    .conversation,
+    .memo {
       display: block;
       background-color: rgba(0,0,0,0.2);
       padding: 10px;

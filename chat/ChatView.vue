@@ -31,6 +31,10 @@
                 </span>
             </div>
 
+            <div><a href="#" @click.prevent="showProfileAnalyzer()" class="btn"><span class="fas fa-user-md"></span>
+                Profile Analyzer</a>
+            </div>
+
             <div class="list-group conversation-nav">
                 <a :class="getClasses(conversations.consoleTab)" href="#" @click.prevent="conversations.consoleTab.show()"
                     class="list-group-item list-group-item-action">
@@ -114,6 +118,15 @@
         <image-preview ref="imagePreview"></image-preview>
         <add-pm-partner ref="addPmPartnerDialog"></add-pm-partner>
         <note-status v-if="coreState.settings.risingShowUnreadOfflineCount"></note-status>
+
+        <modal :buttons="false" ref="profileAnalysis" dialogClass="profile-analysis" >
+            <profile-analysis></profile-analysis>
+            <template slot="title">
+                {{ownCharacter.name}}
+                <a class="btn" @click="showProfileAnalyzer"><i class="fa fa-sync" /></a>
+            </template>
+        </modal>
+
     </div>
 </template>/me
 
@@ -148,6 +161,8 @@
     // import { EventBus } from './preview/event-bus';
     import AdCenterDialog from './ads/AdCenter.vue';
     import AdLauncherDialog from './ads/AdLauncher.vue';
+    import Modal from '../components/Modal.vue';
+    import ProfileAnalysis from '../learn/recommend/ProfileAnalysis.vue';
 
     const unreadClasses = {
         [Conversation.UnreadState.None]: '',
@@ -164,7 +179,9 @@
             'add-pm-partner': PmPartnerAdder,
             'note-status': NoteStatus,
             adCenter: AdCenterDialog,
-            adLauncher: AdLauncherDialog
+            adLauncher: AdLauncherDialog,
+            modal: Modal,
+            'profile-analysis': ProfileAnalysis
         }
     })
     export default class ChatView extends Vue {
@@ -368,6 +385,11 @@
 
         showAdLauncher(): void {
           (<AdLauncherDialog>this.$refs['adLauncher']).show();
+        }
+
+        showProfileAnalyzer(): void {
+          (this.$refs.profileAnalysis as any).show();
+          void (this.$refs.profileAnalysis as any).$children[0].analyze();
         }
 
         showAddPmPartner(): void {

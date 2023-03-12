@@ -524,6 +524,10 @@ export class Matcher {
         return this.formatScoring(score, postLengthPreferenceMapping[theirLength]);
     }
 
+    static getSpeciesName(species: Species): string {
+        return speciesNames[species] || `${Species[species].toLowerCase()}s`;
+    }
+
     private resolveSpeciesScore(): Score {
         const you = this.you;
         const theirAnalysis = this.theirAnalysis;

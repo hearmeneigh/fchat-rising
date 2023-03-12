@@ -85,7 +85,10 @@
 
         show(keepOpen: boolean = false): void {
             this.keepOpen = keepOpen;
-            if(this.isShown) return;
+            if(this.isShown) {
+              this.$emit('reopen');
+              return;
+            }
             this.isShown = true;
             dialogStack.push(this);
             this.$emit('open');

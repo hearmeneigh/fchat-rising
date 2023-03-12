@@ -60,6 +60,7 @@ import ReportDialog from './ReportDialog.vue';
 import { Matcher, MatchReport } from '../learn/matcher';
 import _ from 'lodash';
 import MatchTags from './preview/MatchTags.vue';
+import { MemoManager } from './character/memo';
 
 @Component({
         components: {'match-tags': MatchTags, bbcode: BBCodeView(core.bbCodeParser), modal: Modal, 'ad-view': CharacterAdView}
@@ -76,9 +77,10 @@ import MatchTags from './preview/MatchTags.vue';
         touchedElement: HTMLElement | undefined;
         channel: Channel | undefined;
         memo = '';
-        memoId = 0;
+        // memoId = 0;
         memoLoading = false;
         match: MatchReport | null = null;
+        memoManager?: MemoManager;
 
         openConversation(jump: boolean): void {
             const conversation = core.conversations.getPrivate(this.character!);
@@ -115,23 +117,23 @@ import MatchTags from './preview/MatchTags.vue';
         async showMemo(): Promise<void> {
             this.memoLoading = true;
             this.memo = '';
+            this.memoManager = new MemoManager(this.character!.name);
+
             (<Modal>this.$refs['memo']).show();
+
             try {
-                const memo = await core.connection.queryApi<{note: string | null, id: number}>('character-memo-get2.php',
-                    {target: this.character!.name});
-                this.memoId = memo.id;
-                this.memo = memo.note !== null ? memo.note : '';
-                this.memoLoading = false;
+              await this.memoManager.load();
+
+              this.memo = this.memoManager.get().memo;
+              this.memoLoading = false;
             } catch(e) {
                 alert(errorToString(e));
             }
         }
 
         updateMemo(): void {
-            core.connection.queryApi('character-memo-save.php', {target: this.memoId, note: this.memo})
-                .catch((e: object) => alert(errorToString(e)));
+          this.memoManager?.set(this.memo).catch((e: object) => alert(errorToString(e)))
         }
-
 
         showAdLogs(): void {
             if (!this.hasAdLogs()) {

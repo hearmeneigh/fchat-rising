@@ -1,5 +1,5 @@
 <template>
-  <modal action="Post Ads" @submit="submit" ref="dialog" @open="load" dialogClass="w-100" class="adLauncher" :buttonText="'Start Posting Ads'">
+  <modal action="Post Ads" @submit="submit" ref="dialog" @reopen="load" @open="load" dialogClass="w-100" class="adLauncher" :buttonText="'Start Posting Ads'">
     <div v-if="hasAds()">
         <h4>Ad Tags</h4>
         <div class="form-group">
@@ -14,6 +14,13 @@
         <h4>Target Channels</h4>
         <div class="form-group">
             <p>Serve ads on these channels:</p>
+
+            <p v-if="channels.length === 0">You have no channels open that support ad posting. Open some channels first.</p>
+
+            <label class="control-label">
+                <input type="checkbox" id="ard-all-channels" @change="selectAllChannels($event)" />
+                <i>Select/unselect all</i>
+            </label>
 
             <label class="control-label" :for="`adr-channel-${index}`" v-for="(channel,index) in channels">
                 <input type="checkbox" v-model="channel.value" :id="`adr-channel-${index}`" />
@@ -127,6 +134,15 @@ export default class AdLauncherDialog extends CustomDialog {
   openAdEditor(): void {
     this.hide();
     (<AdCenterDialog>this.$parent.$refs['adCenter']).show();
+  }
+
+  selectAllChannels(e: any): void {
+    const newValue = e.target.checked;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    _.each(this.channels, (c) => c.value = newValue);
   }
 
   submit(e: Event) {

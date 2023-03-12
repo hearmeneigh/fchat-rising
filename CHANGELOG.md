@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.21.0
+* Added clearer broadcast messages
+* Removed extra arrow from gallery view (credit: [@FatCatClient](https://github.com/FatCatClient))
+* Added profile analyser to help improve profile matching
+* Dictionary lookup view now has a 'open in browser' button
+* Character memos are now displayed more prominently
+* Fixed redgifs.com V3 image previews
+* Fixed rule34video.com image previews
+* 'Select all channels' for Post Ads
+
 ## 1.20.0
 * Kink scoring is skipped if characters have only a few shared kinks
 * Kink scoring gives more weight to 'favorite' and 'no' categories
