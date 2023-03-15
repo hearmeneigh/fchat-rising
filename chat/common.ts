@@ -57,8 +57,8 @@ export class Settings implements ISettings {
     risingShowPortraitNearInput = true;
 
     risingFilter = {
-        hideAds: true,
-        hideSearchResults: true,
+        hideAds: false,
+        hideSearchResults: false,
         hideChannelMembers: false,
         hidePublicChannelMessages: false,
         hidePrivateChannelMessages: false,

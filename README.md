@@ -1,8 +1,8 @@
 # Download
-[Windows](https://github.com/mrstallion/fchat-rising/releases/download/v1.21.0/F-Chat-Rising-1.21.0-win.exe) (82 MB)
-| [MacOS Intel](https://github.com/mrstallion/fchat-rising/releases/download/v1.21.0/F-Chat-Rising-1.21.0-macos-intel.dmg) (82 MB)
-| [MacOS M1](https://github.com/mrstallion/fchat-rising/releases/download/v1.21.0/F-Chat-Rising-1.21.0-macos-m1.dmg) (84 MB)
-| [Linux](https://github.com/mrstallion/fchat-rising/releases/download/v1.21.0/F-Chat-Rising-1.21.0-linux.AppImage) (82 MB)
+[Windows](https://github.com/mrstallion/fchat-rising/releases/download/v1.21.1/F-Chat-Rising-1.21.1-win.exe) (82 MB)
+| [MacOS Intel](https://github.com/mrstallion/fchat-rising/releases/download/v1.21.1/F-Chat-Rising-1.21.1-macos-intel.dmg) (82 MB)
+| [MacOS M1](https://github.com/mrstallion/fchat-rising/releases/download/v1.21.1/F-Chat-Rising-1.21.1-macos-m1.dmg) (84 MB)
+| [Linux](https://github.com/mrstallion/fchat-rising/releases/download/v1.21.1/F-Chat-Rising-1.21.1-linux.AppImage) (82 MB)
 
 
 # F-Chat Rising
@@ -52,6 +52,7 @@ This repository contains a heavily customized version of the mainline F-Chat 3.0
     *    Character view tabs (overview, images, etc.) stick to the top 
     *    Show/hide current profile with Ctrl+P or Command+P
     *    Navigate back and forward in character profile view history
+    *    Profile Analyzer guides you to adjust your profile to maximize matches 
 *   Character Search
     *    Search results are sorted based on match scores
     *    Best matching profiles get a 'unicorn' tag
@@ -77,7 +78,7 @@ This repository contains a heavily customized version of the mainline F-Chat 3.0
     *    Option to disable Windows high contrast mode
     *    Right click any word and select 'Look up...' to see its dictionary definition
 *   Technical Details for Nerds
-    *    Upgraded to Electron 10.x
+    *    Upgraded to Electron 17.x
     *    Replaced `node-spellchecker` with the built-in spellchecker that ships with Electron 8+
     *    Multi-language support for spell checking (Windows only – language is autodetected on MacOS) 
 
@@ -85,7 +86,7 @@ This repository contains a heavily customized version of the mainline F-Chat 3.0
 ## How to Set Up Ads
 
 1. Open a conversation channel of your preference, such as `#Sex Driven LFRP`
-1. Locate `Ads` dropdown at the top right corner of the channel view
+1. Locate `Ads` dropdown in the top right corner of the channel view
 1. Click `Ads > Edit Channel Ads...`
 1. Enter one or more ads
 1. Click `Save settings`

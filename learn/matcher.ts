@@ -722,6 +722,9 @@ export class Matcher {
 
     private resolveGenderScore(): Score {
         const you = this.you;
+
+        const yourGender = this.yourAnalysis.gender;
+        const yourOrientation = this.yourAnalysis.orientation;
         const theirGender = this.theirAnalysis.gender;
 
         if (theirGender === null)
@@ -732,6 +735,21 @@ export class Matcher {
 
         if (genderKinkScore !== null)
             return Matcher.formatKinkScore(genderKinkScore, genderName);
+
+        if (yourGender && yourOrientation) {
+            if (Matcher.isCisGender(yourGender) && !Matcher.isCisGender(theirGender)) {
+                if ([
+                    Orientation.Straight,
+                    Orientation.Gay,
+                    Orientation.Bisexual,
+                    Orientation.BiCurious,
+                    Orientation.BiFemalePreference,
+                    Orientation.BiMalePreference
+                ].includes(yourOrientation)) {
+                    return new Score(Scoring.MISMATCH, 'No <span>non-binary</span> genders');
+                }
+            }
+        }
 
         return new Score(Scoring.NEUTRAL);
     }

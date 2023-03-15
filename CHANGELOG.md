@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.21.1
+* Fixed a bug that skipped resolving profiles from channel ads
+* Non-binary genders are now considered mismatches against straight, gay, and bi orientations
+    * To override this, you can add kinks such as 'transgenders' to your favorite kinks
+* Smart Filter automatically marks matches as red if 'penalize matches' is selected 
+
 ## 1.21.0
 * Added clearer broadcast messages
 * Removed extra arrow from gallery view (credit: [@FatCatClient](https://github.com/FatCatClient))

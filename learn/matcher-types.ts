@@ -343,7 +343,6 @@ export const genderKinkMapping: GenderKinkIdMap = {
     [Gender.Transgender]: Kink.Transgenders
 };
 
-
 export interface BodyTypeKinkIdMap {
     [key: number]: Kink
 }
