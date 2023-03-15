@@ -62,7 +62,7 @@ export class CacheManager {
     protected fetchLog: Record<string, number> = {};
     protected ongoingLog: Record<string, true> = {};
 
-    protected isActiveTab = false;
+    protected isActiveTab = true;
 
     setTabActive(isActive: boolean): void {
       this.isActiveTab = isActive;
@@ -87,7 +87,7 @@ export class CacheManager {
             return;
         }
 
-        log.debug('profile.cache.queue', { name, skipCacheCheck, channelId });
+        log.debug('profile.cache.queue', { name, skipCacheCheck, channelId, from: core.characters.ownCharacter.name });
 
         if (!skipCacheCheck) {
             const c = await this.profileCache.get(name);
