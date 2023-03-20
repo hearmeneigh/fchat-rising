@@ -6,8 +6,43 @@
 
 
 # F-Chat Rising
-
 This repository contains a heavily customized version of the mainline F-Chat 3.0 client.
+
+## TL;DR
+
+### Setting Up
+```bash
+# Windows only
+npm install --global --production --vs2015 --add-python-to-path windows-build-tools node-gyp
+
+# All operating systems
+git clone https://github.com/mrstallion/fchat-rising.git
+cd fchat-rising
+yarn
+```
+
+### Dev Mode
+Run two processes simultaneously:
+
+```bash
+# Process 1 -- watch
+cd electron
+yarn watch
+```
+
+```bash
+# Process 2
+cd electron
+yarn start
+# Use `Ctrl+Shift+I` to open the Chromium debugger.
+```
+
+### Build
+```bash
+cd electron
+yarn build:dist
+node pack.js
+```
 
 
 ## Key Differences
@@ -139,36 +174,46 @@ All necessary files to build F-Chat 3.0 as an Electron, mobile or web applicatio
  - IntelliJ IDEA is recommended for development.
  
 ## Building for Electron
- - To build native Node assets, you will need to install Python 2.7 and the Visual C++ 2015 Build tools. [More information can be found in the node-gyp docs.](https://github.com/nodejs/node-gyp#installation)
+ - **Windows only:** To build native Node assets, you will need to install Python and the Visual C++ 2015 Build tools. [More information can be found in the node-gyp docs.](https://github.com/nodejs/node-gyp#installation)
+    - `npm install --global --production --vs2015 --add-python-to-path windows-build-tools node-gyp`
  - Change into the `electron` directory.
  - Run `yarn build`/`yarn watch` to build assets. They are placed into the `app` directory.
  - Run `yarn start` to start the app in debug mode. Use `Ctrl+Shift+I` to open the Chromium debugger.
 
+### Building a Release Package (Electron)
+ 1. `cd electron`
+ 1. `yarn build:dist`
+ 1. `node pack.js`
 
-### Building on Windows
-
-```
-npm install --global --production --vs2015 --add-python-to-path windows-build-tools node-gyp
-```
 
 ### Packaging
-See https://electron.atom.io/docs/tutorial/application-distribution/
- - Run `yarn build:dist` to create a minified production build.
- - Run `yarn run pack`. The generated installer is placed into the `dist` directory.
-   - On Windows you can add the path to and password for a code signing certificate as arguments.
-   - On Mac you can add your code signing identity as an argument. `zip` is required to be installed.
-   - On Linux you can add a GPG key for signing and its password as arguments. `mksquashfs` and `zsyncmake` are required to be installed.
+> This section is outdated and left here for reference purposes only.
+
+~~See https://electron.atom.io/docs/tutorial/application-distribution/~~
+~~Run `cd electron && yarn build:dist` to create a minified production build.~~
+~~Run `yarn run pack`. The generated installer is placed into the `dist` directory.~~
+~~On Windows you can add the path to and password for a code signing certificate as arguments.~~
+~~On Mac you can add your code signing identity as an argument. `zip` is required to be installed.~~
+~~On Linux you can add a GPG key for signing and its password as arguments. `mksquashfs` and `zsyncmake` are required to be installed.~~
 
 ## Building for Mobile
- - Change into the `mobile` directory.
- - Run `yarn build`/`yarn watch` to build assets. They are placed into the `www` directory.
- - For Android, change into the `android` directory and run `./gradlew assembleDebug`. The generated APK is placed into `app/build/outputs/apk`.
- - For iOS, change into the `ios` directory and open `F-Chat.xcodeproj` using XCode. From there, simply run the app using the play button.
+> Mobile builds are not supported. This section is outdated and left here for reference purposes only. 
+>
+> Are you a kickass mobile developer? Maybe you can help us fix the build.
+
+~~Change into the `mobile` directory.~~
+~~Run `yarn build`/`yarn watch` to build assets. They are placed into the `www` directory.~~
+~~For Android, change into the `android` directory and run `./gradlew assembleDebug`. The generated APK is placed into `app/build/outputs/apk`.~~
+~~For iOS, change into the `ios` directory and open `F-Chat.xcodeproj` using XCode. From there, simply run the app using the play button.~~
 
 ## Building for Web
- - Change into the `webchat` directory.
- - Run `yarn build`/`yarn watch` to build assets. They are placed into the `dist` directory.
- - The compiled main.js file can be included by an HTML file that is expected to provide a global `const chatSettings: {account: string, theme: string, characters: ReadonlyArray<string>, defaultCharacter: string | null};`. It should also normalize the page to 100% height.
+> Mobile builds are not supported. This section is outdated and left here for reference purposes only. 
+>
+> Are you a kickass web developer? Maybe you can help us fix the build.
+
+~~Change into the `webchat` directory.~~
+~~Run `yarn build`/`yarn watch` to build assets. They are placed into the `dist` directory.~~
+~~The compiled main.js file can be included by an HTML file that is expected to provide a global `const chatSettings: {account: string, theme: string, characters: ReadonlyArray<string>, defaultCharacter: string | null};`. It should also normalize the page to 100% height.~~
 
 ## Building a custom theme
 See [the wiki](https://wiki.f-list.net/F-Chat_3.0/Themes) for instructions on how to create a custom theme.
