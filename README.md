@@ -18,6 +18,12 @@ npm install --global --production --vs2015 --add-python-to-path windows-build-to
 # All operating systems
 git clone https://github.com/mrstallion/fchat-rising.git
 cd fchat-rising
+
+# Optional; make sure your commits are anonymous
+git config --local user.name "SOME NAME"
+git config --local user.email "some@email.com"
+
+# All operating systems
 yarn
 ```
 
