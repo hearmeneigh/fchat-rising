@@ -207,7 +207,7 @@ All necessary files to build F-Chat 3.0 as an Electron, mobile or web applicatio
 ~~For iOS, change into the `ios` directory and open `F-Chat.xcodeproj` using XCode. From there, simply run the app using the play button.~~
 
 ## Building for Web
-> Mobile builds are not supported. This section is outdated and left here for reference purposes only. 
+> Web builds are not supported. This section is outdated and left here for reference purposes only. 
 >
 > Are you a kickass web developer? Maybe you can help us fix the build.
 
