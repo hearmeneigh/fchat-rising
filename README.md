@@ -35,7 +35,7 @@ yarn watch
 ```
 
 ```bash
-# Process 2
+# Process 2 -- app
 cd electron
 yarn start
 # Use `Ctrl+Shift+I` to open the Chromium debugger.
