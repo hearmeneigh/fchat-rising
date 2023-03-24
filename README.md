@@ -1,20 +1,13 @@
 # Download
-An executable is coming once more changess are made.
+[Windows](https://github.com/mrstallion/fchat-rising/releases/download/v1.19.2/F-Chat-Rising-1.19.2-win.exe) (82 MB)
+| [MacOS Intel](https://github.com/mrstallion/fchat-rising/releases/download/v1.19.2/F-Chat-Rising-1.19.2-macos-intel.dmg) (82 MB)
+| [MacOS M1](https://github.com/mrstallion/fchat-rising/releases/download/v1.19.2/F-Chat-Rising-1.19.2-macos-m1.dmg) (84 MB)
+| [Linux](https://github.com/mrstallion/fchat-rising/releases/download/v1.19.2/F-Chat-Rising-1.19.2-linux.AppImage) (82 MB)
 
 
-# 4-Chat Rising
+# F-Chat Rising
 
-This repository contains a heavily customized version of the mainline F-Chat 3.0 client. It is based on the F-chat rising client written by MrStallion.
-
-Current to-do and wishlist:
-
-*ADJUST FONT SIZE OF CHANNEL NAMES AT TOP OF WINDOW
-
-*IMPLEMENT MULTI-DIMENSIONAL SORT AND FILTER FOR CHANNEL MEMBERS
-
-*INVESTIGATE "minority report" PLUGIN (allegedly there is a plugin/version of rising that allows users to see when another user has opened a conversation/begins typing without having a conversation open on their side) AND REQUEST INTEGRATION
-
-*INVESTIGATE IMPLEMENTATION OF A 'NOT INTERESTED' FLAG (when applied, users would be auto-sorted to the bottom of a channels member list)
+This repository contains a heavily customized version of the mainline F-Chat 3.0 client.
 
 
 ## Key Differences
@@ -24,8 +17,6 @@ Current to-do and wishlist:
 1. **Link previews** popup shows a preview of an image / video when you hover your mouse over a link.
 1. **Caching** speeds up profile loads and other actions.
 1. **Smart filters** let you choose what kind of ads and posts you see in the chat.
-
-!!! 4chat-rising is planned to, in addition to the various changes fchat-rising brings, tweak various pieces of logic in the systems based around compatability testing, kink and interest comparison and other general design decisions which can cause issues when they are forced upon the user.
 
 
 ### More Detailed Differences
