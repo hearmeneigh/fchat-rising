@@ -2,7 +2,7 @@ import {queuedJoin} from '../fchat/channels';
 import {decodeHTML} from '../fchat/common';
 // import { CharacterCacheRecord } from '../learn/profile-cache';
 import { AdManager } from './ads/ad-manager';
-import { characterImage, ConversationSettings, EventMessage, Message, messageToString } from './common';
+import { characterImage, ConversationSettings, EventMessage, BroadcastMessage,  Message, messageToString } from './common';
 import core from './core';
 import { Channel, Character, Conversation as Interfaces } from './interfaces';
 import l from './localize';
@@ -690,7 +690,10 @@ export async function testSmartFilterForPrivateMessage(fromChar: Character.Chara
 
                     await withNeutralVisibilityPrivateConversation(
                       fromChar,
-                      async(p) => core.logs.logMessage(p, logMessage)
+                      async(p) => {
+                        // core.logs.logMessage(p, logMessage)
+                        await p.addMessage(logMessage);
+                      }
                     );
                 }
               }
@@ -703,7 +706,7 @@ export async function testSmartFilterForPrivateMessage(fromChar: Character.Chara
         core.state.settings.risingFilter.hidePrivateMessages &&
         firstTime // subsequent messages bypass this filter on purpose
     ) {
-        if (core.state.settings.logMessages && originalMessage) {
+        if (core.state.settings.logMessages && originalMessage && firstTime) {
             await withNeutralVisibilityPrivateConversation(
               fromChar,
               async(p) => core.logs.logMessage(p, originalMessage)
@@ -941,7 +944,8 @@ export default function(this: any): Interfaces.State {
     connection.onMessage('BRO', async(data, time) => {
         if(data.character !== undefined) {
             const content = decodeHTML(data.message.substr(data.character.length + 24));
-            const message = new EventMessage(l('events.broadcast', `[user]${data.character}[/user]`, content), time);
+            const char = core.characters.get(data.character);
+            const message = new BroadcastMessage(l('events.broadcast', `[user]${data.character}[/user]`, content), char, time);
             await state.consoleTab.addMessage(message);
             await core.notifications.notify(state.consoleTab, l('events.broadcast.notification', data.character), content,
                 characterImage(data.character), 'attention');

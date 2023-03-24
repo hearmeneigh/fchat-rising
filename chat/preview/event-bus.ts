@@ -19,7 +19,8 @@ import { NoteCheckerCount } from '../../site/note-checker';
  * 'channel-ad': {message: Message, channel: Conversation, profile: ComplexCharacter | undefined}
  * 'channel-message': {message: Message, channel: Conversation}
  * 'select-conversation': { conversation: Conversation }
- * 'note-counts-update': {}
+ * 'note-counts-update': {},
+ * 'character-memo': { character: string, memo: CharacterMemo }
  */
 
 

@@ -54,10 +54,11 @@ export class Settings implements ISettings {
 
     risingShowUnreadOfflineCount = true;
     risingColorblindMode = false;
+    risingShowPortraitNearInput = true;
 
     risingFilter = {
-        hideAds: true,
-        hideSearchResults: true,
+        hideAds: false,
+        hideSearchResults: false,
         hideChannelMembers: false,
         hidePublicChannelMessages: false,
         hidePrivateChannelMessages: false,
@@ -68,6 +69,17 @@ export class Settings implements ISettings {
         autoReply: true,
         minAge: null,
         maxAge: null,
+        prefFilters: {
+            Straight: false,
+            Gay: false,
+            Bisexual: false,
+            Asexual: false,
+            Unsure: false,
+            BiMalePreference: false,
+            BiFemalePreference: false,
+            Pansexual: false,
+            BiCurious: false
+        },
         smartFilters: {
             ageplay: false,
             anthro: false,
@@ -172,4 +184,14 @@ export class EventMessage implements Conversation.EventMessage {
 
     constructor(readonly text: string, readonly time: Date = new Date()) {
     }
+}
+
+export class BroadcastMessage implements Conversation.BcastMessage {
+    readonly id = ++messageId;
+    readonly type = Conversation.Message.Type.Bcast;
+
+    readonly score = 0;
+    filterMatch = false;
+
+    constructor(readonly text: string, readonly sender: Character, readonly time: Date = new Date()) {}
 }

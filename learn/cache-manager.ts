@@ -40,6 +40,8 @@ export class CacheManager {
     // @ts-ignore
     private _isVue = true;
 
+    private readonly startTime = new Date();
+
     static readonly PROFILE_QUERY_DELAY = 400; //1 * 1000;
 
     adCache: AdCache = new AdCache();
@@ -60,7 +62,7 @@ export class CacheManager {
     protected fetchLog: Record<string, number> = {};
     protected ongoingLog: Record<string, true> = {};
 
-    protected isActiveTab = false;
+    protected isActiveTab = true;
 
     setTabActive(isActive: boolean): void {
       this.isActiveTab = isActive;
@@ -85,7 +87,7 @@ export class CacheManager {
             return;
         }
 
-        log.debug('profile.cache.queue', { name, skipCacheCheck, channelId });
+        log.debug('profile.cache.queue', { name, skipCacheCheck, channelId, from: core.characters.ownCharacter.name });
 
         if (!skipCacheCheck) {
             const c = await this.profileCache.get(name);
@@ -156,10 +158,15 @@ export class CacheManager {
       if (char && char.status !== 'offline') {
         const conv = core.conversations.getPrivate(char, true);
 
-        if (conv && conv.messages.length > 0 && Date.now() - _.last(conv.messages)!.time.getTime() < 3 * 60 * 1000) {
-          const allMessagesFromThem = _.every(conv.messages, (m) => ('sender' in m)  && m.sender.name === conv.character.name);
+        if (conv && conv.messages.length > 0 && Date.now() - _.last(conv.messages)!.time.getTime() < 5 * 60 * 1000) {
+          const sessionMessages = _.filter(conv.messages, (m) => m.time.getTime() >= this.startTime.getTime());
 
-          if (allMessagesFromThem) {
+          const allMessagesFromThem = _.every(
+            sessionMessages,
+            (m) => ('sender' in m)  && m.sender.name === conv.character.name
+          );
+
+          if (sessionMessages.length > 0 && allMessagesFromThem) {
             await testSmartFilterForPrivateMessage(char);
           }
         }

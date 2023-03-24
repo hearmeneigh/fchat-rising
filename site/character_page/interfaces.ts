@@ -96,15 +96,17 @@ export interface CharacterGroup {
     owner: boolean
 }
 
+export interface CharacterMemo {
+    id: number;
+    memo: string;
+}
+
 export interface Character {
     readonly is_self: boolean
     character: CharacterInfo
     readonly settings: CharacterSettings
     readonly badges?: string[]
-    memo?: {
-        id: number
-        memo: string
-    }
+    memo?: CharacterMemo;
     readonly character_list?: {
         id: number
         name: string

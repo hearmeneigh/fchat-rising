@@ -10,7 +10,8 @@ import anyAscii from 'any-ascii';
 import { Store } from '../site/character_page/data_store';
 
 import {
-    BodyType, bodyTypeKinkMapping,
+    BodyType,
+    bodyTypeKinkMapping,
     fchatGenderMap,
     FurryPreference,
     Gender,
@@ -29,7 +30,10 @@ import {
     nonAnthroSpecies,
     Orientation,
     Position,
-    PostLengthPreference, postLengthPreferenceMapping, postLengthPreferenceScoreMapping, Scoring,
+    PostLengthPreference,
+    postLengthPreferenceMapping,
+    postLengthPreferenceScoreMapping,
+    Scoring,
     Species,
     SpeciesMap,
     speciesMapping,
@@ -520,6 +524,10 @@ export class Matcher {
         return this.formatScoring(score, postLengthPreferenceMapping[theirLength]);
     }
 
+    static getSpeciesName(species: Species): string {
+        return speciesNames[species] || `${Species[species].toLowerCase()}s`;
+    }
+
     private resolveSpeciesScore(): Score {
         const you = this.you;
         const theirAnalysis = this.theirAnalysis;
@@ -614,6 +622,10 @@ export class Matcher {
 
         log.debug('report.score.kink', this.them.name, this.you.name, scores, weighted);
 
+        if (scores.favorite.count + scores.yes.count + scores.maybe.count + scores.no.count < 10) {
+            return new Score(Scoring.NEUTRAL);
+        }
+
         if (weighted === 0) {
             return new Score(Scoring.NEUTRAL);
         }
@@ -682,13 +694,13 @@ export class Matcher {
         const ageplayScore = Matcher.getKinkPreference(you, Kink.Ageplay);
         const underageScore = Matcher.getKinkPreference(you, Kink.UnderageCharacters);
 
-        if ((theirAge < 16) && (ageplayScore !== null))
+        if ((theirAge < 14) && (ageplayScore !== null))
             return Matcher.formatKinkScore(ageplayScore, `ages of ${theirAge}`);
 
-        if ((theirAge < 16) && (ageplayScore === null))
+        if ((theirAge < 14) && (ageplayScore === null))
             return Matcher.formatKinkScore(KinkPreference.No, `ages of ${theirAge}`);
 
-        if ((theirAge < 18) && (theirAge >= 16) && (underageScore !== null))
+        if ((theirAge < 18) && (theirAge >= 14) && (underageScore !== null))
             return Matcher.formatKinkScore(underageScore, `ages of ${theirAge}`);
 
         const yourAge = this.yourAnalysis.age;
@@ -698,10 +710,10 @@ export class Matcher {
             const youngerCharactersScore = Matcher.getKinkPreference(you, Kink.YoungerCharacters);
             const ageDifference = Math.abs(yourAge - theirAge);
 
-            if ((yourAge < theirAge) && (olderCharactersScore !== null) && (ageDifference >= 40))
+            if ((yourAge < theirAge) && (olderCharactersScore !== null) && (ageDifference >= 12))
                 return Matcher.formatKinkScore(olderCharactersScore, 'older characters');
 
-            if ((yourAge > theirAge) && (youngerCharactersScore !== null) && (ageDifference >= 40))
+            if ((yourAge > theirAge) && (youngerCharactersScore !== null) && (ageDifference >= 12))
                 return Matcher.formatKinkScore(youngerCharactersScore, 'younger characters');
         }
 
@@ -710,6 +722,9 @@ export class Matcher {
 
     private resolveGenderScore(): Score {
         const you = this.you;
+
+        const yourGender = this.yourAnalysis.gender;
+        const yourOrientation = this.yourAnalysis.orientation;
         const theirGender = this.theirAnalysis.gender;
 
         if (theirGender === null)
@@ -720,6 +735,21 @@ export class Matcher {
 
         if (genderKinkScore !== null)
             return Matcher.formatKinkScore(genderKinkScore, genderName);
+
+        if (yourGender && yourOrientation) {
+            if (Matcher.isCisGender(yourGender) && !Matcher.isCisGender(theirGender)) {
+                if ([
+                    Orientation.Straight,
+                    Orientation.Gay,
+                    Orientation.Bisexual,
+                    Orientation.BiCurious,
+                    Orientation.BiFemalePreference,
+                    Orientation.BiMalePreference
+                ].includes(yourOrientation)) {
+                    return new Score(Scoring.MISMATCH, 'No <span>non-binary</span> genders');
+                }
+            }
+        }
 
         return new Score(Scoring.NEUTRAL);
     }

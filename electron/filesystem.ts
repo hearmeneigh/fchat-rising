@@ -26,7 +26,7 @@ function writeFile(p: fs.PathLike | number, data: string | NodeJS.ArrayBufferVie
     }
 }
 
-export type Message = Conversation.EventMessage | {
+export type Message = Conversation.EventMessage | Conversation.BcastMessage | {
     readonly sender: {readonly name: string}
     readonly text: string
     readonly time: Date
@@ -305,6 +305,7 @@ export class SettingsStore implements Settings.Store {
             const file = path.join(getSettingsDir(character), key);
             return <Settings.Keys[K]>JSON.parse(fs.readFileSync(file, 'utf8'));
         } catch(e) {
+            console.error('READ KEY FAILURE', e, key, character);
             return undefined;
         }
     }

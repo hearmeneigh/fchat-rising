@@ -17,7 +17,8 @@
     import Modal from '../../components/Modal.vue';
     import {SimpleCharacter} from '../../interfaces';
     import * as Utils from '../utils';
-    import {methods} from './data_store';
+    // import {methods} from './data_store';
+    import { MemoManager } from '../../chat/character/memo';
 
     export interface Memo {
         id: number
@@ -61,8 +62,11 @@
         async save(): Promise<void> {
             try {
                 this.saving = true;
-                const memoReply = await methods.memoUpdate(this.character.id, this.message);
-                this.$emit('memo', this.message !== '' ? memoReply : undefined);
+
+                const memoManager = new MemoManager(this.character.name);
+                await memoManager.set(this.message);
+
+                this.$emit('memo', memoManager.get());
                 this.hide();
             } catch(e) {
                 Utils.ajaxError(e, 'Unable to set memo.');

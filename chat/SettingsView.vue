@@ -199,6 +199,12 @@
                 </label>
             </div>
 
+            <div class="form-group">
+                <label class="control-label" for="risingShowPortraitNearInput">
+                    <input type="checkbox" id="risingShowPortraitNearInput" v-model="risingShowPortraitNearInput"/>
+                    Show character portrait by text input
+                </label>
+            </div>
         </div>
 
         <div v-show="selectedTab === '3'">
@@ -277,6 +283,14 @@
                 <input id="risingFilter.maxAge" type="number" class="form-control" v-model="risingFilter.maxAge" placeholder="Enter age" />
             </div>
 
+            <h5>Preference Match</h5>
+            <div class="form-group filters" >
+                <label class="control-label" :for="'risingFilter.prefFilters.' + key" v-for="(value, key) in smartFilterTypes">
+                    <input type="checkbox" :id="'risingFilter.prefFilters.' + key" v-bind:checked="getPrefFilter(key)" @change="(v) => setPrefFilter(key, v)"/>
+                    {{value.name}}
+                </label>
+            </div>
+
             <h5>Type Match</h5>
             <div class="form-group filters" >
                 <label class="control-label" :for="'risingFilter.smartFilters.' + key" v-for="(value, key) in smartFilterTypes">
@@ -321,10 +335,12 @@
     import core from './core';
     import {Settings as SettingsInterface} from './interfaces';
     import l from './localize';
-    import { SmartFilterSettings, SmartFilterSelection } from '../learn/filter/types';
+    import { SmartFilterSettings, SmartFilterSelection, PrefFiltersSelection } from '../learn/filter/types';
     import { smartFilterTypes as smartFilterTypesOrigin } from '../learn/filter/types';
+    import { prefFilterTypes as prefFilterTypesOrigin } from '../learn/filter/types';
     import _ from 'lodash';
     import { matchesSmartFilters } from '../learn/filter/smart-filter';
+    import { EventBus } from './preview/event-bus';
 
     @Component({
         components: {modal: Modal, tabs: Tabs}
@@ -367,9 +383,13 @@
         risingShowUnreadOfflineCount!: boolean;
         risingColorblindMode!: boolean;
 
+        risingShowPortraitNearInput!: boolean;
+
         risingFilter!: SmartFilterSettings = {} as any;
 
         smartFilterTypes = smartFilterTypesOrigin;
+
+        prefFilterTypes = prefFilterTypesOrigin;
 
         async load(): Promise<void> {
             const settings = core.state.settings;
@@ -408,6 +428,8 @@
             this.risingShowUnreadOfflineCount = settings.risingShowUnreadOfflineCount;
 
             this.risingColorblindMode = settings.risingColorblindMode;
+            this.risingShowPortraitNearInput = settings.risingShowPortraitNearInput;
+
             this.risingFilter = settings.risingFilter;
         }
 
@@ -468,6 +490,7 @@
                 risingComparisonInUserMenu: this.risingComparisonInUserMenu,
                 risingComparisonInSearch: this.risingComparisonInSearch,
                 risingShowUnreadOfflineCount: this.risingShowUnreadOfflineCount,
+                risingShowPortraitNearInput: this.risingShowPortraitNearInput,
 
                 risingColorblindMode: this.risingColorblindMode,
                 risingFilter: {
@@ -486,6 +509,8 @@
             }
 
             if(this.notifications) await core.notifications.requestPermission();
+
+            EventBus.$emit('configuration-update', core.state.settings);
         }
 
         rebuildFilters() {
@@ -526,6 +551,14 @@
 
         setSmartFilter(key: keyof SmartFilterSelection , value: any): void {
           this.risingFilter.smartFilters[key] = value.target.checked;
+        }
+
+        getPrefFilter(key: keyof PrefFiltersSelection): boolean {
+          return !!this.risingFilter.prefFilters?.[key];
+        }
+
+        setPrefFilter(key: keyof PrefFiltersSelection , value: any): void {
+          this.risingFilter.prefFilters[key] = value.target.checked;
         }
     }
 </script>

@@ -37,11 +37,11 @@ const userPostfix: {[key: number]: string | undefined} = {
             ` ${this.filterClasses}`;
         if(message.type !== Conversation.Message.Type.Event) {
             children.push(
-                (message.type === Conversation.Message.Type.Action) ? createElement('i', { class: 'message-pre fas fa-star' }) : '',
+                (message.type === Conversation.Message.Type.Action) ? createElement('i', { class: 'message-pre fas fa-star-of-life' }) : '',
                 createElement(UserView, {props: {character: message.sender, channel: this.channel}}),
                 userPostfix[message.type] !== undefined ? createElement('span', { class: 'message-post' }, userPostfix[message.type]) : ' '
             );
-            if(message.isHighlight) classes += ' message-highlight';
+            if('isHighlight' in message && message.isHighlight) classes += ' message-highlight';
         }
         const isAd = message.type === Conversation.Message.Type.Ad && !this.logs;
         children.push(createElement(BBCodeView(core.bbCodeParser),

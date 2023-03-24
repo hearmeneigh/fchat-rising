@@ -23,6 +23,22 @@ export const smartFilterTypes = {
   zoophilia: { name: 'Zoophilia' }
 };
 
+export const prefFilterTypes = {
+  Straight: {name: 'Straight'},
+  Gay: {name: 'Gay'},
+  Bisexual: {name: 'Bisexual'},
+  Asexual: {name: 'Asexual'},
+  Unsure: {name: 'Unsure'},
+  BiMalePreference: {name: 'BiMalePreference'},
+  BiFemalePreference: {name: 'BiFemalePreference'},
+  Pansexual: {name: 'Pansexual'},
+  BiCurious: {name: 'BiCurious'}
+}
+
+export type PrefFiltersSelection = {
+  [key in keyof typeof prefFilterTypes]: boolean;
+};
+
 export type SmartFilterSelection = {
   [key in keyof typeof smartFilterTypes]: boolean;
 };
@@ -42,6 +58,8 @@ export interface SmartFilterSettings {
   minAge: number | null;
   maxAge: number | null;
 
+
+  prefFilters: PrefFiltersSelection;
   smartFilters: SmartFilterSelection;
 
   exceptionNames: string[];

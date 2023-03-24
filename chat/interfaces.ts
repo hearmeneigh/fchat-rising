@@ -7,6 +7,7 @@ import { SmartFilterSettings } from '../learn/filter/types';
 export {Connection, Channel, Character} from '../fchat/interfaces';
 export const userStatuses: ReadonlyArray<Character.Status> = ['online', 'looking', 'away', 'busy', 'dnd'];
 export const channelModes: ReadonlyArray<Channel.Mode> = ['chat', 'ads', 'both'];
+import { Ad } from './ads/ad-center';
 
 export namespace Conversation {
     interface BaseMessage {
@@ -23,12 +24,17 @@ export namespace Conversation {
         readonly type: Message.Type.Event
     }
 
+    export interface BcastMessage extends BaseMessage {
+        readonly type: Message.Type.Bcast
+        readonly sender: Character;
+    }
+
     export interface ChatMessage extends BaseMessage {
         readonly isHighlight: boolean
         readonly sender: Character
     }
 
-    export type Message = EventMessage | ChatMessage;
+    export type Message = BcastMessage | EventMessage | ChatMessage;
 
     export interface SFCMessage extends EventMessage {
         sfc: Connection.ServerCommands['SFC'] & {confirmed?: true}
@@ -41,7 +47,8 @@ export namespace Conversation {
             Ad,
             Roll,
             Warn,
-            Event
+            Event,
+            Bcast
         }
     }
 
@@ -185,6 +192,7 @@ export namespace Settings {
         searchHistory: (ExtendedSearchData | SearchData)[]
         hideNonMatchingAds: boolean
         hideProfileComparisonSummary: boolean
+        ads: Ad[]
     };
 
     export interface Store {
@@ -226,6 +234,7 @@ export namespace Settings {
 
         readonly risingShowUnreadOfflineCount: boolean;
         readonly risingColorblindMode: boolean;
+        readonly risingShowPortraitNearInput: boolean;
 
         readonly risingFilter: SmartFilterSettings;
     }

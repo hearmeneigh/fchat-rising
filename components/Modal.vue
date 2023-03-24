@@ -14,7 +14,7 @@
                     </div>
                     <div class="modal-footer" v-if="buttons">
                         <button type="button" class="btn btn-secondary" @click="hideWithCheck" v-if="showCancel">Cancel</button>
-                        <button type="button" class="btn" :class="buttonClass" @click="submit" :disabled="disabled">
+                        <button type="button" class="btn" :class="buttonClass" @click="submit" :disabled="shouldBeDisabled()">
                             {{submitText}}
                         </button>
                     </div>
@@ -62,10 +62,20 @@
         @Prop
         readonly buttonText?: string;
         isShown = false;
+
         keepOpen = false;
+        forcedDisabled = false;
 
         get submitText(): string {
             return this.buttonText !== undefined ? this.buttonText : this.action;
+        }
+
+        forceDisabled(disabled: boolean): void {
+          this.forcedDisabled = disabled;
+        }
+
+        shouldBeDisabled(): boolean {
+          return this.disabled || this.forcedDisabled;
         }
 
         submit(e: Event): void {
@@ -75,7 +85,10 @@
 
         show(keepOpen: boolean = false): void {
             this.keepOpen = keepOpen;
-            if(this.isShown) return;
+            if(this.isShown) {
+              this.$emit('reopen');
+              return;
+            }
             this.isShown = true;
             dialogStack.push(this);
             this.$emit('open');

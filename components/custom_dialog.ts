@@ -10,8 +10,8 @@ export default class CustomDialog extends Vue {
         return <Modal>this.$children[0];
     }
 
-    show(): void {
-        this.dialog.show();
+    show(keepOpen?: boolean): void {
+        this.dialog.show(keepOpen);
     }
 
     hide(): void {

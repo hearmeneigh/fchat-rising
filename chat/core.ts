@@ -6,6 +6,7 @@ import {Settings as SettingsImpl} from './common';
 import Conversations from './conversations';
 import {Channel, Character, Connection, Conversation, Logs, Notifications, Settings, State as StateInterface} from './interfaces';
 import { AdCoordinatorGuest } from './ads/ad-coordinator-guest';
+import { AdCenter } from './ads/ad-center';
 import { GeneralSettings } from '../electron/common';
 import { SiteSession } from '../site/site-session';
 import _ from 'lodash';
@@ -64,6 +65,7 @@ const data = {
     notifications: <Notifications | undefined>undefined,
     cache: <CacheManager | undefined>undefined,
     adCoordinator: <AdCoordinatorGuest | undefined>undefined,
+    adCenter: <AdCenter | undefined>undefined,
     siteSession: <SiteSession | undefined>undefined,
 
     register<K extends 'characters' | 'conversations' | 'channels'>(module: K, subState: VueState[K]): void {
@@ -96,6 +98,7 @@ export function init(
     data.notifications = new notificationsClass();
     data.cache = new CacheManager();
     data.adCoordinator = new AdCoordinatorGuest();
+    data.adCenter = new AdCenter();
     data.siteSession = new SiteSession();
 
     (data.state as any).generalSettings = settings;
@@ -126,6 +129,7 @@ export interface Core {
     readonly notifications: Notifications
     readonly cache: CacheManager
     readonly adCoordinator: AdCoordinatorGuest;
+    readonly adCenter: AdCenter;
     readonly siteSession: SiteSession;
 
     watch<T>(getter: (this: VueState) => T, callback: WatchHandler<T>): void

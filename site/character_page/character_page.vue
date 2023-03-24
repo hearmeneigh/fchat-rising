@@ -340,10 +340,14 @@
 
         memo(memo: {id: number, memo: string}): void {
             Vue.set(this.character!, 'memo', memo);
+
+            void core.cache.profileCache.register(this.character!);
         }
 
         bookmarked(state: boolean): void {
             Vue.set(this.character!, 'bookmarked', state);
+
+            void core.cache.profileCache.register(this.character!);
         }
 
         protected async loadSelfCharacter(): Promise<void> {

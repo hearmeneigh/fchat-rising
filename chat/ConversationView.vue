@@ -21,10 +21,15 @@
                     <a href="#" @click.prevent="showChannels()" class="btn">
                         <span class="fa fa-tv"></span><span class="btn-text">Channels</span>
                     </a>
+
+                    <a href="#" @click.prevent="showMemo()" class="btn">
+                        <span class="fas fa-edit"></span><span class="btn-text">Memo</span>
+                    </a>
                 </div>
                 <div style="overflow:auto;overflow-x:hidden;max-height:50px;user-select:text">
                     {{l('status.' + conversation.character.status)}}
                     <span v-show="conversation.character.statusText"> – <bbcode :text="conversation.character.statusText"></bbcode></span>
+                    <div v-show="userMemo"><b>Memo:</b> {{ userMemo }}</div>
                 </div>
             </div>
         </div>
@@ -135,9 +140,12 @@
         <bbcode-editor v-model="conversation.enteredText" @keydown="onKeyDown" :extras="extraButtons" @input="keepScroll"
             :classes="'form-control chat-text-box' + (isChannel(conversation) && conversation.isSendingAds ? ' ads-text-box' : '')"
             :hasToolbar="settings.bbCodeBar" ref="textBox" style="position:relative;margin-top:5px"
-            :maxlength="isChannel(conversation) || isPrivate(conversation) ? conversation.maxMessageLength : undefined">
+            :maxlength="isChannel(conversation) || isPrivate(conversation) ? conversation.maxMessageLength : undefined"
+            :characterName="ownName"
+            >
+
             <span v-if="isPrivate(conversation) && conversation.typingStatus !== 'clear'" class="chat-info-text">
-                {{l('chat.typing.' + conversation.typingStatus, conversation.name)}}
+              <user :character="conversation.character" :match="false" :bookmark="false"></user>&nbsp;{{l('chat.typing.' + conversation.typingStatus, '').trim()}}
             </span>
             <div v-show="conversation.infoText" class="chat-info-text">
                 <span class="fa fa-times" style="cursor:pointer" @click.stop="conversation.infoText = ''"></span>
@@ -175,6 +183,10 @@
         <manage-channel ref="manageDialog" v-if="isChannel(conversation)" :channel="conversation.channel"></manage-channel>
         <ad-view ref="adViewer" v-if="isPrivate(conversation) && conversation.character" :character="conversation.character"></ad-view>
         <channel-list ref="channelList" v-if="isPrivate(conversation)" :character="conversation.character"></channel-list>
+        <modal :action="l('user.memo.action')" ref="userMemoEditor" @submit="updateMemo" dialogClass="w-100">
+            <div style="float:right;text-align:right;">{{getByteLength(editorMemo)}} / 1000</div>
+            <textarea class="form-control" v-model="editorMemo" maxlength="1000"></textarea>
+        </modal>
     </div>
 </template>
 
@@ -183,12 +195,12 @@
     import Vue from 'vue';
     import {EditorButton, EditorSelection} from '../bbcode/editor';
     import {BBCodeView} from '../bbcode/view';
-    import {isShowing as anyDialogsShown} from '../components/Modal.vue';
+    import Modal, {isShowing as anyDialogsShown} from '../components/Modal.vue';
     import {Keys} from '../keys';
     import CharacterAdView from './character/CharacterAdView.vue';
     import {Editor} from './bbcode';
     import CommandHelp from './CommandHelp.vue';
-    import { characterImage, getByteLength, getKey } from './common';
+    import { characterImage, errorToString, getByteLength, getKey } from './common';
     import ConversationSettings from './ConversationSettings.vue';
     import ConversationAdSettings from './ads/ConversationAdSettings.vue';
     import core from './core';
@@ -203,13 +215,26 @@
     import CharacterChannelList from './character/CharacterChannelList.vue';
     import * as _ from 'lodash';
     import Dropdown from '../components/Dropdown.vue';
-
+    import { EventBus } from './preview/event-bus';
+    // import { CharacterMemo } from '../site/character_page/interfaces';
+    import { MemoManager } from './character/memo';
+    import { CharacterMemo } from '../site/character_page/interfaces';
 
     @Component({
         components: {
-            user: UserView, 'bbcode-editor': Editor, 'manage-channel': ManageChannel, settings: ConversationSettings,
-            logs: Logs, 'message-view': MessageView, bbcode: BBCodeView(core.bbCodeParser), 'command-help': CommandHelp,
-            'ad-view': CharacterAdView, 'channel-list': CharacterChannelList, dropdown: Dropdown, adSettings: ConversationAdSettings
+            user: UserView,
+            'bbcode-editor': Editor,
+            'manage-channel': ManageChannel,
+            settings: ConversationSettings,
+            logs: Logs,
+            'message-view': MessageView,
+            bbcode: BBCodeView(core.bbCodeParser),
+            'command-help': CommandHelp,
+            'ad-view': CharacterAdView,
+            'channel-list': CharacterChannelList,
+            dropdown: Dropdown,
+            adSettings: ConversationAdSettings,
+            modal: Modal
         }
     })
     export default class ConversationView extends Vue {
@@ -246,15 +271,24 @@
         isPrivate = Conversation.isPrivate;
         showNonMatchingAds = true;
 
+        userMemo: string = '';
+        editorMemo: string = '';
+        memoManager?: MemoManager;
+
+        ownName?: string;
 
         @Hook('beforeMount')
         async onBeforeMount(): Promise<void> {
+          this.updateOwnName();
+
           this.showNonMatchingAds = !await core.settingsStore.get('hideNonMatchingAds');
         }
 
 
         @Hook('mounted')
         mounted(): void {
+            this.updateOwnName();
+
             this.extraButtons = [{
                 title: 'Help\n\nClick this button for a quick overview of slash commands.',
                 tag: '?',
@@ -295,7 +329,17 @@
 
             this.$watch(() => this.conversation.adManager.isActive(), () => (this.refreshAutoPostingTimer()));
             this.refreshAutoPostingTimer();
+
+            this.configUpdateHook = () => this.updateOwnName();
+            EventBus.$on('configuration-update', this.configUpdateHook);
+
+            this.memoUpdateHook = (e: any) => this.refreshMemo(e);
+            EventBus.$on('character-memo', this.memoUpdateHook);
         }
+
+        protected configUpdateHook: any;
+
+        protected memoUpdateHook: any;
 
         @Hook('destroyed')
         destroyed(): void {
@@ -305,11 +349,18 @@
             clearInterval(this.searchTimer);
             clearInterval(this.autoPostingUpdater);
             clearInterval(this.adCountdown);
+
+            EventBus.$off('configuration-update', this.configUpdateHook);
+            EventBus.$off('character-memo', this.memoUpdateHook);
         }
 
         hideSearch(): void {
             this.showSearch = false;
             this.searchInput = '';
+        }
+
+        updateOwnName(): void {
+            this.ownName = core.state.settings.risingShowPortraitNearInput ? core.characters.ownCharacter?.name : undefined;
         }
 
         get conversation(): Conversation {
@@ -327,11 +378,19 @@
         }
 
         @Watch('conversation')
-        conversationChanged(): void {
+        async conversationChanged(): Promise<void> {
+            this.updateOwnName();
+
             if(!anyDialogsShown) (<Editor>this.$refs['textBox']).focus();
             this.$nextTick(() => setTimeout(() => this.messageView.scrollTop = this.messageView.scrollHeight));
             this.scrolledDown = true;
             this.refreshAutoPostingTimer();
+            this.userMemo = '';
+
+            if (this.isPrivate(this.conversation)) {
+              const c = await core.cache.profileCache.get(this.conversation.name);
+              this.userMemo = c?.character?.memo?.memo || '';
+            }
         }
 
         @Watch('conversation.messages')
@@ -589,6 +648,35 @@
         hasSFC(message: Conversation.Message): message is Conversation.SFCMessage {
             // noinspection TypeScriptValidateTypes
             return (<Partial<Conversation.SFCMessage>>message).sfc !== undefined;
+        }
+
+        updateMemo(): void {
+          this.memoManager?.set(this.editorMemo).catch((e: object) => alert(errorToString(e)))
+          this.userMemo = this.editorMemo;
+        }
+
+        refreshMemo(event: { character: string, memo: CharacterMemo }): void {
+          this.userMemo = event.memo.memo;
+        }
+
+        async showMemo(): Promise<void> {
+          if (this.isPrivate(this.conversation)) {
+            const c = this.conversation.character;
+
+            this.editorMemo = '';
+
+            (<Modal>this.$refs['userMemoEditor']).show();
+
+            try {
+              this.memoManager = new MemoManager(c.name);
+              await this.memoManager.load();
+
+              this.userMemo = this.memoManager.get().memo;
+              this.editorMemo = this.userMemo;
+            } catch(e) {
+                alert(errorToString(e));
+            }
+          }
         }
 
         get characterImage(): string {

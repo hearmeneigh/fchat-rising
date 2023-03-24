@@ -163,7 +163,7 @@ export class AdManager {
         return this.firstPost;
     }
 
-    start(): void {
+    start(timeoutMs = AdManager.POSTING_PERIOD): void {
         const chanConv = (<Conversation.ChannelConversation>this.conversation);
 
         const initialWait = Math.max(
@@ -180,7 +180,7 @@ export class AdManager {
             (this.conversation.settings.adSettings.lastAdTimestamp || 0) + (core.connection.vars.lfrp_flood * 1000)
         ));
 
-        this.expireDue = new Date(Date.now() + AdManager.POSTING_PERIOD);
+        this.expireDue = new Date(Date.now() + timeoutMs);
         this.adMap = this.generateAdMap();
 
         // tslint:disable-next-line: no-unnecessary-type-assertion
