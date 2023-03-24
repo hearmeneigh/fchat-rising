@@ -286,7 +286,7 @@
             <h5>Preference Match</h5>
             <div class="form-group filters" >
                 <label class="control-label" :for="'risingFilter.prefFilters.' + key" v-for="(value, key) in smartFilterTypes">
-                    <input type="checkbox" :id="'risingFilter.prefFilters.' + key" v-bind:checked="getSmartFilter(key)" @change="(v) => setSmartFilter(key, v)"/>
+                    <input type="checkbox" :id="'risingFilter.prefFilters.' + key" v-bind:checked="getPrefFilter(key)" @change="(v) => setPrefFilter(key, v)"/>
                     {{value.name}}
                 </label>
             </div>
@@ -335,7 +335,7 @@
     import core from './core';
     import {Settings as SettingsInterface} from './interfaces';
     import l from './localize';
-    import { SmartFilterSettings, SmartFilterSelection } from '../learn/filter/types';
+    import { SmartFilterSettings, SmartFilterSelection, PrefFiltersSelection } from '../learn/filter/types';
     import { smartFilterTypes as smartFilterTypesOrigin } from '../learn/filter/types';
     import { prefFilterTypes as prefFilterTypesOrigin } from '../learn/filter/types';
     import _ from 'lodash';
@@ -551,6 +551,14 @@
 
         setSmartFilter(key: keyof SmartFilterSelection , value: any): void {
           this.risingFilter.smartFilters[key] = value.target.checked;
+        }
+
+        getPrefFilter(key: keyof PrefFiltersSelection): boolean {
+          return !!this.risingFilter.prefFilters?.[key];
+        }
+
+        setPrefFilter(key: keyof PrefFiltersSelection , value: any): void {
+          this.risingFilter.prefFilters[key] = value.target.checked;
         }
     }
 </script>
