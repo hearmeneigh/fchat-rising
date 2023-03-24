@@ -283,6 +283,14 @@
                 <input id="risingFilter.maxAge" type="number" class="form-control" v-model="risingFilter.maxAge" placeholder="Enter age" />
             </div>
 
+            <h5>Preference Match</h5>
+            <div class="form-group filters" >
+                <label class="control-label" :for="'risingFilter.prefFilters.' + key" v-for="(value, key) in smartFilterTypes">
+                    <input type="checkbox" :id="'risingFilter.prefFilters.' + key" v-bind:checked="getSmartFilter(key)" @change="(v) => setSmartFilter(key, v)"/>
+                    {{value.name}}
+                </label>
+            </div>
+
             <h5>Type Match</h5>
             <div class="form-group filters" >
                 <label class="control-label" :for="'risingFilter.smartFilters.' + key" v-for="(value, key) in smartFilterTypes">
@@ -329,6 +337,7 @@
     import l from './localize';
     import { SmartFilterSettings, SmartFilterSelection } from '../learn/filter/types';
     import { smartFilterTypes as smartFilterTypesOrigin } from '../learn/filter/types';
+    import { prefFilterTypes as prefFilterTypesOrigin } from '../learn/filter/types';
     import _ from 'lodash';
     import { matchesSmartFilters } from '../learn/filter/smart-filter';
     import { EventBus } from './preview/event-bus';
@@ -379,6 +388,8 @@
         risingFilter!: SmartFilterSettings = {} as any;
 
         smartFilterTypes = smartFilterTypesOrigin;
+
+        prefFilterTypes = prefFilterTypesOrigin;
 
         async load(): Promise<void> {
             const settings = core.state.settings;
