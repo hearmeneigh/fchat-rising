@@ -235,9 +235,15 @@
             Sortable.create(<HTMLElement>this.$refs['tabs'], {
                 animation: 50,
                 onEnd: (e) => {
+                    // log.debug('ONEND', e);
                     if(e.oldIndex === e.newIndex) return;
-                    const tab = this.tabs.splice(e.oldIndex!, 1)[0];
-                    this.tabs.splice(e.newIndex!, 0, tab);
+
+                    // log.debug('PRE', this.tabs);
+                    //
+                    // const tab = this.tabs.splice(e.oldIndex!, 1)[0];
+                    // this.tabs.splice(e.newIndex!, 0, tab);
+                    //
+                    // log.debug('POST', this.tabs);
                 },
                 onMove: (e: {related: HTMLElement}) => e.related.id !== 'addTab',
                 filter: '.addTab'

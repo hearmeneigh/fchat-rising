@@ -1,5 +1,39 @@
 # Changelog
 
+## 1.21.1
+* Fixed a bug that skipped resolving profiles from channel ads
+* Non-binary genders are now considered mismatches against straight, gay, and bi orientations
+    * To override this, you can add kinks such as 'transgenders' to your favorite kinks
+* Smart Filter automatically marks matches as red if 'penalize matches' is selected 
+
+## 1.21.0
+* Added clearer broadcast messages
+* Removed extra arrow from gallery view (credit: [@FatCatClient](https://github.com/FatCatClient))
+* Added profile analyser to help improve profile matching
+* Dictionary lookup view now has a 'open in browser' button
+* Character memos are now displayed more prominently
+* Fixed redgifs.com V3 image previews
+* Fixed rule34video.com image previews
+* 'Select all channels' for Post Ads
+
+## 1.20.0
+* Kink scoring is skipped if characters have only a few shared kinks
+* Kink scoring gives more weight to 'favorite' and 'no' categories
+* Fixed auto-responder not responding to previously unknown characters
+* Fixed re-order tabs
+* Added Ad Editor:
+    * Central ad editor for all ads
+    * Button near 'Console' in the Sidebar
+* Added Post Ads:
+    * Select ads based on your mood, preference, etc. 
+    * Launch ads on multiple channels
+    * Button near 'Console' in the Sidebar
+
+## 1.19.3
+* Added option to have character portrait displayed next to text input
+* Fixed asexual orientation ID
+* Replaced the action star icon to differentiate with the mod badges
+
 ## 1.19.2
 * Fixed a bug that could lead to ad-flooding if the client experiences frequent connection drops
 

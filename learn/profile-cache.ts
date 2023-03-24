@@ -152,7 +152,7 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
     async register(c: ComplexCharacter, skipStore: boolean = false): Promise<CharacterCacheRecord> {
         const k = AsyncCache.nameKey(c.character.name);
         const match = ProfileCache.match(c);
-        const score = (!match || match.score === null) ? Scoring.NEUTRAL : match.score;
+        let score = (!match || match.score === null) ? Scoring.NEUTRAL : match.score;
 
         if (score === 0) {
             console.log(`Storing score 0 for character ${c.character.name}`);
@@ -164,8 +164,14 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
         const risingFilter = core.state.settings.risingFilter;
         const isFiltered = matchesSmartFilters(c.character, risingFilter);
 
+        const penalty = (isFiltered && risingFilter.penalizeMatches) ? -5 : (!isFiltered && risingFilter.rewardNonMatches) ? 2 : 0;
+
+        if (isFiltered && risingFilter.penalizeMatches) {
+            score = Scoring.MISMATCH;
+        }
+
         const searchScore = match
-            ? Matcher.calculateSearchScoreForMatch(score, match, (isFiltered && risingFilter.penalizeMatches) ? -2 : (!isFiltered && risingFilter.rewardNonMatches) ? 1 : 0)
+            ? Matcher.calculateSearchScoreForMatch(score, match, penalty)
             : 0;
 
         const matchDetails = { matchScore: score, searchScore, isFiltered };

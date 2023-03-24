@@ -39,6 +39,15 @@ export class ImageUrlMutator {
         // );
 
         this.add(
+          /^https?:\/\/rule34video.com\/videos\/([0-9a-zA-Z-_]+)/,
+          async(_url: string, match: RegExpMatchArray): Promise<string> => {
+            const videoId = match[1];
+
+            return `https://rule34video.com/embed/${videoId}`;
+          }
+        );
+
+        this.add(
           /^https?:\/\/(www.)?pornhub.com\/view_video.php\?viewkey=([a-z0-9A-Z]+)/,
           async(_url: string, match: RegExpMatchArray): Promise<string> => {
             // https://www.pornhub.com/view_video.php?viewkey=ph5e11b975327f2
@@ -60,7 +69,7 @@ export class ImageUrlMutator {
         );
 
         this.add(
-          /^https?:\/\/(www.)?redgifs.com\/watch\/([a-z0-9A-Z]+)/,
+          /^https?:\/\/(www.|v3.)?redgifs.com\/watch\/([a-z0-9A-Z]+)/,
           async(_url: string, match: RegExpMatchArray): Promise<string> => {
             const redgifId = match[2];
 

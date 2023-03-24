@@ -6,3 +6,7 @@ declare module "!!raw-loader!*" {
 declare module "any-ascii" {
     export default function anyAscii(s: string): string;
 }
+
+declare module 'vue-input-tag' {
+
+}

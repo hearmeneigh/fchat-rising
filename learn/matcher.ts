@@ -10,7 +10,8 @@ import anyAscii from 'any-ascii';
 import { Store } from '../site/character_page/data_store';
 
 import {
-    BodyType, bodyTypeKinkMapping,
+    BodyType,
+    bodyTypeKinkMapping,
     fchatGenderMap,
     FurryPreference,
     Gender,
@@ -29,7 +30,10 @@ import {
     nonAnthroSpecies,
     Orientation,
     Position,
-    PostLengthPreference, postLengthPreferenceMapping, postLengthPreferenceScoreMapping, Scoring,
+    PostLengthPreference,
+    postLengthPreferenceMapping,
+    postLengthPreferenceScoreMapping,
+    Scoring,
     Species,
     SpeciesMap,
     speciesMapping,
@@ -520,6 +524,10 @@ export class Matcher {
         return this.formatScoring(score, postLengthPreferenceMapping[theirLength]);
     }
 
+    static getSpeciesName(species: Species): string {
+        return speciesNames[species] || `${Species[species].toLowerCase()}s`;
+    }
+
     private resolveSpeciesScore(): Score {
         const you = this.you;
         const theirAnalysis = this.theirAnalysis;
@@ -613,6 +621,10 @@ export class Matcher {
         const weighted = scores.favorite.weighted + scores.yes.weighted + scores.maybe.weighted + scores.no.weighted;
 
         log.debug('report.score.kink', this.them.name, this.you.name, scores, weighted);
+
+        if (scores.favorite.count + scores.yes.count + scores.maybe.count + scores.no.count < 10) {
+            return new Score(Scoring.NEUTRAL);
+        }
 
         if (weighted === 0) {
             return new Score(Scoring.NEUTRAL);
@@ -710,6 +722,9 @@ export class Matcher {
 
     private resolveGenderScore(): Score {
         const you = this.you;
+
+        const yourGender = this.yourAnalysis.gender;
+        const yourOrientation = this.yourAnalysis.orientation;
         const theirGender = this.theirAnalysis.gender;
 
         if (theirGender === null)
@@ -720,6 +735,21 @@ export class Matcher {
 
         if (genderKinkScore !== null)
             return Matcher.formatKinkScore(genderKinkScore, genderName);
+
+        if (yourGender && yourOrientation) {
+            if (Matcher.isCisGender(yourGender) && !Matcher.isCisGender(theirGender)) {
+                if ([
+                    Orientation.Straight,
+                    Orientation.Gay,
+                    Orientation.Bisexual,
+                    Orientation.BiCurious,
+                    Orientation.BiFemalePreference,
+                    Orientation.BiMalePreference
+                ].includes(yourOrientation)) {
+                    return new Score(Scoring.MISMATCH, 'No <span>non-binary</span> genders');
+                }
+            }
+        }
 
         return new Score(Scoring.NEUTRAL);
     }
