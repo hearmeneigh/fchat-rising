@@ -69,17 +69,6 @@ export class Settings implements ISettings {
         autoReply: true,
         minAge: null,
         maxAge: null,
-        prefFilters: {
-            Straight: false,
-            Gay: false,
-            Bisexual: false,
-            Asexual: false,
-            Unsure: false,
-            BiMalePreference: false,
-            BiFemalePreference: false,
-            Pansexual: false,
-            BiCurious: false
-        },
         smartFilters: {
             ageplay: false,
             anthro: false,
