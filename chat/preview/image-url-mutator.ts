@@ -69,6 +69,16 @@ export class ImageUrlMutator {
         );
 
         this.add(
+          /^https?:\/\/(www.|v3.)?gifdeliverynetwork.com\/([a-z0-9A-Z]+)/,
+          async(_url: string, match: RegExpMatchArray): Promise<string> => {
+            const redgifId = match[2];
+
+            // Redgifs is correct
+            return `https://www.redgifs.com/ifr/${redgifId}?controls=0&hd=1`;
+          }
+        );
+
+        this.add(
           /^https?:\/\/(www.|v3.)?redgifs.com\/watch\/([a-z0-9A-Z]+)/,
           async(_url: string, match: RegExpMatchArray): Promise<string> => {
             const redgifId = match[2];
@@ -123,10 +133,10 @@ export class ImageUrlMutator {
 
 
         this.add(
-            /^https?:\/\/((m|www).)?imgur.com\/gallery\/([a-zA-Z0-9]+)/,
+            /^https?:\/\/((m|www).)?imgur.(com|io)\/gallery\/([a-zA-Z0-9]+)/,
             async(url: string, match: RegExpMatchArray): Promise<string> => {
                 // Imgur Gallery
-                const galleryId = match[3];
+                const galleryId = match[4];
 
                 try {
                     const result = await Axios.get(
@@ -159,10 +169,10 @@ export class ImageUrlMutator {
         );
 
         this.add(
-            /^https?:\/\/((m|www).)?imgur.com\/a\/([a-zA-Z0-9]+)/,
+            /^https?:\/\/((m|www).)?imgur.(com|io)\/a\/([a-zA-Z0-9]+)/,
             async(url: string, match: RegExpMatchArray): Promise<string> => {
                 // Imgur Album
-                const albumId = match[3];
+                const albumId = match[4];
 
                 try {
                     const result = await Axios.get(
@@ -196,10 +206,10 @@ export class ImageUrlMutator {
 
         // must be AFTER gallery & album test
         this.add(
-            /^https?:\/\/((m|www).)?imgur.com\/([a-zA-Z0-9]+)/,
+            /^https?:\/\/((m|www).)?imgur.(com|io)\/([a-zA-Z0-9]+)/,
             async(url: string, match: RegExpMatchArray): Promise<string> => {
                 // Single Imgur Image
-                const imageId = match[3];
+                const imageId = match[4];
 
                 try {
                     const result = await Axios.get(

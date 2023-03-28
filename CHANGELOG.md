@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.21.2
+* Fixed image previews for `imgur.io`, `gifdeliverynetwork.com`, and `rule34.us`
+
 ## 1.21.1
 * Fixed a bug that skipped resolving profiles from channel ads
 * Non-binary genders are now considered mismatches against straight, gay, and bi orientations

@@ -175,6 +175,7 @@ export class ImageDomMutator {
         this.add('shadbase.com', this.getBaseJsMutatorScript(['#comic video', '#comic img', 'video', 'img']));
         this.add('instagram.com', this.getBaseJsMutatorScript(['article video', 'article img', 'video', 'img']));
         this.add('rule34video.com', this.getBaseJsMutatorScript(['video'], true, [], false, true));
+        this.add('rule34.us', this.getBaseJsMutatorScript(['.content_push video', '.content_push img']));
 
         this.add(
             'pornhub.com',
