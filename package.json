@@ -9,7 +9,7 @@
     "@f-list/fork-ts-checker-webpack-plugin": "^3.1.1",
     "@f-list/vue-ts": "^1.0.3",
     "@fortawesome/fontawesome-free": "^5.15.1",
-    "@types/bluebird": "^3.5.33",
+    "@types/bluebird": "3.5.32",
     "@types/lodash": "^4.14.164",
     "@types/node": "^14.17.0",
     "@types/node-fetch": "^2.5.12",
@@ -20,7 +20,7 @@
     "any-ascii": "^0.3.0",
     "async": "^0.9.0",
     "axios": "^0.21.4",
-    "bluebird": "^3.7.2",
+    "bluebird": "~3.7.2",
     "bootstrap": "^4.5.3",
     "copy-webpack-plugin": "^6.2.1",
     "css-loader": "^5.0.0",
@@ -68,7 +68,8 @@
     "vue": "2.6.12",
     "vue-class-component": "6.3.2",
     "vue-loader": "15.9.8",
-    "vue-template-compiler": "2.6.12"
+    "vue-template-compiler": "2.6.12",
+    "@types/bluebird": "3.5.32"
   },
   "scripts": {
     "postinstall": "electron-rebuild --prebuild-tag-prefix=ignoreprebuilds -f -o keytar"
