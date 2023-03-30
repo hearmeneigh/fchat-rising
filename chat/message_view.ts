@@ -3,7 +3,7 @@ import {CreateElement, default as Vue, VNode, VNodeChildrenArrayContents} from '
 import {Channel} from '../fchat';
 import { Score } from '../learn/matcher';
 import {BBCodeView} from '../bbcode/view';
-import {formatTime} from './common';
+import { formatTime } from './common';
 import core from './core';
 import {Conversation} from './interfaces';
 import UserView from './UserView.vue';
@@ -38,7 +38,7 @@ const userPostfix: {[key: number]: string | undefined} = {
         if(message.type !== Conversation.Message.Type.Event) {
             children.push(
                 (message.type === Conversation.Message.Type.Action) ? createElement('i', { class: 'message-pre fas fa-star-of-life' }) : '',
-                createElement(UserView, {props: {character: message.sender, channel: this.channel}}),
+                createElement(UserView, {props: {avatar: core.state.settings.risingShowPortraitInMessage, character: message.sender, channel: this.channel}}),
                 userPostfix[message.type] !== undefined ? createElement('span', { class: 'message-post' }, userPostfix[message.type]) : ' '
             );
             if('isHighlight' in message && message.isHighlight) classes += ' message-highlight';

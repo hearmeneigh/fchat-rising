@@ -22,6 +22,7 @@
         <li v-for="r in recommendations" class="recommendation" :class="r.level">
           <h3>{{r.title}}</h3>
           <p>{{r.desc}}</p>
+          <p class="more-info" v-if="r.helpUrl"><a :href="r.helpUrl">Here's how</a></p>
         </li>
       </ul>
     </div>
@@ -48,9 +49,9 @@ export default class ProfileAnalysis extends Vue {
     const profile = new CharacterAnalysis(char.character);
     const analyzer = new ProfileRecommendationAnalyzer(profile);
 
-    this.analyzing = false;
+    this.recommendations = await analyzer.analyze();
 
-    this.recommendations = analyzer.analyze();
+    this.analyzing = false;
   }
 }
 </script>
@@ -85,6 +86,15 @@ export default class ProfileAnalysis extends Vue {
 
     &.note {
       background-color: var(--scoreWeakMismatchBg);
+    }
+  }
+
+  .more-info {
+    margin-top: 1em;
+
+    a {
+      color: var(--linkForcedColor) !important;
+      font-weight: bold;
     }
   }
 }

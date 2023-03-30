@@ -205,6 +205,13 @@
                     Show character portrait by text input
                 </label>
             </div>
+
+            <div class="form-group">
+                <label class="control-label" for="risingShowPortraitInMessage">
+                    <input type="checkbox" id="risingShowPortraitInMessage" v-model="risingShowPortraitInMessage"/>
+                    Show character portrait with each message
+                </label>
+            </div>
         </div>
 
         <div v-show="selectedTab === '3'">
@@ -375,6 +382,7 @@
         risingColorblindMode!: boolean;
 
         risingShowPortraitNearInput!: boolean;
+        risingShowPortraitInMessage!: boolean;
 
         risingFilter!: SmartFilterSettings = {} as any;
 
@@ -418,6 +426,7 @@
 
             this.risingColorblindMode = settings.risingColorblindMode;
             this.risingShowPortraitNearInput = settings.risingShowPortraitNearInput;
+            this.risingShowPortraitInMessage = settings.risingShowPortraitInMessage;
 
             this.risingFilter = settings.risingFilter;
         }
@@ -480,6 +489,7 @@
                 risingComparisonInSearch: this.risingComparisonInSearch,
                 risingShowUnreadOfflineCount: this.risingShowUnreadOfflineCount,
                 risingShowPortraitNearInput: this.risingShowPortraitNearInput,
+                risingShowPortraitInMessage: this.risingShowPortraitInMessage,
 
                 risingColorblindMode: this.risingColorblindMode,
                 risingFilter: {

@@ -2,6 +2,10 @@
 
 ## 1.21.2
 * Fixed image previews for `imgur.io`, `gifdeliverynetwork.com`, and `rule34.us`
+* Fixed dependencies
+* Profile analyser now warns about a missing portrait image
+* Added option for mini portraits in chat messages
+* Added convenience buttons to joining a channel and creating a private chat
 
 ## 1.21.1
 * Fixed a bug that skipped resolving profiles from channel ads

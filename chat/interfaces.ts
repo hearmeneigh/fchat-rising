@@ -235,6 +235,7 @@ export namespace Settings {
         readonly risingShowUnreadOfflineCount: boolean;
         readonly risingColorblindMode: boolean;
         readonly risingShowPortraitNearInput: boolean;
+        readonly risingShowPortraitInMessage: boolean;
 
         readonly risingFilter: SmartFilterSettings;
     }

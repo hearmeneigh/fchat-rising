@@ -32,7 +32,7 @@
             </div>
 
             <div><a href="#" @click.prevent="showProfileAnalyzer()" class="btn"><span class="fas fa-user-md"></span>
-                Profile Analyzer</a>
+                Profile Helper</a>
             </div>
 
             <div class="list-group conversation-nav">
@@ -43,8 +43,8 @@
             </div>
 
 
-            {{l('chat.pms')}}
-            <div @click.prevent="showAddPmPartner()" class="pm-add"><a href="#"><span class="fas fa-plus"></span></a></div>
+            <a href="#" @click.prevent="showAddPmPartner()" class="btn"><span class="fas fa-comment"></span>
+                {{l('chat.pms')}}</a>
 
             <div class="list-group conversation-nav" ref="privateConversations">
                 <a v-for="conversation in conversations.privateConversations" href="#" @click.prevent="conversation.show()"
@@ -64,7 +64,10 @@
                         </div>
                     </div>
                 </a>
+
+                <a href="#" @click.prevent="showAddPmPartner()" class="new-conversation" :class="{ glowing: conversations.privateConversations.length === 0 }">Open Conversation</a>
             </div>
+
             <a href="#" @click.prevent="showChannels()" class="btn"><span class="fas fa-list"></span>
                 {{l('chat.channels')}}</a>
 
@@ -82,6 +85,8 @@
                         <span class="fas fa-times leave" @click.stop="conversation.close()" :aria-label="l('chat.closeTab')"></span>
                     </span>
                 </a>
+
+                <a href="#" @click.prevent="showChannels()" class="join-channel" :class="{ glowing: conversations.channelConversations.length === 0 }">Join Channel</a>
             </div>
         </sidebar>
         <div style="display:flex;flex-direction:column;flex:1;min-width:0">
@@ -615,6 +620,38 @@
             &:hover {
               color: var(--red);
             }
+          }
+        }
+
+        .new-conversation, .join-channel {
+          font-size: 90%;
+          margin-left: 0.2em;
+          margin-top: 0.25em;
+        }
+
+        .glowing {
+          padding: 3px;
+          margin-right: 0.5em;
+          animation: noticeme 2.5s infinite alternate;
+          animation-timing-function: ease-in-out;
+        }
+
+        .join-channel.glowing {
+          animation-delay: 0.3s !important;
+        }
+
+        @keyframes noticeme {
+          0% {
+            // box-shadow: 0 0 10px -10px #aef4af;
+            color: var(--gray-dark)
+          }
+          80% {
+            // box-shadow: 0 0 10px -10px #aef4af;
+            color: var(--gray-dark)
+          }
+          100% {
+            // box-shadow: 0 0 10px 10px #aef4af;
+            color: var(--yellow)
           }
         }
     }

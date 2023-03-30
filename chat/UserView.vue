@@ -1,5 +1,5 @@
 <!-- Linebreaks inside this template will break BBCode views -->
-<template><span :class="userClass" v-bind:bbcodeTag.prop="'user'" v-bind:character.prop="character" v-bind:channel.prop="channel" @mouseover.prevent="show()" @mouseenter.prevent="show()" @mouseleave.prevent="dismiss()" @click.middle.prevent.stop="toggleStickyness()" @click.right.passive="dismiss(true)" @click.left.passive="dismiss(true)"><span v-if="!!statusClass" :class="statusClass"></span><span v-if="!!rankIcon" :class="rankIcon"></span><span v-if="!!smartFilterIcon" :class="smartFilterIcon"></span>{{character.name}}<span v-if="!!matchClass" :class="matchClass">{{getMatchScoreTitle(matchScore)}}</span></span></template>
+<template><span :class="userClass" v-bind:bbcodeTag.prop="'user'" v-bind:character.prop="character" v-bind:channel.prop="channel" @mouseover.prevent="show()" @mouseenter.prevent="show()" @mouseleave.prevent="dismiss()" @click.middle.prevent.stop="toggleStickyness()" @click.right.passive="dismiss(true)" @click.left.passive="dismiss(true)"><img v-if="!!avatar" :src="avatarUrl" class="user-avatar" /><span v-if="!!statusClass" :class="statusClass"></span><span v-if="!!rankIcon" :class="rankIcon"></span><span v-if="!!smartFilterIcon" :class="smartFilterIcon"></span>{{character.name}}<span v-if="!!matchClass" :class="matchClass">{{getMatchScoreTitle(matchScore)}}</span></span></template>
 
 
 <script lang="ts">
@@ -10,6 +10,7 @@ import { Score } from '../learn/matcher';
 import core from './core';
 import { EventBus } from './preview/event-bus';
 import { kinkMatchWeights, Scoring } from '../learn/matcher-types';
+import { characterImage } from './common';
 
 
 export function getStatusIcon(status: Character.Status): string {
@@ -137,6 +138,9 @@ export default class UserView extends Vue {
     @Prop({default: true})
     readonly preview: boolean = true;
 
+    @Prop({default: false})
+    readonly avatar: boolean = false;
+
     userClass = '';
 
     rankIcon: string | null = null;
@@ -144,6 +148,7 @@ export default class UserView extends Vue {
     statusClass: string | null = null;
     matchClass: string | null = null;
     matchScore: number | string | null = null;
+    avatarUrl: string | null = null;
 
     // tslint:disable-next-line no-any
     scoreWatcher: ((event: any) => void) | null = null;
@@ -214,6 +219,7 @@ export default class UserView extends Vue {
       this.matchClass = res.matchClass;
       this.matchScore = res.matchScore;
       this.userClass = res.userClass;
+      this.avatarUrl = characterImage(this.character.name);
     }
 
 

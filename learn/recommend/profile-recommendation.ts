@@ -1,7 +1,9 @@
 import _ from 'lodash';
+import Axios from 'axios';
 
 import { CharacterAnalysis, Matcher } from '../matcher';
 import { FurryPreference, Kink, mammalSpecies, Species } from '../matcher-types';
+import { characterImage } from '../../chat/common';
 
 export enum ProfileRecommendationLevel {
   INFO = 'info',
@@ -18,6 +20,7 @@ export interface ProfileRecommendation {
   level: ProfileRecommendationLevel;
   title: string;
   desc: string;
+  helpUrl?: string;
   urlParams?: ProfileRecommendationUrlParams
 }
 
@@ -28,19 +31,20 @@ export class ProfileRecommendationAnalyzer {
     //
   }
 
-  protected add(code: string, level: ProfileRecommendationLevel, title: string, desc: string, urlParams?: ProfileRecommendationUrlParams): void {
-    this.recommendations.push({ code, level, title, desc, urlParams });
+  protected add(code: string, level: ProfileRecommendationLevel, title: string, desc: string, helpUrl?: string, urlParams?: ProfileRecommendationUrlParams): void {
+    this.recommendations.push({ code, level, title, desc, helpUrl, urlParams });
   }
 
-  analyze(): ProfileRecommendation[] {
+  async analyze(): Promise<ProfileRecommendation[]> {
     this.recommendations = [];
+
+    await this.checkPortrait();
 
     this.checkMissingProperties();
     this.checkSpeciesPreferences();
     this.checkKinkCounts();
     this.checkCustomKinks();
 
-    this.checkPortrait();
     this.checkImages();
     this.checkInlineImage();
     this.checkDescriptionLength();
@@ -48,22 +52,27 @@ export class ProfileRecommendationAnalyzer {
     return this.recommendations;
   }
 
-  protected checkPortrait(): void {
-    // this.profile.character.
-    // do nothing
+  protected async checkPortrait(): Promise<void> {
+    const profileUrl = characterImage(this.profile.character.name);
+
+    const result = await Axios.head(profileUrl);
+
+    if (_.trim(result.headers['etag'] || '', '"').trim().toLowerCase() === '639d154d-16c3') {
+      this.add(`ADD_AVATAR`, ProfileRecommendationLevel.CRITICAL, 'Add an avatar portrait', 'Profiles with an avatar portrait stand out in chats.', 'https://wiki.f-list.net/Guide:_Character_Profiles#Avatar');
+    }
   }
 
   protected checkImages(): void {
     if (!this.profile.character.image_count) {
-      this.add(`ADD_IMAGE`, ProfileRecommendationLevel.CRITICAL, 'Add a profile image', 'Profiles with images are more attractive to other players.');
+      this.add(`ADD_IMAGE`, ProfileRecommendationLevel.CRITICAL, 'Add a profile image', 'Profiles with images are more attractive to other players.', 'https://wiki.f-list.net/Guide:_Character_Profiles#Images');
     } else if (this.profile.character.image_count > 1 && this.profile.character.image_count < 3) {
-      this.add(`ADD_MORE_IMAGES`, ProfileRecommendationLevel.NOTE, 'Add more profile images', 'Profiles with images are more attractive – try to have at least 3 images in your profile.');
+      this.add(`ADD_MORE_IMAGES`, ProfileRecommendationLevel.NOTE, 'Add more profile images', 'Profiles with images are more attractive – try to have at least 3 images in your profile.', 'https://wiki.f-list.net/Guide:_Character_Profiles#Images');
     }
   }
 
   protected checkInlineImage(): void {
     if (_.keys(this.profile.character.inlines).length < 1) {
-      this.add(`ADD_INLINE_IMAGE`, ProfileRecommendationLevel.NOTE, 'Add an inline image', 'Profiles with inline images are more engaging to other players.');
+      this.add(`ADD_INLINE_IMAGE`, ProfileRecommendationLevel.NOTE, 'Add an inline image', 'Profiles with inline images are more engaging to other players.', 'https://wiki.f-list.net/Frequently_Asked_Questions#How_do_I_add_an_inline_image_to_my_profile.3F');
     }
   }
 
@@ -71,9 +80,9 @@ export class ProfileRecommendationAnalyzer {
     const desc = this.profile.character.description.trim();
 
     if (desc.length < 20) {
-      this.add(`ADD_DESCRIPTION`, ProfileRecommendationLevel.CRITICAL, 'Add description', 'Profiles with descriptions are more likely to draw attention from other players.');
+      this.add(`ADD_DESCRIPTION`, ProfileRecommendationLevel.CRITICAL, 'Add a description', 'Profiles with descriptions are more likely to draw attention from other players.', 'https://wiki.f-list.net/Guide:_Character_Profiles#Description');
     } else if (desc.length < 400) {
-      this.add(`EXPAND_DESCRIPTION`, ProfileRecommendationLevel.NOTE, 'Extend your description', 'Long descriptions are more attractive to other players. Try expanding your description to at least 400 characters.');
+      this.add(`EXPAND_DESCRIPTION`, ProfileRecommendationLevel.NOTE, 'Extend your description', 'Long descriptions are more attractive to other players. Try expanding your description to at least 400 characters.', 'https://wiki.f-list.net/Guide:_Character_Profiles#Description');
     }
   }
 
@@ -91,13 +100,13 @@ export class ProfileRecommendationAnalyzer {
     }, { filled: 0, total: 0 });
 
     if (counts.total === 0) {
-      this.add(`ADD_CUSTOM_KINK`, ProfileRecommendationLevel.CRITICAL, 'Add custom kinks', `Custom kinks will help your profile stand out. Try adding at least 5 custom kinks.`);
+      this.add(`ADD_CUSTOM_KINK`, ProfileRecommendationLevel.CRITICAL, 'Add custom kinks', `Custom kinks will help your profile stand out. Try adding at least 5 custom kinks.`, 'https://wiki.f-list.net/Guide:_Character_Profiles#Custom_Kinks');
     } else if (counts.total < 5) {
-      this.add(`ADD_MORE_CUSTOM_KINKS`, ProfileRecommendationLevel.NOTE, 'Add more custom kinks', `Players pay a lot of attention to custom kinks. Try adding at least 5 custom kinks.`);
+      this.add(`ADD_MORE_CUSTOM_KINKS`, ProfileRecommendationLevel.NOTE, 'Add more custom kinks', `Players pay a lot of attention to custom kinks. Try adding at least 5 custom kinks.`, 'https://wiki.f-list.net/Guide:_Character_Profiles#Custom_Kinks');
     }
 
     if (counts.filled < counts.total && counts.total > 0) {
-      this.add(`ADD_MORE_CUSTOM_KINK_DESCRIPTIONS`, ProfileRecommendationLevel.NOTE, 'Add descriptions to custom kinks', `Some or all of your custom kinks are missing descriptions. Add descriptions to your custom kinks to attract more players.`);
+      this.add(`ADD_MORE_CUSTOM_KINK_DESCRIPTIONS`, ProfileRecommendationLevel.NOTE, 'Add descriptions to custom kinks', `Some or all of your custom kinks are missing descriptions. Add descriptions to your custom kinks to attract more players.`, 'https://wiki.f-list.net/Guide:_Character_Profiles#Custom_Kinks');
     }
   }
 
@@ -114,11 +123,11 @@ export class ProfileRecommendationAnalyzer {
     const totalCount = counts.favorite + counts.yes + counts.maybe + counts.no;
 
     if (totalCount < 10) {
-        this.add(`ADD_MORE_KINKS`, ProfileRecommendationLevel.CRITICAL, `Add more kinks`, `You should have at least 10 kinks for the matching algorithm to work well.`);
+        this.add(`ADD_MORE_KINKS`, ProfileRecommendationLevel.CRITICAL, `Add more kinks`, `You should have at least 10 kinks for the matching algorithm to work well.`, 'https://wiki.f-list.net/Guide:_Character_Profiles#Kinks');
     } else {
       _.each(counts, (count, key) => {
         if (count < minCountPerType) {
-          this.add(`ADD_MORE_KINKS_${key.toString().toUpperCase()}`, ProfileRecommendationLevel.CRITICAL, `Add more '${key}' kinks`, `You should have at least ${minCountPerType} '${key}' kinks for the matching algorithm to work well.`);
+          this.add(`ADD_MORE_KINKS_${key.toString().toUpperCase()}`, ProfileRecommendationLevel.CRITICAL, `Add more '${key}' kinks`, `You should have at least ${minCountPerType} '${key}' kinks for the matching algorithm to work well.`, 'https://wiki.f-list.net/Guide:_Character_Profiles#Kinks');
         }
       });
     }
@@ -128,35 +137,39 @@ export class ProfileRecommendationAnalyzer {
     const p = this.profile;
 
     if (p.age === null) {
-      this.add('AGE', ProfileRecommendationLevel.CRITICAL, 'Enter age', 'Specifying the age of your character will improve your matches with other players.');
+      this.add('AGE', ProfileRecommendationLevel.CRITICAL, 'Enter age', 'Specifying the age of your character will improve your matches with other players.', 'https://wiki.f-list.net/Guide:_Character_Profiles#General_Details');
     }
 
     if (p.orientation === null) {
-      this.add('ORIENTATION', ProfileRecommendationLevel.CRITICAL, 'Enter sexual orientation', 'Specifying the sexual orientation of your character will improve your matches with other players.');
+      this.add('ORIENTATION', ProfileRecommendationLevel.CRITICAL, 'Enter sexual orientation', 'Specifying the sexual orientation of your character will improve your matches with other players.', 'https://wiki.f-list.net/Guide:_Character_Profiles#General_Details');
     }
 
     if (p.species === null) {
-      this.add('SPECIES', ProfileRecommendationLevel.CRITICAL, 'Enter species', 'Specifying the species of your character – even if it\'s \'human\' – will improve your matches with other players.');
+      this.add('SPECIES', ProfileRecommendationLevel.CRITICAL, 'Enter species', 'Specifying the species of your character – even if it\'s \'human\' – will improve your matches with other players.', 'https://wiki.f-list.net/Guide:_Character_Profiles#General_Details');
     }
 
     if (p.furryPreference === null) {
-      this.add('FURRY_PREFERENCE', ProfileRecommendationLevel.CRITICAL, 'Enter furry preference', 'Specifying whether you like to play with anthro characters will improve your matches with other players.');
+      this.add('FURRY_PREFERENCE', ProfileRecommendationLevel.CRITICAL, 'Enter furry preference', 'Specifying whether you like to play with anthro characters will improve your matches with other players.', 'https://wiki.f-list.net/Guide:_Character_Profiles#RPing_Preferences');
     }
 
     if (p.subDomRole === null) {
-      this.add('SUB_DOM_ROLE', ProfileRecommendationLevel.CRITICAL, 'Enter sub/dom role', 'Specifying your preferred sub/dom role will improve your matches with other players.');
+      this.add('SUB_DOM_ROLE', ProfileRecommendationLevel.CRITICAL, 'Enter sub/dom role', 'Specifying your preferred sub/dom role will improve your matches with other players.', 'https://wiki.f-list.net/Guide:_Character_Profiles#Sexual_Details');
     }
 
     if (p.position === null) {
-      this.add('POSITION', ProfileRecommendationLevel.CRITICAL, 'Enter position', 'Specifying your preferred position (e.g. "top", "bottom") will improve your matches with other players.');
+      this.add('POSITION', ProfileRecommendationLevel.CRITICAL, 'Enter position', 'Specifying your preferred position (e.g. "top", "bottom") will improve your matches with other players.', 'https://wiki.f-list.net/Guide:_Character_Profiles#Sexual_Details');
     }
 
     if (p.postLengthPreference === null) {
-      this.add('POST_LENGTH', ProfileRecommendationLevel.CRITICAL, 'Enter post length preference', 'Specifying your post length preference will improve your matches with other players.');
+      this.add('POST_LENGTH', ProfileRecommendationLevel.CRITICAL, 'Enter post length preference', 'Specifying your post length preference will improve your matches with other players.', 'https://wiki.f-list.net/Guide:_Character_Profiles#RPing_Preferences');
     }
 
     if (p.bodyType === null) {
-      this.add('BODY_TYPE', ProfileRecommendationLevel.CRITICAL, 'Enter body type', 'Specifying your character\'s body type will improve your matches with other players.');
+      this.add('BODY_TYPE', ProfileRecommendationLevel.CRITICAL, 'Enter body type', 'Specifying your character\'s body type will improve your matches with other players.', 'https://wiki.f-list.net/Guide:_Character_Profiles#General_Details');
+    }
+
+    if (p.gender === null) {
+      this.add('GENDER', ProfileRecommendationLevel.CRITICAL, 'Enter gender', 'Specifying your character\'s gender will help matching you with other players', 'https://wiki.f-list.net/Guide:_Character_Profiles#General_Details');
     }
   }
 

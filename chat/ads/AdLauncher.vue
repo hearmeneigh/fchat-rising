@@ -133,7 +133,7 @@ export default class AdLauncherDialog extends CustomDialog {
 
   openAdEditor(): void {
     this.hide();
-    (<AdCenterDialog>this.$parent.$refs['adCenter']).show();
+    (<AdCenterDialog>this.$parent.$refs['adCenter'])!.show();
   }
 
   selectAllChannels(e: any): void {

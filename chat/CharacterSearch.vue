@@ -43,11 +43,11 @@
             <div v-for="record in results" :key="record.character.name" class="search-result" :class="'status-' + record.character.status">
                 <template v-if="record.character.status === 'looking'" v-once>
                     <img :src="characterImage(record.character.name)" v-if="showAvatars"/>
-                    <user :character="record.character" :showStatus="true" :match="shouldShowMatch"></user>
+                    <user :character="record.character" :showStatus="true" :match="shouldShowMatch" :avatar="false"></user>
                     <bbcode :text="record.character.statusText" class="status-text"></bbcode>
                 </template>
                 <template v-else v-once>
-                  <user :character="record.character" :showStatus="true" :match="shouldShowMatch"></user>
+                  <user :character="record.character" :showStatus="true" :match="shouldShowMatch" :avatar="shouldShowAvatar"></user>
                   <bbcode :text="record.character.statusText" v-if="!!record.character.statusText" class="status-text"></bbcode>
                 </template>
             </div>
@@ -151,6 +151,7 @@
         shouldShowMatch = true;
         state = 'search';
         hasReceivedResults = false;
+        shouldShowAvatar = false;
 
         debugSearchJson = JSON.stringify(
           {
@@ -521,6 +522,7 @@
             }
 
             this.shouldShowMatch = core.state.settings.risingComparisonInSearch;
+            this.shouldShowAvatar = core.state.settings.risingShowPortraitInMessage;
 
             this.results = [];
             this.state = 'results';
@@ -644,11 +646,21 @@
             & > .status-crown {
               overflow: hidden;
               width: 100%;
-              height: 23px;
+              height: 2em;
+              padding-top: 5px;
+
+              .user-avatar {
+                max-width: 2em;
+                max-height: 2em;
+                min-width: 2em;
+                min-height: 2em;
+                margin-top: -5px;
+              }
 
               .status-text {
                 opacity: 0.75;
                 padding-left: 4px;
+                display: inline-flex;
               }
             }
 
