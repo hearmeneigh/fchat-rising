@@ -33,10 +33,40 @@ export class ImageUrlMutator {
     }
 
     protected init(): void {
-        // this.add(
-        //   /^https?:\/\/.*twitter.com/,
-        //   async(): Promise<string> => 'https://i.imgur.com/ScNLbsp.png'
-        // );
+        this.add(
+           /^https?:\/\/.*twitter.com\/(.*)/,
+           async(url: string, match: RegExpMatchArray): Promise<string> => {
+                const path = match[1];
+
+                try {
+                    const result = await Axios.get(
+                        `https://api.fxtwitter.com/${path}`
+                    );
+                    const imageUrl = _.get(result, 'data.tweet.media.photos.0.url', null);
+
+                    if (!imageUrl) {
+                        const videoUrl = _.get(result, 'data.tweet.media.videos.0.url', null);
+                        if (!videoUrl) {
+                            return url;
+                        }
+    
+                        if (this.debug)
+                            console.log('Twitter', url, videoUrl);
+    
+                        return videoUrl;
+                    }
+
+                    if (this.debug)
+                        console.log('Twitter', url, imageUrl);
+
+                    return imageUrl;
+
+                } catch (err) {
+                    console.error('Twitter Failure', url, err);
+                    return url;
+                }
+            }
+        );
 
         this.add(
           /^https?:\/\/rule34video.com\/videos\/([0-9a-zA-Z-_]+)/,
