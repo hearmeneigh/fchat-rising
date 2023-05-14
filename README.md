@@ -125,12 +125,12 @@ node pack.js
 ## How to Set Up Ads
 
 1. Open a conversation channel of your preference, such as `#Sex Driven LFRP`
-1. Locate `Ads` dropdown in the top right corner of the channel view
-1. Click `Ads > Edit Channel Ads...`
-1. Enter one or more ads
-1. Click `Save settings`
-1. Click `Ads > Start Posting Ads`
-1. To stop, click `Ads > Stop Posting Ads`
+1. Locate the `Ad Editor` button underneath your character overview on the left.
+1. Enter one or more ads and tag them appropriately
+1. Click `Save`
+1. Click the `Post Ads` underneath the `Ad Editor` option.
+1. Select the tags you wish to use and which channel to post them in and then click `Start Posting Ads` on the bottom.
+1. To stop, click the red stop button next to the `Post Ads` button.
 
 
 ## FAQ
@@ -145,7 +145,7 @@ node pack.js
    *   Position preference
    *   Non-custom kinks
    *   Species
-1. Maching for non-binary genders relies on kinks. For example, if your non-binary character has a preference for females, make sure 'females' are listed as a favorite kink.
+1. Matching for non-binary genders relies on kinks. For example, if your non-binary character has a preference for females, make sure 'females' are listed as a favorite kink.
 1. 'Underage' kink is considered to apply to characters aged 16 or above; 'ageplay' kink is considered to apply to characters aged 16 or below.
 1. 'Older characters' and 'younger characters' kink preferences are interpreted as age difference of 8+ years.
 1. Comparison results will get faster over time, as more and more character data is cached.
