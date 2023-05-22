@@ -56,7 +56,7 @@
   "dependencies": {
     "@cliqz/adblocker-electron": "~1.24.0",
     "jquery": "^3.6.0",
-    "keytar": "~7.5.0",
+    "keytar": "~7.9.0",
     "node-fetch": "^2.6.4",
     "vue-apexcharts": "^1.6.2"
   },
