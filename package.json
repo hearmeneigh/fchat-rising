@@ -10,8 +10,8 @@
     "@f-list/vue-ts": "^1.0.3",
     "@fortawesome/fontawesome-free": "^5.15.1",
     "@types/bluebird": "3.5.32",
-    "@types/lodash": "^4.14.164",
-    "@types/node": "^14.17.0",
+    "@types/lodash": "4.14.162",
+    "@types/node": "16.18.32",
     "@types/node-fetch": "^3.0.3",
     "@types/qs": "^6.9.5",
     "@types/request-promise": "^4.1.46",
@@ -24,7 +24,7 @@
     "bootstrap": "^4.5.3",
     "copy-webpack-plugin": "^6.2.1",
     "css-loader": "^5.0.0",
-    "date-fns": "^2.16.1",
+    "date-fns": "2.29.3",
     "electron": "^17.1.2",
     "electron-log": "^4.4.3",
     "electron-packager": "^15.4.0",
@@ -49,16 +49,15 @@
     "typescript": "^3.9.7",
     "vue": "2.6.12",
     "vue-input-tag": "^2.0.7",
-    "vue-loader": "^15.9.8",
+    "vue-loader": "15.9.8",
     "vue-template-compiler": "2.6.12",
     "webpack": "5.8.0"
   },
   "dependencies": {
-    "@cliqz/adblocker-electron": "~1.24.0",
+    "@cliqz/adblocker-electron": "1.26.3",
     "jquery": "^3.6.0",
     "keytar": "~7.8.0",
-    "node-fetch": "^3.2.10",
-    "vue-apexcharts": "^1.6.2"
+    "node-fetch": "3.0.0"
   },
   "optionalDependencies": {
     "appdmg": "^0.6.0",
@@ -70,7 +69,8 @@
     "vue-class-component": "6.3.2",
     "vue-loader": "15.9.8",
     "vue-template-compiler": "2.6.12",
-    "@types/bluebird": "3.5.32"
+    "@types/bluebird": "3.5.32",
+    "@types/node": "16.18.32"
   },
   "scripts": {
     "postinstall": "electron-rebuild --prebuild-tag-prefix=ignoreprebuilds -f -o keytar"
