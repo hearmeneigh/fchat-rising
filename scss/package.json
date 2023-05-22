@@ -6,7 +6,7 @@
   "license": "MIT",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
-    "bootstrap": "^4.5.3",
+    "bootstrap": "^4.6.2",
     "node-sass": "^7.0.1"
   },
   "scripts": {
