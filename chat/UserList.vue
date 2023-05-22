@@ -1,7 +1,7 @@
 <template>
     <sidebar id="user-list" :label="l('users.title')" icon="fa-users" :right="true" :open="expanded">
-        <tabs style="flex-shrink:0" :tabs="channel ? [l('users.friends'), l('users.members')] : [l('users.friends')]" v-model="tab"></tabs>
-        <div class="users" style="padding-left:10px" v-show="tab === '0'">
+        <tabs style="flex-shrink:0" :tabs="channel ? { friends: l('users.friends'), members: l('users.members') } : { profile: 'Profile', friends: l('users.friends') }" v-model="tab"></tabs>
+        <div class="users" style="padding-left:10px" v-show="tab === 'friends'">
             <h4>{{l('users.friends')}}</h4>
             <div v-for="character in friends" :key="character.name">
                 <user :character="character" :showStatus="true" :bookmark="false"></user>
@@ -11,7 +11,7 @@
                 <user :character="character" :showStatus="true" :bookmark="false"></user>
             </div>
         </div>
-        <div v-if="channel" style="padding-left:5px;flex:1;display:flex;flex-direction:column" v-show="tab === '1'">
+        <div v-if="channel" style="padding-left:5px;flex:1;display:flex;flex-direction:column" v-show="tab === 'members'">
             <div class="users" style="flex:1;padding-left:5px">
                 <h4>{{l('users.memberCount', channel.sortedMembers.length)}} <a class="btn sort" @click="switchSort"><i class="fa fa-sort"></i></a></h4>
                 <div v-for="member in filteredMembers" :key="member.character.name">
@@ -24,6 +24,9 @@
                 </div>
                 <input class="form-control" v-model="filter" :placeholder="l('filter')" type="text"/>
             </div>
+        </div>
+        <div v-if="!channel" style="flex:1;display:flex;flex-direction:column" class="profile" v-show="tab === 'profile'">
+           <character-page :authenticated="true" :oldApi="true" :name="profileName" :image-preview="true" ref="characterPage"></character-page>
         </div>
     </sidebar>
 </template>
@@ -38,6 +41,7 @@
     import Sidebar from './Sidebar.vue';
     import UserView from './UserView.vue';
     import _ from 'lodash';
+    import characterPage from '../site/character_page/character_page.vue';
 
     type StatusSort = {
       [key in Character.Status]: number;
@@ -72,10 +76,10 @@
     const availableSorts = ['normal', 'status', 'gender'] as const;
 
     @Component({
-        components: {user: UserView, sidebar: Sidebar, tabs: Tabs}
+        components: {characterPage, user: UserView, sidebar: Sidebar, tabs: Tabs}
     })
     export default class UserList extends Vue {
-        tab = '0';
+        tab = 'friends';
         expanded = window.innerWidth >= 992;
         filter = '';
         l = l;
@@ -93,6 +97,10 @@
 
         get channel(): Channel {
             return (<Conversation.ChannelConversation>core.conversations.selectedConversation).channel;
+        }
+
+        get profileName(): string | undefined {
+          return this.channel ? undefined : core.conversations.selectedConversation.name;
         }
 
         get filteredMembers(): ReadonlyArray<Channel.Member> {
@@ -189,6 +197,12 @@
             border-top-left-radius: 0;
         }
 
+        .sidebar {
+          .body {
+            overflow-x: hidden;
+          }
+        }
+
         @media (min-width: breakpoint-min(md)) {
             .sidebar {
                 position: static;
@@ -205,5 +219,119 @@
         &.open .body {
             display: flex;
         }
+
+      .profile {
+        h4 {
+          margin: 0.5rem 0 0.5rem 0 !important;
+          padding-left: 0.2rem;
+          padding-right: 0.2rem;
+        }
+
+        .match-report {
+          display: none;
+        }
+
+        .row.character-page {
+          display: block;
+          margin-right: 0;
+          margin-left: 0;
+
+          > div {
+            max-width: 100% !important;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            flex: 0 0 100%;
+          }
+        }
+
+        #character-page-sidebar {
+          border: none;
+          background-color: transparent !important;
+        }
+
+        .card-body {
+          padding: 0;
+        }
+
+        .character-page {
+          .character-links-block,
+          .character-avatar,
+          .character-page-note-link,
+          .character-card-header,
+          .compare-highlight-block
+          {
+            display: none !important;
+          }
+
+          #characterView {
+            .card {
+              border: none !important;
+              background-color: transparent !important;
+            }
+          }
+
+          .infotag {
+            margin: 0;
+            padding: 0;
+            margin-bottom: 0.3rem;
+
+            .infotag-value {
+              margin: 0;
+            }
+          }
+
+          .quick-info {
+            display: none !important;
+          }
+
+          .character-kinks-block {
+            > div {
+              flex-direction: column !important;
+              margin: 0 !important;
+
+              > div {
+                min-width: 100% !important;
+                padding: 0 !important;
+
+                .card {
+                  border: none !important;
+
+                  .card-header {
+                    margin: 0;
+                    padding: 0;
+                  }
+
+                  .character-kink {
+                    margin: 0;
+                    padding: 0;
+
+                    &.stock-kink {
+                      padding-left: 0.2rem !important;
+                      margin-right: 0.3rem !important;
+                      margin-left: 0.1rem !important;
+                    }
+
+                    &.custom-kink {
+                      margin-bottom: 0.3rem;
+                      border: none;
+                      margin-left: auto;
+                      max-width: 95%;
+                      margin-right: auto;
+                      padding-bottom: 0.5rem;
+                      border-bottom: 1px var(--characterKinkCustomBorderColor) solid;
+                    }
+
+                    .popover {
+                      min-width: 180px;
+                      max-width: 180px;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
 </style>
