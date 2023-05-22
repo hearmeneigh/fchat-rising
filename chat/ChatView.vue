@@ -632,7 +632,8 @@
         .glowing {
           padding: 3px;
           margin-right: 0.5em;
-          animation: noticeme 2.5s infinite alternate;
+          animation: noticeme 2.5s alternate;
+          animation-iteration-count: 10;
           animation-timing-function: ease-in-out;
         }
 
