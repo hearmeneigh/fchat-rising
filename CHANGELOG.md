@@ -1,5 +1,13 @@
 # Changelog
 
+## Canary
+* Added quick profile view to the right side panel
+* Better YouTube previews (credit: [@twilight-sparkle-irl](https://github.com/twilight-sparkle-irl))
+* Better Twitter previews (credit: [@twilight-sparkle-irl](https://github.com/twilight-sparkle-irl))
+* Security updates to NPM dependencies
+* Fixed issue that prevented `yarn.lock` from being deleted
+* Join channel / open conversation UI glow now stops after ~25 seconds
+
 ## 1.21.2
 * Fixed image previews for `imgur.io`, `gifdeliverynetwork.com`, and `rule34.us`
 * Fixed dependencies
