@@ -23,19 +23,19 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@cliqz/adblocker-content@^1.26.5":
-  version "1.26.5"
-  resolved "https://registry.yarnpkg.com/@cliqz/adblocker-content/-/adblocker-content-1.26.5.tgz#b8ed6198a8d06737a2dcc82c367e78f53540bdd0"
-  integrity sha512-pcQ/Lpd0zvkxpOYx+38IQ7ZLWj38oF5tdsjm8Yq+hQ1jBu1Dwnk9LwIlYxpktidRvpMh4dGFOYUBmb4vsieEwQ==
+"@cliqz/adblocker-content@1.26.3", "@cliqz/adblocker-content@^1.26.3":
+  version "1.26.3"
+  resolved "https://registry.yarnpkg.com/@cliqz/adblocker-content/-/adblocker-content-1.26.3.tgz#6f0c78883d6574f0d0ce081a6a79d052c1c89e47"
+  integrity sha512-Bg6Ex5LNBUnijhlQlkeZqrtKqViqfcTXiXvpXQHMY01pdeZQ70rYBT7HRV5FpQYV3xWkRaQrClanhWz36XWRew==
   dependencies:
-    "@cliqz/adblocker-extended-selectors" "^1.26.5"
+    "@cliqz/adblocker-extended-selectors" "^1.26.3"
 
-"@cliqz/adblocker-electron-preload@^1.26.3":
-  version "1.26.5"
-  resolved "https://registry.yarnpkg.com/@cliqz/adblocker-electron-preload/-/adblocker-electron-preload-1.26.5.tgz#5d3f028d4ee48be52449ac07342139fbfcb651b9"
-  integrity sha512-4XrfNyn493sUrXRpVW1Qg35SqNv7/BeaXPKVSbEUo9tEzNc5gDnLckWIb5uG204e0D6Xo+o6FUkvv1t8Smpv1g==
+"@cliqz/adblocker-electron-preload@1.26.3", "@cliqz/adblocker-electron-preload@^1.26.3":
+  version "1.26.3"
+  resolved "https://registry.yarnpkg.com/@cliqz/adblocker-electron-preload/-/adblocker-electron-preload-1.26.3.tgz#dcbfe39f1962ec224b91c672a3c25ad235881a5e"
+  integrity sha512-lEapuW9JJnUSRh58BblUYlg8zunHxrL0U9HRl0S+73g/8IqrJdmEn12Eo2LMJIJzOQg8gLy4CkAzaLNPgVpJ5g==
   dependencies:
-    "@cliqz/adblocker-content" "^1.26.5"
+    "@cliqz/adblocker-content" "^1.26.3"
 
 "@cliqz/adblocker-electron@1.26.3":
   version "1.26.3"
@@ -46,22 +46,22 @@
     "@cliqz/adblocker-electron-preload" "^1.26.3"
     tldts-experimental "^5.6.21"
 
-"@cliqz/adblocker-extended-selectors@^1.26.5":
-  version "1.26.5"
-  resolved "https://registry.yarnpkg.com/@cliqz/adblocker-extended-selectors/-/adblocker-extended-selectors-1.26.5.tgz#f52efc753f0fc0e95fd1f42bf92f627ac49bf849"
-  integrity sha512-+81FOTJtWwk3t58XyXBotkdOp7uP9vNe6hyUQQY173Rt9X9tsErGkPW57hMP0OgVsYNIYg7/TXxHEabxTUQubw==
+"@cliqz/adblocker-extended-selectors@1.26.3", "@cliqz/adblocker-extended-selectors@^1.26.3":
+  version "1.26.3"
+  resolved "https://registry.yarnpkg.com/@cliqz/adblocker-extended-selectors/-/adblocker-extended-selectors-1.26.3.tgz#7553158ae78e7a50a263bfc595e521746cceec00"
+  integrity sha512-wLcP7gkc3YVee/iqkIbFoeweSMbX9aaNUissIlzqDz+8BAci0RXOt4SHj+Ri/TIpTkR5urvhKsmQ8sb1hnJX6Q==
 
-"@cliqz/adblocker@^1.26.3":
-  version "1.26.5"
-  resolved "https://registry.yarnpkg.com/@cliqz/adblocker/-/adblocker-1.26.5.tgz#5de1dbcc2fd23fb69732fefb3f13f06b530dae6d"
-  integrity sha512-hbvkcfAQdpcREf+Jim9SXIp/M5p2g2YRB5Bd+g3zlTS+cJXvyk1Hvkj9fxHs37xytWfQMYevWyGko1ZlkOAbNA==
+"@cliqz/adblocker@1.26.3", "@cliqz/adblocker@^1.26.3":
+  version "1.26.3"
+  resolved "https://registry.yarnpkg.com/@cliqz/adblocker/-/adblocker-1.26.3.tgz#8ae59ffaf731d26ee515eeb3a9b3d51c28480b90"
+  integrity sha512-RdXlgNRWEvT+QAVuc81hsitSOObXFkAJiXPL/8PmJ8rFKh0RHfkOpdXl8Xb2GOh2HUbKhy5u9vAhSFMCBKCbCg==
   dependencies:
-    "@cliqz/adblocker-content" "^1.26.5"
-    "@cliqz/adblocker-extended-selectors" "^1.26.5"
+    "@cliqz/adblocker-content" "^1.26.3"
+    "@cliqz/adblocker-extended-selectors" "^1.26.3"
     "@remusao/guess-url-type" "^1.1.2"
     "@remusao/small" "^1.1.2"
     "@remusao/smaz" "^1.7.1"
-    "@types/chrome" "^0.0.225"
+    "@types/chrome" "^0.0.224"
     "@types/firefox-webext-browser" "^111.0.0"
     tldts-experimental "^5.6.21"
 
@@ -347,10 +347,10 @@
   resolved "https://registry.yarnpkg.com/@types/caseless/-/caseless-0.12.2.tgz#f65d3d6389e01eeb458bd54dc8f52b95a9463bc8"
   integrity sha512-6ckxMjBBD8URvjB6J3NcnuAn5Pkl7t3TizAg+xdlzzQGSPSmBcXf8KoIH0ua/i+tio+ZRUHEXp0HEmvaR4kt0w==
 
-"@types/chrome@^0.0.225":
-  version "0.0.225"
-  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.225.tgz#3d8f9ffe8141385389862607dfee2d7b0915fd90"
-  integrity sha512-acSFQN7X0/fjF6PSP0Ki9TlwWsEeJeh5WclMYilJSHHp+ayLDMD/YeSIUzsodwLKPZQ9h8SyiL13/pPab8M4RA==
+"@types/chrome@^0.0.224":
+  version "0.0.224"
+  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.224.tgz#0138497299eaaf261d61ece62d7d6af3868ce856"
+  integrity sha512-YkL7q3KDV7OAKgVCBNIfH73rnjNMbIzAYHzTa2DKhSK/2z0Wf/n8yJnK/UoW+lvuYJJR4LtAkG3YvsIZTy7BOA==
   dependencies:
     "@types/filesystem" "*"
     "@types/har-format" "*"

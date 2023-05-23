@@ -26,7 +26,13 @@
             </div>
         </div>
         <div v-if="!channel" style="flex:1;display:flex;flex-direction:column" class="profile" v-show="tab === 'profile'">
-           <character-page :authenticated="true" :oldApi="true" :name="profileName" :image-preview="true" ref="characterPage"></character-page>
+
+          <a :href="profileUrl" target="_blank" class="btn profile-button">
+              <span class="fa fa-fw fa-user"></span>
+              Full Profile
+          </a>
+
+          <character-page :authenticated="true" :oldApi="true" :name="profileName" :image-preview="true" ref="characterPage"></character-page>
         </div>
     </sidebar>
 </template>
@@ -42,6 +48,7 @@
     import UserView from './UserView.vue';
     import _ from 'lodash';
     import characterPage from '../site/character_page/character_page.vue';
+    import { profileLink } from './common';
 
     type StatusSort = {
       [key in Character.Status]: number;
@@ -101,6 +108,14 @@
 
         get profileName(): string | undefined {
           return this.channel ? undefined : core.conversations.selectedConversation.name;
+        }
+
+        get profileUrl(): string | undefined {
+          if (!this.profileName) {
+            return;
+          }
+
+          return profileLink(this.profileName);
         }
 
         get filteredMembers(): ReadonlyArray<Channel.Member> {
@@ -221,10 +236,24 @@
         }
 
       .profile {
+        .profile-button {
+          border: 1px var(--secondary) solid;
+          padding-top: 0.25rem;
+          padding-bottom: 0.25rem;
+          min-height: 2rem;
+          margin-left: 0.3rem;
+          margin-right: 0.3rem;
+          margin-top: 0.6rem;
+          display: block;
+        }
+
         h4 {
           margin: 0.5rem 0 0.5rem 0 !important;
-          padding-left: 0.2rem;
+          padding-left: 0.25rem;
           padding-right: 0.2rem;
+          padding-top: 0.25rem;
+          padding-bottom: 0.25rem;
+          color: var(--characterKinkCustomColor);
         }
 
         .match-report {
@@ -318,6 +347,10 @@
             }
           }
 
+          .character-list-block {
+            display: none !important;
+          }
+
           .quick-info-block {
             margin-left: 5px;
             margin-right: 5px;
@@ -330,6 +363,8 @@
           #headerCharacterMemo {
             margin-left: 5px;
             margin-right: 5px;
+            margin-top: 0.75rem;
+            margin-bottom: 0.75rem;
           }
 
           .character-kinks-block {
@@ -340,6 +375,7 @@
               > div {
                 min-width: 100% !important;
                 padding: 0 !important;
+                margin-top: 0.5rem;
 
                 .card {
                   border: none !important;
@@ -347,6 +383,12 @@
                   .card-header {
                     margin: 0;
                     padding: 0;
+                  }
+
+                  div.stock-kink + div.custom-kink {
+                      border-top: 1px var(--characterKinkCustomBorderColor) solid !important;
+                      padding-top: 0.25rem !important;
+                      margin-top: 0.25rem !important;
                   }
 
                   .character-kink {

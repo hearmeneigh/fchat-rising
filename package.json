@@ -70,7 +70,11 @@
     "vue-loader": "15.9.8",
     "vue-template-compiler": "2.6.12",
     "@types/bluebird": "3.5.32",
-    "@types/node": "16.18.32"
+    "@types/node": "16.18.32",
+    "@cliqz/adblocker": "1.26.3",
+    "@cliqz/adblocker-content": "1.26.3",
+    "@cliqz/adblocker-electron-preload": "1.26.3",
+    "@cliqz/adblocker-extended-selectors": "1.26.3"
   },
   "scripts": {
     "postinstall": "electron-rebuild --prebuild-tag-prefix=ignoreprebuilds -f -o keytar"

@@ -140,7 +140,6 @@ export class ImageDomMutator {
         /* tslint:disable max-line-length */
         this.add('default', this.getBaseJsMutatorScript(['.content video', '.content img', '#video, video', '#image, img']));
         this.add('about:blank', '');
-        this.add('yewtu.be', '');
         this.add('e621.net', this.getBaseJsMutatorScript(['video', '#image']));
         this.add('e-hentai.org', this.getBaseJsMutatorScript(['video', '#img']));
         this.add('gelbooru.com', this.getBaseJsMutatorScript(['video.gelcomVPlayer', '.post-view video', '.contain-push video', '#image']));
@@ -149,7 +148,6 @@ export class ImageDomMutator {
         this.add('danbooru.donmai.us', this.getBaseJsMutatorScript(['video', '#image']));
         this.add('gfycat.com', this.getBaseJsMutatorScript(['video'], true, [], true));
         this.add('gfycatporn.com', this.getBaseJsMutatorScript(['video'], true, [], true));
-        this.add('youtube.com', this.getBaseJsMutatorScript(['video']), undefined, 'dom-ready');
         this.add('instantfap.com', this.getBaseJsMutatorScript(['#post video', '#post img']));
         this.add('webmshare.com', this.getBaseJsMutatorScript(['video']));
         this.add('vimeo.com', this.getBaseJsMutatorScript(['#video, video', '#image, img']));
@@ -258,7 +256,6 @@ export class ImageDomMutator {
             }
         );
 
-
         this.add(
             'twitter.com',
             `
@@ -314,7 +311,6 @@ export class ImageDomMutator {
             scheduler();
             `
         );
-
     }
 
 
