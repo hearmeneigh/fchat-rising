@@ -1,6 +1,6 @@
 # Changelog
 
-## Canary
+## 1.22.0
 * Added quick profile view to the right side panel
 * Better YouTube previews (credit: [@twilight-sparkle-irl](https://github.com/twilight-sparkle-irl))
 * Better Twitter previews (credit: [@twilight-sparkle-irl](https://github.com/twilight-sparkle-irl))

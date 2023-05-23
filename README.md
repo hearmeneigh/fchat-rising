@@ -1,8 +1,8 @@
 # Download
-[Windows](https://github.com/mrstallion/fchat-rising/releases/download/v1.21.2/F-Chat-Rising-1.21.2-win.exe) (82 MB)
-| [MacOS Intel](https://github.com/mrstallion/fchat-rising/releases/download/v1.21.2/F-Chat-Rising-1.21.2-macos-intel.dmg) (82 MB)
-| [MacOS M1](https://github.com/mrstallion/fchat-rising/releases/download/v1.21.2/F-Chat-Rising-1.21.2-macos-m1.dmg) (84 MB)
-| [Linux](https://github.com/mrstallion/fchat-rising/releases/download/v1.21.2/F-Chat-Rising-1.21.2-linux.AppImage) (82 MB)
+[Windows](https://github.com/mrstallion/fchat-rising/releases/download/v1.22.0/F-Chat-Rising-1.22.0-win.exe) (82 MB)
+| [MacOS Intel](https://github.com/mrstallion/fchat-rising/releases/download/v1.22.0/F-Chat-Rising-1.22.0-macos-intel.dmg) (82 MB)
+| [MacOS M1](https://github.com/mrstallion/fchat-rising/releases/download/v1.22.0/F-Chat-Rising-1.22.0-macos-m1.dmg) (84 MB)
+| [Linux](https://github.com/mrstallion/fchat-rising/releases/download/v1.22.0/F-Chat-Rising-1.22.0-linux.AppImage) (82 MB)
 
 
 # F-Chat Rising
@@ -71,6 +71,7 @@ node pack.js
     *    LFP ads are automatically rated (great/good/maybe/no) and matched against your profile
 *   Private Conversations
     *    View a characters' recent ads
+    *    Quick prof  
 *   Link Previews
     *    Hover cursor over any `[url]` to see a preview of it
     *    Hover cursor over any character name to see a preview of the character
@@ -91,7 +92,7 @@ node pack.js
     *    Character view tabs (overview, images, etc.) stick to the top 
     *    Show/hide current profile with Ctrl+P or Command+P
     *    Navigate back and forward in character profile view history
-    *    Profile Analyzer guides you to adjust your profile to maximize matches 
+    *    Profile Analyzer guides you to adjust your profile to maximize matches
 *   Character Search
     *    Search results are sorted based on match scores
     *    Best matching profiles get a 'unicorn' tag
