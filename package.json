@@ -12,7 +12,7 @@
     "@types/bluebird": "3.5.32",
     "@types/lodash": "4.14.162",
     "@types/node": "16.18.32",
-    "@types/node-fetch": "^3.0.3",
+    "@types/node-fetch": "2.6.4",
     "@types/qs": "^6.9.5",
     "@types/request-promise": "^4.1.46",
     "@types/sortablejs": "^1.10.6",
@@ -57,7 +57,7 @@
     "@cliqz/adblocker-electron": "1.26.3",
     "jquery": "^3.6.0",
     "keytar": "~7.8.0",
-    "node-fetch": "3.0.0"
+    "node-fetch": "2.6.11"
   },
   "optionalDependencies": {
     "appdmg": "^0.6.0",

@@ -231,6 +231,17 @@
           display: none;
         }
 
+        .tab-content #overview > div {
+            margin-bottom: 0.4rem !important;
+            margin-left: 5px;
+            margin-right: 5px;
+
+            &.character-kinks-block {
+              margin-left: 0;
+              margin-right: 0;
+            }
+        }
+
         .row.character-page {
           display: block;
           margin-right: 0;
@@ -269,6 +280,32 @@
               border: none !important;
               background-color: transparent !important;
             }
+
+            .character-kinks-block {
+              .kink-block-no {
+                .card {
+                  background-color: var(--scoreMismatchBgFaint) !important;
+                }
+              }
+
+              .kink-block-maybe {
+                .card {
+                  background-color: var(--scoreWeakMismatchBgFaint) !important;
+                }
+              }
+
+              .kink-block-yes {
+                .card {
+                  background-color: var(--scoreWeakMatchBgFaint) !important;
+                }
+              }
+
+              .kink-block-favorite {
+                .card {
+                  background-color: var(--scoreMatchBgFaint) !important;
+                }
+              }
+            }
           }
 
           .infotag {
@@ -281,8 +318,18 @@
             }
           }
 
+          .quick-info-block {
+            margin-left: 5px;
+            margin-right: 5px;
+          }
+
           .quick-info {
             display: none !important;
+          }
+
+          #headerCharacterMemo {
+            margin-left: 5px;
+            margin-right: 5px;
           }
 
           .character-kinks-block {
