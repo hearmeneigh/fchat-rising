@@ -1,7 +1,17 @@
 # Changelog
 
+## 1.23.0
+* Cleaned up top menu
+  * Profile Helper now only shows up if you have anything to fix; otherwise the profile helper can be found in the Settings menu
+  * Post Ads and Ad Editor have been merged together
+* Improved text editor
+  * eicon picker (courtesy of @Xariah Dailstone)
+  * color picker
+  * unicode emoji picker
+* Added [privacy statement](PRIVACY.md)
+
 ## 1.22.0
-* Added quick profile view to the right side panel
+* Added quick profile view on the right side panel
 * Better YouTube previews (credit: [@twilight-sparkle-irl](https://github.com/twilight-sparkle-irl))
 * Better Twitter previews (credit: [@twilight-sparkle-irl](https://github.com/twilight-sparkle-irl))
 * Security updates to NPM dependencies
