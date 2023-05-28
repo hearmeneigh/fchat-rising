@@ -1,5 +1,5 @@
 <template>
-    <modal :action="l('chat.setStatus')" @submit="setStatus" @close="reset" dialogClass="w-100 modal-lg">
+    <modal :action="l('chat.setStatus')" @submit="setStatus" @close="reset" dialogClass="w-100 modal-lg statusEditor">
         <div class="form-group" id="statusSelector">
             <label class="control-label">{{l('chat.setStatus.status')}}</label>
             <dropdown linkClass="custom-select">
@@ -105,3 +105,9 @@
         }
     }
 </script>
+
+<style lang="scss">
+  .statusEditor .bbcode-toolbar .color-selector {
+      left: 58px !important;
+  }
+</style>

@@ -91,6 +91,10 @@
 </script>
 
 <style lang="scss">
+  .ad-list .bbcode-toolbar .color-selector {
+      left: 58px !important;
+  }
+
   .w-100 {
     min-width: 70%;
   }

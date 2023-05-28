@@ -7,6 +7,7 @@ export interface EditorButton {
     icon: string;
     key?: Keys;
     class?: string;
+    outerClass?: string;
     startText?: string;
     endText?: string;
     handler?(vm: Vue): void;

@@ -6,13 +6,22 @@
             <i class="fa fa-code"></i>
         </a>
         <div class="bbcode-toolbar btn-toolbar" role="toolbar" :disabled="disabled" :style="showToolbar ? {display: 'flex'} : undefined" @mousedown.stop.prevent
-            v-if="hasToolbar" style="flex:1 51%">
-            <div class="btn-group" style="flex-wrap:wrap">
+            v-if="hasToolbar" style="flex:1 51%; position: relative">
+
+            <div class="popover popover-top color-selector" v-show="colorPopupVisible" v-on-clickaway="dismissColorSelector">
+                <div class="popover-body">
+                  <div class="btn-group" role="group" aria-label="Color">
+                    <button v-for="btnCol in buttonColors" type="button" class="btn text-color" :class="btnCol" :title="btnCol" @click.prevent.stop="colorApply(btnCol)"></button>
+                  </div>
+                </div>
+            </div>
+
+            <div class="btn-group toolbar-buttons" style="flex-wrap:wrap">
                 <div v-if="!!characterName" class="character-btn">
                   <icon :character="characterName"></icon>
                 </div>
 
-                <div class="btn btn-light btn-sm" v-for="button in buttons" :title="button.title" @click.prevent.stop="apply(button)">
+                <div class="btn btn-light btn-sm" v-for="button in buttons" :class="button.outerClass" :title="button.title" @click.prevent.stop="apply(button)">
                     <i :class="(button.class ? button.class : 'fa ') + button.icon"></i>
                 </div>
                 <div @click="previewBBCode" class="btn btn-light btn-sm" :class="preview ? 'active' : ''"
@@ -41,7 +50,9 @@
 
 <script lang="ts">
     import {Component, Hook, Prop, Watch} from '@f-list/vue-ts';
+    import _ from 'lodash';
     import Vue from 'vue';
+    import { mixin as clickaway } from 'vue-clickaway';
     import {getKey} from '../chat/common';
     import {Keys} from '../keys';
     import {BBCodeElement, CoreBBCodeParser, urlRegex} from './core';
@@ -52,7 +63,8 @@
     @Component({
       components: {
         'icon': IconView
-      }
+      },
+      mixins: [ clickaway ]
     })
     export default class Editor extends Vue {
         @Prop
@@ -81,6 +93,9 @@
 
         @Prop({default: null})
         readonly characterName: string | null = null;
+
+        buttonColors = ['red', 'orange', 'yellow', 'green', 'cyan', 'purple', 'blue', 'pink', 'black', 'brown', 'white', 'gray'];
+        colorPopupVisible = false;
 
         preview = false;
         previewWarnings: ReadonlyArray<string> = [];
@@ -156,10 +171,25 @@
 
         get buttons(): EditorButton[] {
             const buttons = this.defaultButtons.slice();
+
             if(this.extras !== undefined)
                 for(let i = 0, l = this.extras.length; i < l; i++)
                     buttons.push(this.extras[i]);
+
+            const colorButtonIndex = _.findIndex(buttons, (b) => b.icon === 'fa-eye-dropper')!;
+
+            if (this.colorPopupVisible) {
+              const colorButton = _.cloneDeep(buttons[colorButtonIndex]);
+              colorButton.outerClass = 'toggled';
+
+              buttons[colorButtonIndex] = colorButton;
+            }
+
             return buttons;
+        }
+
+        getColorButton(): EditorButton {
+          return _.find(this.buttons, (b) => b.icon === 'fa-eye-dropper')!;
         }
 
         @Watch('value')
@@ -213,7 +243,32 @@
             this.$emit('input', this.text);
         }
 
+        dismissColorSelector(): void {
+          this.colorPopupVisible = false;
+        }
+
+        colorApply(btnColor: string): void {
+          const button = this.getColorButton();
+
+          this.applyButtonEffect(button, btnColor);
+
+          this.colorPopupVisible = false;
+        }
+
         apply(button: EditorButton): void {
+            if (button.tag === 'color') {
+              this.colorPopupVisible = !this.colorPopupVisible;
+              return;
+            } else if (button.tag === 'eicon') {
+
+            } else if (button.tag === 'emoji') {
+
+            }
+
+            this.applyButtonEffect(button);
+        }
+
+        applyButtonEffect(button: EditorButton, withArgument?: string): void {
             // Allow emitted variations for custom buttons.
             this.$once('insert', (startText: string, endText: string) => this.applyText(startText, endText));
             // noinspection TypeScriptValidateTypes
@@ -221,8 +276,8 @@
                 // tslint:ignore-next-line:no-any
                 return button.handler.call(this as any, this);
             }
-            if(button.startText === undefined)
-                button.startText = `[${button.tag}]`;
+            if(button.startText === undefined || withArgument)
+                button.startText = `[${button.tag}${withArgument ? '=' + withArgument : ''}]`;
             if(button.endText === undefined)
                 button.endText = `[/${button.tag}]`;
 
@@ -266,7 +321,7 @@
                     if(button.key === key) {
                         e.stopPropagation();
                         e.preventDefault();
-                        this.apply(button);
+                        this.applyButtonEffect(button);
                         break;
                     }
             } else if(e.shiftKey) this.isShiftPressed = true;
@@ -336,6 +391,96 @@
       img {
         width: inherit;
         height: inherit;
+      }
+    }
+  }
+
+  .bbcode-toolbar {
+    .toolbar-buttons {
+      .btn.toggled {
+        background-color: var(--secondary) !important;
+      }
+    }
+
+    .color-selector {
+      max-width: 145px;
+      top: -57px;
+      left: 94px;
+      line-height: 1;
+      z-index: 1000;
+      background-color: var(--input-bg);
+
+      .btn-group {
+        display: block;
+      }
+
+      .btn {
+        &.text-color {
+          border-radius: 0 !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          margin-right: -1px !important;
+          margin-bottom: -1px !important;
+          border: 1px solid var(--secondary);
+          width: 1.3rem;
+          height: 1.3rem;
+
+          &::before {
+            display: none !important;
+          }
+
+          &:hover {
+            border-color: var(--gray-dark) !important;
+          }
+
+          &.red {
+            background-color: var(--textRedColor);
+          }
+
+          &.orange {
+            background-color: var(--textOrangeColor);
+          }
+
+          &.yellow {
+            background-color: var(--textYellowColor);
+          }
+
+          &.green {
+            background-color: var(--textGreenColor);
+          }
+
+          &.cyan {
+            background-color: var(--textCyanColor);
+          }
+
+          &.purple {
+            background-color: var(--textPurpleColor);
+          }
+
+          &.blue {
+            background-color: var(--textBlueColor);
+          }
+
+          &.pink {
+            background-color: var(--textPinkColor);
+          }
+
+          &.black {
+            background-color: var(--textBlackColor);
+          }
+
+          &.brown {
+            background-color: var(--textBrownColor);
+          }
+
+          &.white {
+            background-color: var(--textWhiteColor);
+          }
+
+          &.gray {
+            background-color: var(--textGrayColor);
+          }
+        }
       }
     }
   }
