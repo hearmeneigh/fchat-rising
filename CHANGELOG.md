@@ -1,10 +1,5 @@
 # Changelog
 
-## Canary
-* Cleaned up top menu
-  * Profile Helper now only shows up if you have anything to fix; otherwise the profile helper can be found in the Settings menu
-  * Post Ads and Ad Editor have been merged together
-
 ## 1.23.0
 * Improved text editor
   * eicon picker (courtesy of @Xariah Dailstone)
