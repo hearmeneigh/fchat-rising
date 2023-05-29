@@ -65,7 +65,7 @@
                     </div>
                 </a>
 
-                <a href="#" @click.prevent="showAddPmPartner()" class="new-conversation" :class="{ glowing: conversations.privateConversations.length === 0 }">Open Conversation</a>
+                <a href="#" @click.prevent="showAddPmPartner()" class="new-conversation" :class="{ glowing: conversations.privateConversations.length === 0 && privateCanGlow }">Open Conversation</a>
             </div>
 
             <a href="#" @click.prevent="showChannels()" class="btn"><span class="fas fa-list"></span>
@@ -86,7 +86,7 @@
                     </span>
                 </a>
 
-                <a href="#" @click.prevent="showChannels()" class="join-channel" :class="{ glowing: conversations.channelConversations.length === 0 }">Join Channel</a>
+                <a href="#" @click.prevent="showChannels()" class="join-channel" :class="{ glowing: conversations.channelConversations.length === 0 && channelCanGlow }">Join Channel</a>
             </div>
         </sidebar>
         <div style="display:flex;flex-direction:column;flex:1;min-width:0">
@@ -136,7 +136,7 @@
 </template>/me
 
 <script lang="ts">
-    import {Component, Hook} from '@f-list/vue-ts';
+import { Component, Hook, Watch } from '@f-list/vue-ts';
 
     import Sortable from 'sortablejs';
 
@@ -199,6 +199,26 @@
         keydownListener!: (e: KeyboardEvent) => void;
         focusListener!: () => void;
         blurListener!: () => void;
+
+        channelConversations = core.conversations.channelConversations
+        privateConversations = core.conversations.privateConversations
+
+        privateCanGlow = !this.channelConversations?.length;
+        channelCanGlow = !this.privateConversations?.length;
+
+        @Watch('conversations.channelConversations')
+        channelConversationsChange() {
+          if (this.conversations.channelConversations?.length) {
+            this.channelCanGlow = false;
+          }
+        }
+
+        @Watch('conversations.privateConversations')
+        privateConversationsChange() {
+          if (this.conversations.privateConversations?.length) {
+            this.privateCanGlow = false;
+          }
+        }
 
         @Hook('mounted')
         mounted(): void {

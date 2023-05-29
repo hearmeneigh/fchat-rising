@@ -1,7 +1,5 @@
 import _ from 'lodash';
 
-import * as electron from 'electron';
-const app = electron.app;
 import * as remote from '@electron/remote';
 import log from 'electron-log'; //tslint:disable-line:match-default-export-name
 import * as fs from 'fs';
@@ -41,9 +39,11 @@ export class EIconStore {
       this.asOfTimestamp = data?.asOfTimestamp || 0;
       this.lookup = _.fromPairs(_.map(this.records, (r) => [r.eicon, r]));
 
-      this.resortList();
+      log.info('eicons.loaded.local', { records: this.records.length, asOfTimestamp: this.asOfTimestamp });
 
-      log.info('eicons.loaded', { records: this.records.length, asOfTimestamp: this.asOfTimestamp });
+      await this.update();
+
+      log.info('eicons.loaded.update.remote', { records: this.records.length, asOfTimestamp: this.asOfTimestamp });
     } catch (err) {
       try {
         await this.downloadAll();
@@ -54,7 +54,7 @@ export class EIconStore {
   }
 
   protected getStoreFilename(): string {
-    const baseDir = app.getPath('userData');
+    const baseDir = remote.app.getPath('userData');
     const settingsDir = path.join(baseDir, 'data');
 
     return path.join(settingsDir, 'eicons.json');
@@ -78,7 +78,7 @@ export class EIconStore {
   }
 
   async update(): Promise<void> {
-    log.info('eicons.update');
+    log.info('eicons.update', { asOf: this.asOfTimestamp });
 
     const changes = await this.updater.fetchUpdates(this.asOfTimestamp);
 
@@ -91,6 +91,8 @@ export class EIconStore {
     this.resortList();
 
     this.asOfTimestamp = changes.asOfTimestamp;
+
+    log.info('eicons.update.processed', { removals: removals.length, additions: additions.length, asOf: this.asOfTimestamp });
 
     if (changes.recordUpdates.length > 0) {
       await this.save();
@@ -131,7 +133,7 @@ export class EIconStore {
   }
 
   search(searchString: string): EIconRecord[] {
-    const lcSearch = searchString.toLowerCase();
+    const lcSearch = searchString.trim().toLowerCase();
     const found = _.filter(this.records, (r) => r.eicon.indexOf(lcSearch) >= 0);
 
     return found.sort((a, b) => {
@@ -145,5 +147,23 @@ export class EIconStore {
 
       return a.eicon.localeCompare(b.eicon);
     });
+  }
+
+  random(count: number): EIconRecord[] {
+    return _.sampleSize(this.records, count);
+  }
+
+  private static sharedStore: EIconStore | undefined;
+
+  static async getSharedStore(): Promise<EIconStore> {
+    if (!EIconStore.sharedStore) {
+      EIconStore.sharedStore = new EIconStore();
+
+      await EIconStore.sharedStore.load();
+
+      setInterval(() => EIconStore.sharedStore!.update(), 60 * 60 * 1000);
+    }
+
+    return EIconStore.sharedStore;
   }
 }

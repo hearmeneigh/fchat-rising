@@ -93,6 +93,11 @@
 <style lang="scss">
   .ad-list .bbcode-toolbar .color-selector {
       left: 58px !important;
+      top: 30px !important;
+  }
+
+  .ad-list .bbcode-toolbar .eicon-selector {
+      top: 30px !important;
   }
 
   .w-100 {

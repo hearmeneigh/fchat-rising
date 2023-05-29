@@ -16,6 +16,12 @@
                 </div>
             </div>
 
+            <div class="popover popover-top eicon-selector" v-show="eiconPopupVisible" v-on-clickaway="dismissEIconSelector">
+                <div class="popover-body">
+                  <EIconSelector :onSelect="onSelectEIcon" ref="eIconSelector"></EIconSelector>
+                </div>
+            </div>
+
             <div class="btn-group toolbar-buttons" style="flex-wrap:wrap">
                 <div v-if="!!characterName" class="character-btn">
                   <icon :character="characterName"></icon>
@@ -59,10 +65,12 @@
     import {defaultButtons, EditorButton, EditorSelection} from './editor';
     import {BBCodeParser} from './parser';
     import {default as IconView} from './IconView.vue';
+    import {default as EIconSelector} from './EIconSelector.vue';
 
     @Component({
       components: {
-        'icon': IconView
+        'icon': IconView,
+        'EIconSelector': EIconSelector
       },
       mixins: [ clickaway ]
     })
@@ -96,6 +104,7 @@
 
         buttonColors = ['red', 'orange', 'yellow', 'green', 'cyan', 'purple', 'blue', 'pink', 'black', 'brown', 'white', 'gray'];
         colorPopupVisible = false;
+        eiconPopupVisible = false;
 
         preview = false;
         previewWarnings: ReadonlyArray<string> = [];
@@ -176,7 +185,7 @@
                 for(let i = 0, l = this.extras.length; i < l; i++)
                     buttons.push(this.extras[i]);
 
-            const colorButtonIndex = _.findIndex(buttons, (b) => b.icon === 'fa-eye-dropper')!;
+            const colorButtonIndex = _.findIndex(buttons, (b) => b.tag === 'color');
 
             if (this.colorPopupVisible) {
               const colorButton = _.cloneDeep(buttons[colorButtonIndex]);
@@ -185,11 +194,26 @@
               buttons[colorButtonIndex] = colorButton;
             }
 
+            const eiconButtonIndex = _.findIndex(buttons, (b) => b.tag === 'eicon');
+
+            if (this.eiconPopupVisible) {
+              const eiconButton = _.cloneDeep(buttons[eiconButtonIndex]);
+              eiconButton.outerClass = 'toggled';
+
+              buttons[eiconButtonIndex] = eiconButton;
+            }
+
             return buttons;
         }
 
-        getColorButton(): EditorButton {
-          return _.find(this.buttons, (b) => b.icon === 'fa-eye-dropper')!;
+        getButtonByTag(tag: string): EditorButton {
+          const btn = _.find(this.buttons, (b) => b.tag === tag);
+
+          if (!btn) {
+            throw new Error('Unknown button');
+          }
+
+          return btn;
         }
 
         @Watch('value')
@@ -228,16 +252,16 @@
             this.element.setSelectionRange(start, end);
         }
 
-        applyText(startText: string, endText: string): void {
+        applyText(startText: string, endText: string, withInject?: string): void {
             const selection = this.getSelection();
             if(selection.length > 0) {
-                const replacement = startText + selection.text + endText;
+                const replacement = startText + (withInject || selection.text) + endText;
                 this.text = this.replaceSelection(replacement);
                 this.setSelection(selection.start, selection.start + replacement.length);
             } else {
                 const start = this.text.substr(0, selection.start) + startText;
                 const end = endText + this.text.substr(selection.start);
-                this.text = start + end;
+                this.text = start + (withInject || '') + end;
                 this.$nextTick(() => this.setSelection(start.length));
             }
             this.$emit('input', this.text);
@@ -248,11 +272,27 @@
         }
 
         colorApply(btnColor: string): void {
-          const button = this.getColorButton();
+          const button = this.getButtonByTag('color');
 
           this.applyButtonEffect(button, btnColor);
 
           this.colorPopupVisible = false;
+        }
+
+        dismissEIconSelector(): void {
+          this.eiconPopupVisible = false;
+        }
+
+        onSelectEIcon(eiconId: string): void {
+          this.eiconApply(eiconId);
+        }
+
+        eiconApply(eiconId: string): void {
+          const button = this.getButtonByTag('eicon');
+
+          this.applyButtonEffect(button, undefined, eiconId);
+
+          this.eiconPopupVisible = false;
         }
 
         apply(button: EditorButton): void {
@@ -260,15 +300,19 @@
               this.colorPopupVisible = !this.colorPopupVisible;
               return;
             } else if (button.tag === 'eicon') {
+              this.eiconPopupVisible = !this.eiconPopupVisible;
 
-            } else if (button.tag === 'emoji') {
+              if (this.eiconPopupVisible) {
+                setTimeout(() => (this.$refs.eIconSelector as any).setFocus(), 100);
+              }
 
+              return;
             }
 
             this.applyButtonEffect(button);
         }
 
-        applyButtonEffect(button: EditorButton, withArgument?: string): void {
+        applyButtonEffect(button: EditorButton, withArgument?: string, withInject?: string): void {
             // Allow emitted variations for custom buttons.
             this.$once('insert', (startText: string, endText: string) => this.applyText(startText, endText));
             // noinspection TypeScriptValidateTypes
@@ -285,7 +329,7 @@
             const sbl = button.startText ? button.startText.length : 0;
 
             if(this.text.length + sbl + ebl > this.maxlength) return;
-            this.applyText(button.startText || '', button.endText || '');
+            this.applyText(button.startText || '', button.endText || '', withInject);
             this.lastInput = Date.now();
         }
 
@@ -400,6 +444,17 @@
       .btn.toggled {
         background-color: var(--secondary) !important;
       }
+    }
+
+    .eicon-selector {
+      width: 550px;
+      max-width: 550px;
+      top: -169px;
+      left: 0;
+      line-height: 1;
+      z-index: 1000;
+      background-color: var(--input-bg);
+      min-height: 170px;
     }
 
     .color-selector {
