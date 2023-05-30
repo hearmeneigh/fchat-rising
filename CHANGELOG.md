@@ -5,6 +5,9 @@
   * Post Ads and Ad Editor have been merged together into My Ads
   * Profile Helper now only shows up if you have anything to fix; otherwise the profile helper can be found in the Settings menu
 
+## 1.23.2
+* Hotfix to fix eicon search hanging the client
+
 ## 1.23.1
 * Added favorites to eicon picker
 * Improved eicon picker
