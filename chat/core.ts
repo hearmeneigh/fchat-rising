@@ -21,6 +21,7 @@ function createBBCodeParser(): BBCodeParser {
 class State implements StateInterface {
     _settings: Settings | undefined = undefined;
     hiddenUsers: string[] = [];
+    favoriteEIcons: Record<string, boolean> = {};
 
     get settings(): Settings {
         if(this._settings === undefined) throw new Error('Settings load failed.');
@@ -86,6 +87,9 @@ const data = {
 
         const hiddenUsers = await core.settingsStore.get('hiddenUsers');
         state.hiddenUsers = hiddenUsers !== undefined ? hiddenUsers : [];
+
+        const favoriteEIcons = await core.settingsStore.get('favoriteEIcons');
+        state.favoriteEIcons = favoriteEIcons !== undefined ? favoriteEIcons : {};
     }
 };
 

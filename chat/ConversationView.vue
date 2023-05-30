@@ -142,6 +142,7 @@
             :hasToolbar="settings.bbCodeBar" ref="textBox" style="position:relative;margin-top:5px"
             :maxlength="isChannel(conversation) || isPrivate(conversation) ? conversation.maxMessageLength : undefined"
             :characterName="ownName"
+            :type="'big'"
             >
 
             <span v-if="isPrivate(conversation) && conversation.typingStatus !== 'clear'" class="chat-info-text">

@@ -188,6 +188,7 @@ export namespace Settings {
         recent: Conversation.RecentPrivateConversation[]
         recentChannels: Conversation.RecentChannelConversation[]
         hiddenUsers: string[]
+        favoriteEIcons: Record<string, boolean>
         statusHistory: string[]
         searchHistory: (ExtendedSearchData | SearchData)[]
         hideNonMatchingAds: boolean
@@ -252,6 +253,7 @@ export interface Notifications {
 }
 
 export interface State {
-    settings: Settings
-    hiddenUsers: string[]
+    settings: Settings;
+    hiddenUsers: string[];
+    favoriteEIcons: Record<string, boolean>;
 }

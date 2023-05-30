@@ -11,16 +11,18 @@
             <div class="popover popover-top color-selector" v-show="colorPopupVisible" v-on-clickaway="dismissColorSelector">
                 <div class="popover-body">
                   <div class="btn-group" role="group" aria-label="Color">
-                    <button v-for="btnCol in buttonColors" type="button" class="btn text-color" :class="btnCol" :title="btnCol" @click.prevent.stop="colorApply(btnCol)"></button>
+                    <button v-for="btnCol in buttonColors" type="button" class="btn text-color" :class="btnCol" :title="btnCol" @click.prevent.stop="colorApply(btnCol)" tabindex="0"></button>
                   </div>
                 </div>
             </div>
 
-            <div class="popover popover-top eicon-selector" v-show="eiconPopupVisible" v-on-clickaway="dismissEIconSelector">
-                <div class="popover-body">
-                  <EIconSelector :onSelect="onSelectEIcon" ref="eIconSelector"></EIconSelector>
-                </div>
-            </div>
+<!--            <div class="popover popover-top eicon-selector" :class="{ big: type === 'big' }" v-show="eiconPopupVisible" v-on-clickaway="dismissEIconSelector">-->
+<!--                <div class="popover-body">-->
+<!--                  <EIconSelector :onSelect="onSelectEIcon" ref="eIconSelector"></EIconSelector>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <EIconSelector :onSelect="onSelectEIcon" ref="eIconSelector"></EIconSelector>
 
             <div class="btn-group toolbar-buttons" style="flex-wrap:wrap">
                 <div v-if="!!characterName" class="character-btn">
@@ -58,7 +60,6 @@
     import {Component, Hook, Prop, Watch} from '@f-list/vue-ts';
     import _ from 'lodash';
     import Vue from 'vue';
-    import { mixin as clickaway } from 'vue-clickaway';
     import {getKey} from '../chat/common';
     import {Keys} from '../keys';
     import {BBCodeElement, CoreBBCodeParser, urlRegex} from './core';
@@ -66,13 +67,13 @@
     import {BBCodeParser} from './parser';
     import {default as IconView} from './IconView.vue';
     import {default as EIconSelector} from './EIconSelector.vue';
+    import Modal from '../components/Modal.vue';
 
     @Component({
       components: {
         'icon': IconView,
         'EIconSelector': EIconSelector
-      },
-      mixins: [ clickaway ]
+      }
     })
     export default class Editor extends Vue {
         @Prop
@@ -102,9 +103,11 @@
         @Prop({default: null})
         readonly characterName: string | null = null;
 
+        @Prop({default: 'normal'})
+        readonly type: 'normal' | 'big' = 'normal';
+
         buttonColors = ['red', 'orange', 'yellow', 'green', 'cyan', 'purple', 'blue', 'pink', 'black', 'brown', 'white', 'gray'];
         colorPopupVisible = false;
-        eiconPopupVisible = false;
 
         preview = false;
         previewWarnings: ReadonlyArray<string> = [];
@@ -194,15 +197,6 @@
               buttons[colorButtonIndex] = colorButton;
             }
 
-            const eiconButtonIndex = _.findIndex(buttons, (b) => b.tag === 'eicon');
-
-            if (this.eiconPopupVisible) {
-              const eiconButton = _.cloneDeep(buttons[eiconButtonIndex]);
-              eiconButton.outerClass = 'toggled';
-
-              buttons[eiconButtonIndex] = eiconButton;
-            }
-
             return buttons;
         }
 
@@ -262,7 +256,10 @@
                 const start = this.text.substr(0, selection.start) + startText;
                 const end = endText + this.text.substr(selection.start);
                 this.text = start + (withInject || '') + end;
-                this.$nextTick(() => this.setSelection(start.length));
+
+                const selectionPoint = withInject ? start.length + withInject.length + endText.length : start.length;
+
+                this.$nextTick(() => this.setSelection(selectionPoint));
             }
             this.$emit('input', this.text);
         }
@@ -280,7 +277,12 @@
         }
 
         dismissEIconSelector(): void {
-          this.eiconPopupVisible = false;
+          (this.$refs['eIconSelector'] as Modal).hide();
+        }
+
+        showEIconSelector(): void {
+          (this.$refs['eIconSelector'] as Modal).show();
+          setTimeout(() => (this.$refs['eIconSelector'] as any).setFocus(), 50);
         }
 
         onSelectEIcon(eiconId: string): void {
@@ -292,20 +294,17 @@
 
           this.applyButtonEffect(button, undefined, eiconId);
 
-          this.eiconPopupVisible = false;
+          this.dismissEIconSelector();
         }
 
         apply(button: EditorButton): void {
+            this.colorPopupVisible = false;
+
             if (button.tag === 'color') {
               this.colorPopupVisible = !this.colorPopupVisible;
               return;
             } else if (button.tag === 'eicon') {
-              this.eiconPopupVisible = !this.eiconPopupVisible;
-
-              if (this.eiconPopupVisible) {
-                setTimeout(() => (this.$refs.eIconSelector as any).setFocus(), 100);
-              }
-
+              this.showEIconSelector();
               return;
             }
 
@@ -444,17 +443,6 @@
       .btn.toggled {
         background-color: var(--secondary) !important;
       }
-    }
-
-    .eicon-selector {
-      width: 550px;
-      max-width: 550px;
-      top: -169px;
-      left: 0;
-      line-height: 1;
-      z-index: 1000;
-      background-color: var(--input-bg);
-      min-height: 170px;
     }
 
     .color-selector {
