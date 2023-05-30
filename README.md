@@ -1,8 +1,8 @@
 # Download
-[Windows](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.0/F-Chat-Rising-1.23.0-win.exe) (82 MB)
-| [MacOS Intel](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.0/F-Chat-Rising-1.23.0-macos-intel.dmg) (82 MB)
-| [MacOS M1](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.0/F-Chat-Rising-1.23.0-macos-m1.dmg) (84 MB)
-| [Linux](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.0/F-Chat-Rising-1.23.0-linux.AppImage) (82 MB)
+[Windows](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.1/F-Chat-Rising-1.23.1-win.exe) (82 MB)
+| [MacOS Intel](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.1/F-Chat-Rising-1.23.1-macos-intel.dmg) (82 MB)
+| [MacOS M1](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.1/F-Chat-Rising-1.23.1-macos-m1.dmg) (84 MB)
+| [Linux](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.1/F-Chat-Rising-1.23.1-linux.AppImage) (82 MB)
 
 
 # F-Chat Rising
