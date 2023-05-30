@@ -131,7 +131,7 @@ export default class EIconSelector extends CustomDialog {
       if (s.length === 0) {
         this.results = _.map(this.store?.random(250), (e) => e.eicon);
       } else {
-        this.results = _.map(_.take(this.store?.search(s), 1000), (e) => e.eicon);
+        this.results = _.map(_.take(this.store?.search(s), 250), (e) => e.eicon);
       }
     }
   }

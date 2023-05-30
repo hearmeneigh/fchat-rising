@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.23.2
+* Hotfix to fix eicon search hanging the client
+
 ## 1.23.1
 * Added favorites to eicon picker
 * Improved eicon picker
