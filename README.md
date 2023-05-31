@@ -1,8 +1,8 @@
 # Download
-[Windows](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.2/F-Chat-Rising-1.23.2-win.exe) (82 MB)
-| [MacOS Intel](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.2/F-Chat-Rising-1.23.2-macos-intel.dmg) (82 MB)
-| [MacOS M1](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.2/F-Chat-Rising-1.23.2-macos-m1.dmg) (84 MB)
-| [Linux](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.2/F-Chat-Rising-1.23.2-linux.AppImage) (82 MB)
+[Windows](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.3/F-Chat-Rising-1.23.3-win.exe) (82 MB)
+| [MacOS Intel](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.3/F-Chat-Rising-1.23.3-macos-intel.dmg) (82 MB)
+| [MacOS M1](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.3/F-Chat-Rising-1.23.3-macos-m1.dmg) (84 MB)
+| [Linux](https://github.com/mrstallion/fchat-rising/releases/download/v1.23.3/F-Chat-Rising-1.23.3-linux.AppImage) (82 MB)
 
 
 # F-Chat Rising
@@ -147,10 +147,11 @@ node pack.js
    *   Non-custom kinks
    *   Species
 1. Matching for non-binary genders relies on kinks. For example, if your non-binary character has a preference for females, make sure 'females' are listed as a favorite kink.
-1. 'Underage' kink is considered to apply to characters aged 16 or above; 'ageplay' kink is considered to apply to characters aged 16 or below.
-1. 'Older characters' and 'younger characters' kink preferences are interpreted as age difference of 8+ years.
-1. Comparison results will get faster over time, as more and more character data is cached.
-1. If you have a species-fluid character (e.g. you play both your character as both a human and an anthro), you can indicate this by setting your **species** in your character profile in the following ways. F-List Rising will then score you against the best fitting type. 
+   *    Similarly if you want to match with non-binary genders -- independent of your characters' gender -- add your preferred non-binary types into your kink list.
+3. 'Underage' kink is considered to apply to characters aged 16 or above; 'ageplay' kink is considered to apply to characters aged 16 or below.
+4. 'Older characters' and 'younger characters' kink preferences are interpreted as age difference of 8+ years.
+5. Comparison results will get faster over time, as more and more character data is cached.
+6. If you have a species-fluid character (e.g. you play both your character as both a human and an anthro), you can indicate this by setting your **species** in your character profile in the following ways. F-List Rising will then score you against the best fitting type. 
     * Human or tiger
     * Human, tiger, or dragon 
     * Anthro (Horse or Tiger)
