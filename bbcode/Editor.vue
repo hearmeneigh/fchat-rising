@@ -16,12 +16,6 @@
                 </div>
             </div>
 
-<!--            <div class="popover popover-top eicon-selector" :class="{ big: type === 'big' }" v-show="eiconPopupVisible" v-on-clickaway="dismissEIconSelector">-->
-<!--                <div class="popover-body">-->
-<!--                  <EIconSelector :onSelect="onSelectEIcon" ref="eIconSelector"></EIconSelector>-->
-<!--                </div>-->
-<!--            </div>-->
-
             <EIconSelector :onSelect="onSelectEIcon" ref="eIconSelector"></EIconSelector>
 
             <div class="btn-group toolbar-buttons" style="flex-wrap:wrap">
@@ -60,6 +54,7 @@
     import {Component, Hook, Prop, Watch} from '@f-list/vue-ts';
     import _ from 'lodash';
     import Vue from 'vue';
+    import { mixin as clickaway } from 'vue-clickaway';
     import {getKey} from '../chat/common';
     import {Keys} from '../keys';
     import {BBCodeElement, CoreBBCodeParser, urlRegex} from './core';
@@ -73,7 +68,8 @@
       components: {
         'icon': IconView,
         'EIconSelector': EIconSelector
-      }
+      },
+      mixins: [ clickaway ]
     })
     export default class Editor extends Vue {
         @Prop
@@ -298,14 +294,15 @@
         }
 
         apply(button: EditorButton): void {
-            this.colorPopupVisible = false;
-
             if (button.tag === 'color') {
               this.colorPopupVisible = !this.colorPopupVisible;
               return;
             } else if (button.tag === 'eicon') {
               this.showEIconSelector();
+              this.colorPopupVisible = false;
               return;
+            } else {
+              this.colorPopupVisible = false;
             }
 
             this.applyButtonEffect(button);

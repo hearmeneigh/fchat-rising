@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.23.3
+* Hotfix to fix color picker not disappearing
+
 ## 1.23.2
 * Hotfix to fix eicon search hanging the client
 
