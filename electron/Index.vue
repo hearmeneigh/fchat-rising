@@ -150,16 +150,16 @@
     // import Connection from '../fchat/connection';
     // import Notifications from './notifications';
 
-    import VueLazyload from 'vue-lazyload';
-
-    Vue.use(VueLazyload, {
-      observer: true,
-
-      observerOptions: {
-        rootMargin: '0px',
-        threshold: 0,
-      }
-    });
+    // import VueLazyload from 'vue-lazyload';
+    //
+    // Vue.use(VueLazyload, {
+    //   observer: true,
+    //
+    //   observerOptions: {
+    //     rootMargin: '0px',
+    //     threshold: 0,
+    //   }
+    // });
 
     const webContents = remote.getCurrentWebContents();
     const parent = remote.getCurrentWindow().webContents;
