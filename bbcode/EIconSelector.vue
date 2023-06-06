@@ -56,7 +56,7 @@
         <div class="carousel slide w-100 results">
           <div class="carousel-inner w-100" role="listbox">
             <div class="carousel-item" v-for="eicon in results" role="img" :aria-label="eicon" tabindex="0">
-              <img class="eicon" :alt="eicon" v-lazy="'https://static.f-list.net/images/eicon/' + eicon + '.gif'" :title="eicon" role="button" :aria-label="eicon" @click.prevent.stop="selectIcon(eicon)">
+              <img class="eicon" :alt="eicon" :src="'https://static.f-list.net/images/eicon/' + eicon + '.gif'" :title="eicon" role="button" :aria-label="eicon" @click.prevent.stop="selectIcon(eicon)">
 
               <div class="btn favorite-toggle" :class="{ favorited: isFavorite(eicon) }" @click.prevent.stop="toggleFavorite(eicon)" role="button" :aria-label="isFavorite(eicon) ? 'Remove from favorites' : 'Add to favorites'">
                 <i class="fas fa-thumbtack"></i>
@@ -94,7 +94,7 @@ export default class EIconSelector extends CustomDialog {
 
   refreshing = false;
 
-  searchUpdateDebounce = _.debounce(() => this.runSearch(), 200, { maxWait: 1000 });
+  searchUpdateDebounce = _.debounce(() => this.runSearch(), 350, { maxWait: 2000 });
 
   @Hook('mounted')
   async mounted(): Promise<void> {

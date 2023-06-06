@@ -187,7 +187,7 @@
             const colorButtonIndex = _.findIndex(buttons, (b) => b.tag === 'color');
 
             if (this.colorPopupVisible) {
-              const colorButton = _.cloneDeep(buttons[colorButtonIndex]);
+              const colorButton = _.clone(buttons[colorButtonIndex]);
               colorButton.outerClass = 'toggled';
 
               buttons[colorButtonIndex] = colorButton;
