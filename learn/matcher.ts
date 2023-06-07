@@ -940,8 +940,8 @@ export class Matcher {
 
 
     private resolveKinkBucketScore(bucket: 'all' | 'favorite' | 'yes' | 'maybe' | 'no' | 'positive' | 'negative'): KinkBucketScore {
-        const yourKinks = this.getAllStandardKinks(this.you);
-        const theirKinks = this.getAllStandardKinks(this.them);
+        const yourKinks = Matcher.getAllStandardKinks(this.you);
+        const theirKinks = Matcher.getAllStandardKinks(this.them);
 
         // let missed = 0;
 
@@ -1014,7 +1014,7 @@ export class Matcher {
     //     );
     // }
 
-    private getAllStandardKinks(c: Character): { [key: number]: KinkChoice } {
+    static getAllStandardKinks(c: Character): { [key: number]: KinkChoice } {
         const kinks = _.pickBy(c.kinks, _.isString);
 
         // Avoid using _.forEach on c.customs because lodash thinks it is an array
@@ -1027,6 +1027,24 @@ export class Matcher {
         }
 
         return kinks as any;
+    }
+
+    static findKinkById(c: Character, kinkId: number): KinkChoice | number | undefined {
+        if (kinkId in c.kinks) {
+            return c.kinks[kinkId];
+        }
+
+        for (const custom of Object.values(c.customs)) {
+            if (custom) {
+                const children = (custom as any).children ?? [];
+
+                if (children.includes(kinkId)) {
+                    return custom.choice;
+                }
+            }
+        }
+
+        return undefined;
     }
 
 
@@ -1053,17 +1071,14 @@ export class Matcher {
     }
 
     static getKinkPreference(c: Character, kinkId: number): KinkPreference | null {
-        if (!(kinkId in c.kinks))
-            return null;
-
-        const kinkVal = c.kinks[kinkId];
+        const kinkVal = Matcher.findKinkById(c, kinkId);
 
         if (kinkVal === undefined) {
             return null;
         }
 
         if (typeof kinkVal === 'string') {
-            return kinkMapping[c.kinks[kinkId] as string];
+            return kinkMapping[kinkVal];
         }
 
         const custom = c.customs[kinkVal];

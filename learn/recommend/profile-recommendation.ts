@@ -111,7 +111,9 @@ export class ProfileRecommendationAnalyzer {
   }
 
   protected checkKinkCounts(): void {
-    const counts = _.reduce(this.profile.character.kinks, (accum, kinkLevel) => {
+    const kinks = Matcher.getAllStandardKinks(this.profile.character);
+
+    const counts = _.reduce(kinks, (accum, kinkLevel) => {
       if (_.isString(kinkLevel) && kinkLevel) {
         accum[kinkLevel as keyof typeof accum] += 1;
       }

@@ -2,6 +2,7 @@
 
 ## 1.23.4
 * Hotfix to address slowdown issues
+* Fixed Profile Helper failing to detect stock kinks grouped inside custom kinks 
 
 ## 1.23.3
 * Hotfix to fix color picker not disappearing
