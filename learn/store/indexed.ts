@@ -77,6 +77,12 @@ export class IndexedStore implements PermanentIndexedStore {
         // tslint:disable-next-line: no-unsafe-any
         data.profileData = data.profileData as ComplexCharacter;
 
+        // fix to clean out extra customs that somehow sometimes appear:
+        if (_.isArray(data.profileData.character.customs)) {
+            data.profileData.character.customs = {};
+            await this.storeProfile(data.profileData.character);
+        }
+
         // console.log('IDX profile', name, data);
 
         return data as ProfileRecord;
@@ -86,6 +92,11 @@ export class IndexedStore implements PermanentIndexedStore {
     private async prepareProfileData(c: ComplexCharacter): Promise<ProfileRecord> {
         const existing = await this.getProfile(c.character.name);
         const ca = new CharacterAnalysis(c.character);
+
+        // fix to clean out extra customs that somehow sometimes appear:
+        if (_.isArray(c.character.customs) || !_.isPlainObject(c.character.customs)) {
+            c.character.customs = {};
+        }
 
         const data: ProfileRecord = {
             id: this.toProfileId(c.character.name),

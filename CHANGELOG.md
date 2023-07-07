@@ -6,6 +6,9 @@
   * Profile Helper now only shows up if you have anything to fix; otherwise the profile helper can be found in the Settings menu
 * Channel owners can now add `[ads: 30min]` in the channel description to control how often Rising can auto-post ads on the channel
 
+## 1.23.5
+* Fixed random freezes caused by profile cache
+
 ## 1.23.4
 * Hotfix to address slowdown issues
 * Fixed Profile Helper failing to detect stock kinks grouped inside custom kinks 
