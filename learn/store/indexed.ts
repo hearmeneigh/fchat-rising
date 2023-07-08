@@ -80,7 +80,7 @@ export class IndexedStore implements PermanentIndexedStore {
         // fix to clean out extra customs that somehow sometimes appear:
         if (_.isArray(data.profileData.character.customs)) {
             data.profileData.character.customs = {};
-            await this.storeProfile(data.profileData.character);
+            await this.storeProfile(data.profileData);
         }
 
         // console.log('IDX profile', name, data);
