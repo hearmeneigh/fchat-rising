@@ -99,8 +99,8 @@ import MessageView from '../message_view';
 
 interface CustomKinkWithScore extends CustomKink {
   score: number;
+  name: string;
 }
-
 
 @Component({
     components: {
@@ -308,15 +308,19 @@ export default class CharacterPreview extends Vue {
   updateCustoms(): void {
     this.customs = _.orderBy(
       _.map(
-        _.reject(Object.values(this.character!.character.customs ?? []), (c) => _.isUndefined(c)) as CustomKink[],
-        (c: CustomKink) => _.assign(
-          {},
-          c,
-          {
-            score: kinkMapping[c.choice],
-            name: c.name.trim().replace(/^\W+/, '').replace(/\W+$/, '')
-          }
-        )
+        _.reject(Object.values(this.character!.character.customs ?? {}), (c) => _.isUndefined(c)) as CustomKink[],
+        (c: CustomKink) => {
+          const val: CustomKinkWithScore = _.assign(
+            {},
+            c,
+            {
+              score: kinkMapping[c.choice] as number,
+              name: c.name.trim().replace(/^\W+/, '').replace(/\W+$/, '')
+            }
+          ) as CustomKinkWithScore;
+
+          return val;
+        }
       ),
       ['score', 'name'],
       ['desc', 'asc']

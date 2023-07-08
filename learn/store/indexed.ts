@@ -28,9 +28,9 @@ export class IndexedStore implements PermanentIndexedStore {
     }
 
     static async open(dbName: string = 'flist-ascending-profiles'): Promise<IndexedStore> {
-        const request = indexedDB.open(dbName, 2);
+        const request = indexedDB.open(dbName, 3);
 
-        request.onupgradeneeded = (event) => {
+        request.onupgradeneeded = async(event) => {
             const db = request.result;
 
             if (event.oldVersion < 1) {
@@ -48,6 +48,13 @@ export class IndexedStore implements PermanentIndexedStore {
                       multiEntry: false
                   }
                 );
+            }
+
+            if (event.oldVersion < 3) {
+                const store = request.transaction!.objectStore(IndexedStore.STORE_NAME);
+                const req = store.clear();
+
+                await promisifyRequest(req);
             }
         };
 
