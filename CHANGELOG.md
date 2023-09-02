@@ -251,7 +251,7 @@
     *   [Doyensec Electronegativity](https://github.com/doyensec/electronegativity)
     *   [Quasar Electron Security Concerns](https://quasar.dev/quasar-cli/developing-electron-apps/electron-security-concerns)
     *   [Reasonably Secure Electron](https://know.bishopfox.com/research/reasonably-secure-electron)
-    *   [SNYK.io](https://snyk.io/) vulnerability scan [![Known Vulnerabilities](https://snyk.io/test/github/mrstallion/fchat-rising/badge.svg)](https://snyk.io/test/github/mrstallion/fchat-rising)
+    *   [SNYK.io](https://snyk.io/) vulnerability scan [![Known Vulnerabilities](https://snyk.io/test/github/hearmeneigh/fchat-rising/badge.svg)](https://snyk.io/test/github/hearmeneigh/fchat-rising)
 
 
 ## 1.0.0

@@ -13,7 +13,7 @@ layout: rising
 > 
 > Consider these alternatives to increase your safety:
 > 
-> 1) Compile F-Chat Rising yourself from the [source](https://github.com/mrstallion/fchat-rising); or
+> 1) Compile F-Chat Rising yourself from the [source](https://github.com/hearmeneigh/fchat-rising); or
 >
 > 2) Run F-Chat Rising in a [virtual machine](https://www.parallels.com/); or
 > 

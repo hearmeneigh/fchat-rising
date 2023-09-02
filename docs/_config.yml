@@ -19,7 +19,7 @@ description: >- # this means to ignore newlines until "baseurl:"
   A heavily customized F-Chat 3.0 client
 baseurl: "/fchat-rising" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
-github_username:  mrstallion
+github_username:  hearmeneigh
 show_downloads: true
 
 # Build settings
@@ -47,12 +47,12 @@ exclude:
 
 theme: jekyll-theme-slate
 
-changelog: https://github.com/mrstallion/fchat-rising/blob/master/CHANGELOG.md
+changelog: https://github.com/hearmeneigh/fchat-rising/blob/master/CHANGELOG.md
 
 download:
   version: 1.23.5
 
-  url: https://github.com/mrstallion/fchat-rising/releases/download/v%VERSION%/F-Chat-Rising-%VERSION%-%PLATFORM_TAIL%
+  url: https://github.com/hearmeneigh/fchat-rising/releases/download/v%VERSION%/F-Chat-Rising-%VERSION%-%PLATFORM_TAIL%
 
   downloads:
     - type: win
