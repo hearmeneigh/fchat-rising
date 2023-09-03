@@ -281,7 +281,7 @@ function createWindow(): electron.BrowserWindow | undefined {
 
 function showPatchNotes(): void {
     //tslint:disable-next-line: no-floating-promises
-    electron.shell.openExternal('https://github.com/mrstallion/fchat-rising/blob/master/CHANGELOG.md');
+    electron.shell.openExternal('https://github.com/hearmeneigh/fchat-rising/blob/master/CHANGELOG.md');
 }
 
 
@@ -311,14 +311,14 @@ function onReady(): void {
 
     // require('update-electron-app')(
     //   {
-    //     repo: 'https://github.com/mrstallion/fchat-rising.git',
+    //     repo: 'https://github.com/hearmeneigh/fchat-rising.git',
     //     updateInterval: '3 hours',
     //     logger: require('electron-log')
     //   }
     // );
 
     //tslint:disable-next-line: no-unsafe-any
-    const updaterUrl = `https://update.electronjs.org/mrstallion/fchat-rising/${process.platform}-${process.arch}/${pck.version}`;
+    const updaterUrl = `https://update.electronjs.org/hearmeneigh/fchat-rising/${process.platform}-${process.arch}/${pck.version}`;
     if((process.env.NODE_ENV === 'production') && (process.platform !== 'darwin')) {
         electron.autoUpdater.setFeedURL({url: updaterUrl + (settings.beta ? '?channel=beta' : ''), serverType: 'json'});
         setTimeout(() => electron.autoUpdater.checkForUpdates(), 10000);
@@ -576,7 +576,7 @@ function onReady(): void {
             submenu: [
                 {
                     label: l('help.fchat'),
-                    click: () => electron.shell.openExternal('https://github.com/mrstallion/fchat-rising/blob/master/README.md')
+                    click: () => electron.shell.openExternal('https://github.com/hearmeneigh/fchat-rising/blob/master/README.md')
                 },
                 // {
                 //     label: l('help.feedback'),
