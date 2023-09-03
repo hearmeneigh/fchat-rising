@@ -123,13 +123,18 @@ require('electron-packager')({
 
         async function downloadAppImageTool(appImageBase) {
             const localArch = process.arch === 'x64' ? 'x86_64' : 'aarch64';
-            const res = await axios.get(`https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-${localArch}.AppImage`);
+            const url = `https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-${localArch}.AppImage`;
+            const res = await axios.get(url, { responseType: 'arraybuffer' });
             const appImagePath = path.join(appImageBase, 'appimagetool.AppImage');
+
+            console.log('Downloading', url, appImageBase, typeof res.data);
+
+
 
             fs.writeFileSync(appImagePath, res.data);
             fs.chmodSync(appImagePath, 0o755);
 
-            const result = child_process.spawnSync(appImagePath, ['--appimage-extract'], {cwd: appImageBase, env: { ...process.env }});
+            const result = child_process.spawnSync(appImagePath, ['--appimage-extract'], {cwd: appImageBase});
 
             if (result.status !== 0) {
                 console.log('Run failed', 'APPIMAGE EXTRACT', {status: result.status, call: result.error?.syscall, args: result.error?.spawnargs, path: result.error?.path, code: result.error?.code, stdout: String(result.stdout), stderr: String(result.stderr) });
@@ -151,7 +156,7 @@ require('electron-packager')({
             fs.renameSync(path.join(appPath, 'F-Chat'), path.join(appPath, 'AppRun'));
             fs.copyFileSync(path.join(buildPath, 'icon.png'), path.join(appPath, 'icon.png'));
 
-            const libDir = path.join(appPath, 'usr', 'lib'), libSource = path.join(buildPath, 'linux-libs');
+            const libDir = path.join(appPath, 'usr', 'lib'), libSource = path.join(buildPath, 'linux-libs', appArchLong);
 
             fs.mkdirSync(libDir, {recursive: true});
 
@@ -174,7 +179,7 @@ require('electron-packager')({
                 args.push('--sign-args', `--no-tty  --pinentry-mode loopback --yes --passphrase=${process.argv[3]}`);
             }
 
-            const appRunResult = child_process.spawnSync(path.join(distFinal, 'squashfs-root', 'AppRun'), args, {cwd: distFinal, env: {ARCH: appArchLong }});
+            const appRunResult = child_process.spawnSync(path.join(appImageBase, 'squashfs-root', 'AppRun'), args, {cwd: appImageBase, env: {ARCH: appArchLong }});
 
             if (appRunResult.status !== 0) {
                 console.log('Run failed', 'APPRUN', appArch, {status: appRunResult.status, call: appRunResult.error?.syscall, args: appRunResult.error?.spawnargs, path: appRunResult.error?.path, code: appRunResult.error?.code, stdout: String(appRunResult.stdout), stderr: String(appRunResult.stderr) });
