@@ -9,8 +9,7 @@ RELEASE_VERSION="${1}"
 RELEASE_PATH="${HOME}/fchat-rising-dist/${RELEASE_VERSION}"
 DIST_PATH="${HOME}/fchat-rising/electron/dist"
 
-
-cd "/${HOME}/fchat-rising"
+cd "${HOME}/fchat-rising"
 git checkout master
 git pull
 yarn
@@ -21,8 +20,6 @@ rm -rf "${DIST_PATH}"
 cd electron
 yarn build:dist
 node pack.js
-
-
 
 cp "${DIST_PATH}/F-Chat Rising Intel.dmg" "${RELEASE_PATH}/F-Chat-Rising-${RELEASE_VERSION}-macos-intel.dmg"
 rm -f "${RELEASE_PATH}/F-Chat-Rising-${RELEASE_VERSION}-macos-intel.zip"
