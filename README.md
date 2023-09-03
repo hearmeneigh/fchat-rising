@@ -71,6 +71,7 @@ node pack.js
     *    Manage channel ad settings via "Tab Settings"
     *    Automatically re-post ads every 11-18 minutes (randomized) for up to 180 minutes
     *    Rotate multiple ads on a single channel by entering multiple ads in "Ad Settings"
+    *    Channel owners can set a minimum time between ads by adding `[ads: 30min]` to the channel description 
 *   Ad Ratings
     *    LFP ads are automatically rated (great/good/maybe/no) and matched against your profile
 *   Private Conversations
