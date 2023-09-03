@@ -132,7 +132,7 @@ require('electron-packager')({
             const stream = fs.createWriteStream(downloaded);
             res.data.pipe(stream);
             stream.on('close', () => {
-                const args = [appPaths[0], 'fchat.AppImage', '-u', 'gh-releases-zsync|mrstallion|fchat-rising|latest|F-Chat-Rising-*-linux.AppImage.zsync'];
+                const args = [appPaths[0], 'fchat.AppImage', '-u', 'gh-releases-zsync|hearmeneigh|fchat-rising|latest|F-Chat-Rising-*-linux.AppImage.zsync'];
                 if(process.argv.length > 2) args.push('-s', '--sign-key', process.argv[2]);
                 else console.warn('Warning: Creating unsigned AppImage');
                 if(process.argv.length > 3) args.push('--sign-args', `--no-tty  --pinentry-mode loopback --yes --passphrase=${process.argv[3]}`);
