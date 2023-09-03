@@ -1,6 +1,7 @@
 # Changelog
 
 ## 1.24.0
+* Added Linux ARM64 build
 * Channel owners can now add `[ads: 30min]` in the channel description to limit how often Rising auto-posts ads on the channel
 * Neko/mimi species are now considered human, not anthro
 * Fixed a bug that prevented the client from occasionally recognizing gender preferences
