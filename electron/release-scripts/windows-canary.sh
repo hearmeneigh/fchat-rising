@@ -12,4 +12,4 @@ yarn
 rm -rf "${DIST_PATH}"
 
 cd electron
-yarn build:dist
+yarn build
