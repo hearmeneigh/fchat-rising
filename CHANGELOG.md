@@ -4,7 +4,13 @@
 * Cleaned up top menu
   * Post Ads and Ad Editor have been merged together into My Ads
   * Profile Helper now only shows up if you have anything to fix; otherwise the profile helper can be found in the Settings menu
-* Channel owners can now add `[ads: 30min]` in the channel description to control how often Rising can auto-post ads on the channel
+
+## 1.24.0
+* Channel owners can now add `[ads: 30min]` in the channel description to limit how often Rising auto-posts ads on the channel
+* Neko/mimi species are now considered human, not anthro
+* Fixed a bug that prevented the client from occasionally recognizing gender preferences
+* Fixed more random freezes
+* New URL: https://hearmeneigh.github.io/fchat-rising/
 
 ## 1.23.5
 * Fixed random freezes caused by profile cache

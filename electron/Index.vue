@@ -144,6 +144,7 @@
 
     import BBCodeTester from '../bbcode/Tester.vue';
     import { BBCodeView } from '../bbcode/view';
+    import { EIconStore } from '../learn/eicon/store';
 
     // import ImagePreview from '../chat/preview/ImagePreview.vue';
     // import Bluebird from 'bluebird';
@@ -258,6 +259,10 @@
             await core.cache.start(this.settings, this.hasCompletedUpgrades);
 
             log.debug('init.chat.cache.done');
+
+            await EIconStore.getSharedStore();
+
+            log.debug('init.eicons.update.done');
 
             clearTimeout(timer);
 

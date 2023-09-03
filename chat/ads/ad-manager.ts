@@ -89,6 +89,25 @@ export class AdManager {
         );
     }
 
+    private determineNextAdDelayMs(chanConv: Conversation.ChannelConversation): number {
+        const match = chanConv.channel.description.toLowerCase().match(/\[\s*ads:\s*([0-9.]+)\s*(m|min|minutes?|h|hr|hours?|s|secs?|seconds?)\s*]/);
+
+        if (!match) {
+            return AdManager.POST_DELAY;
+        }
+
+        const n = _.toNumber(match[1]);
+        let mul = 1000; // seconds
+
+        if (match[2].substr(0, 1) === 'h') {
+            mul = 60 * 60 * 1000; // hours
+        } else if (match[2].substr(0, 1) === 'm') {
+            mul = 60 * 1000; // minutes
+        }
+
+        return Math.max((n * mul) - (Date.now() - chanConv.nextAd), AdManager.POST_DELAY);
+    }
+
     private async sendNextPost(): Promise<void> {
         const msg = this.getNextAd();
 
@@ -103,7 +122,7 @@ export class AdManager {
 
         // post next ad every 12 - 22 minutes
         const nextInMs = Math.max(0, (chanConv.nextAd - Date.now())) +
-            AdManager.POST_DELAY +
+            this.determineNextAdDelayMs(chanConv) +
             Math.random() * AdManager.POST_VARIANCE;
 
         this.adIndex = this.adIndex + 1;

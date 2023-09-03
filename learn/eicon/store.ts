@@ -8,7 +8,7 @@ import * as path from 'path';
 import { EIconRecord, EIconUpdater } from './updater';
 
 export class EIconStore {
-  protected records: EIconRecord[] = [];
+  // protected records: EIconRecord[] = [];
 
   protected lookup: Record<string, EIconRecord> = {};
 
@@ -18,11 +18,13 @@ export class EIconStore {
 
   async save(): Promise<void> {
     const fn = this.getStoreFilename();
-    log.info('eicons.save', { records: this.records.length, asOfTimestamp: this.asOfTimestamp, fn });
+    const recordArray = _.values(this.lookup);
+
+    log.info('eicons.save', { records: recordArray.length, asOfTimestamp: this.asOfTimestamp, fn });
 
     fs.writeFileSync(fn, JSON.stringify({
       asOfTimestamp: this.asOfTimestamp,
-      records: this.records
+      records: recordArray
     }));
 
     remote.ipcMain.emit('eicons.reload', { asOfTimestamp: this.asOfTimestamp });
@@ -35,15 +37,17 @@ export class EIconStore {
     try {
       const data = JSON.parse(fs.readFileSync(fn, 'utf-8'));
 
-      this.records = data?.records || [];
+      // this.records = data?.records || [];
       this.asOfTimestamp = data?.asOfTimestamp || 0;
-      this.lookup = _.fromPairs(_.map(this.records, (r) => [r.eicon, r]));
+      this.lookup = _.fromPairs(_.map(data?.records || [], (r) => [r.eicon, r]));
 
-      log.info('eicons.loaded.local', { records: this.records.length, asOfTimestamp: this.asOfTimestamp });
+      const recordCount = _.keys(this.lookup).length;
+
+      log.info('eicons.loaded.local', { records: recordCount, asOfTimestamp: this.asOfTimestamp });
 
       await this.update();
 
-      log.info('eicons.loaded.update.remote', { records: this.records.length, asOfTimestamp: this.asOfTimestamp });
+      log.info('eicons.loaded.update.remote', { records: recordCount, asOfTimestamp: this.asOfTimestamp });
     } catch (err) {
       try {
         await this.downloadAll();
@@ -65,8 +69,7 @@ export class EIconStore {
 
     const eicons = await this.updater.fetchAll();
 
-    this.records = eicons.records;
-    this.lookup = _.fromPairs(_.map(this.records, (r) => [r.eicon, r]));
+    this.lookup = _.fromPairs(_.map(eicons.records, (r) => [r.eicon, r]));
 
     _.each(eicons.records, (changeRecord) => this.addIcon(changeRecord));
 
@@ -100,7 +103,7 @@ export class EIconStore {
   }
 
   protected resortList(): void {
-    _.sortBy(this.records, 'eicon');
+    // _.sortBy(this.records, 'eicon');
   }
 
   protected addIcon(record: EIconRecord): void {
@@ -114,7 +117,6 @@ export class EIconStore {
       timestamp: record.timestamp
     };
 
-    this.records.push(r);
     this.lookup[record.eicon] = r;
   }
 
@@ -124,17 +126,11 @@ export class EIconStore {
     }
 
     delete this.lookup[record.eicon];
-
-    const idx = this.records.findIndex((r) => (r.eicon === record.eicon));
-
-    if (idx >= 0) {
-      this.records.splice(idx, 1);
-    }
   }
 
   search(searchString: string): EIconRecord[] {
     const lcSearch = searchString.trim().toLowerCase();
-    const found = _.filter(this.records, (r) => r.eicon.indexOf(lcSearch) >= 0);
+    const found = _.filter(this.lookup, (r) => r.eicon.indexOf(lcSearch) >= 0);
 
     return found.sort((a, b) => {
       if ((a.eicon.substr(0, lcSearch.length) === lcSearch) && (b.eicon.substr(0, lcSearch.length) !== lcSearch)) {
@@ -150,7 +146,7 @@ export class EIconStore {
   }
 
   random(count: number): EIconRecord[] {
-    return _.sampleSize(this.records, count);
+    return _.sampleSize(this.lookup, count);
   }
 
   private static sharedStore: EIconStore | undefined;
