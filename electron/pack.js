@@ -54,7 +54,7 @@ require('electron-packager')({
     ignore: ['\.map$'],
     osxSign: process.argv.length > 2 ? {identity: process.argv[2]} : false,
     prune: false,
-    arch: process.platform === 'darwin' ? ['x64', 'arm64'] : undefined
+    arch: process.platform === 'darwin' ? ['x64', 'arm64'] : ['x64', 'arm64'],
 }).then((appPaths) => {
     if (process.env.SKIP_INSTALLER) {
         return;
@@ -119,6 +119,11 @@ require('electron-packager')({
         });
     } else {
         console.log('Creating Linux AppImage');
+	console.log('APPPATHS', appPaths);
+
+	for 
+
+	console.log('RENAMESYNC', path.join(appPaths[0], 'F-Chat'), path.join(appPaths[0], 'AppRun'));
         fs.renameSync(path.join(appPaths[0], 'F-Chat'), path.join(appPaths[0], 'AppRun'));
         fs.copyFileSync(path.join(__dirname, 'build', 'icon.png'), path.join(appPaths[0], 'icon.png'));
         const libDir = path.join(appPaths[0], 'usr', 'lib'), libSource = path.join(__dirname, 'build', 'linux-libs');
@@ -135,10 +140,18 @@ require('electron-packager')({
                 const args = [appPaths[0], 'fchat.AppImage', '-u', 'gh-releases-zsync|hearmeneigh|fchat-rising|latest|F-Chat-Rising-*-linux.AppImage.zsync'];
                 if(process.argv.length > 2) args.push('-s', '--sign-key', process.argv[2]);
                 else console.warn('Warning: Creating unsigned AppImage');
+                console.log('Dist DIR', distDir);
                 if(process.argv.length > 3) args.push('--sign-args', `--no-tty  --pinentry-mode loopback --yes --passphrase=${process.argv[3]}`);
                 fs.chmodSync(downloaded, 0o755);
+
                 child_process.spawn(downloaded, ['--appimage-extract'], {cwd: distDir}).on('close', () => {
-                    const child = child_process.spawn(path.join(distDir, 'squashfs-root', 'AppRun'), args, {cwd: distDir, env: {ARCH: 'x86_64'}});
+                    const child = child_process.spawn(path.join(distDir, 'F-Chat-linux-x64', 'AppRun'), args, {cwd: distDir, env: {ARCH: 'x86_64'}});
+                    child.stdout.on('data', (data) => console.log(data.toString()));
+                    child.stderr.on('data', (data) => console.error(data.toString()));
+                });
+
+                child_process.spawn(downloaded, ['--appimage-extract'], {cwd: distDir}).on('close', () => {
+                    const child = child_process.spawn(path.join(distDir, 'F-Chat-linux-arm64', 'AppRun'), args, {cwd: distDir, env: {ARCH: 'arm64'}});
                     child.stdout.on('data', (data) => console.log(data.toString()));
                     child.stderr.on('data', (data) => console.error(data.toString()));
                 });
