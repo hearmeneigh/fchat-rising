@@ -3,6 +3,7 @@
 if [ -z "${1}" ]
 then
   echo "Usage: ${0} RELEASE_VERSION"
+  exit 1
 fi
 
 RELEASE_VERSION="${1}"
