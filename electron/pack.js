@@ -64,26 +64,49 @@ require('electron-packager')({
     if(process.platform === 'win32') {
         console.log('Creating Windows installer');
         const icon = path.join(__dirname, 'build', 'icon.ico');
-        const setupName = `F-Chat Rising Setup.exe`;
-        if(fs.existsSync(path.join(distDir, setupName))) fs.unlinkSync(path.join(distDir, setupName));
-        const nupkgName = path.join(distDir, `fchat-${pkg.version}-full.nupkg`);
-        const deltaName = path.join(distDir, `fchat-${pkg.version}-delta.nupkg`);
-        if(fs.existsSync(nupkgName)) fs.unlinkSync(nupkgName);
-        if(fs.existsSync(deltaName)) fs.unlinkSync(deltaName);
-        if(process.argv.length <= 3) console.warn('Warning: Creating unsigned installer');
-        require('electron-winstaller').createWindowsInstaller({
-            appDirectory: appPaths[0],
-            outputDirectory: distDir,
-            iconUrl: 'file:///%localappdata%\\fchat\\app.ico',
-            setupIcon: icon,
-            noMsi: true,
-            exe: 'F-Chat.exe',
-            title: 'F-Chat Rising',
-            setupExe: setupName,
-            name: 'fchat'
-            // remoteReleases: 'https://client.f-list.net/win32/' + (isBeta ? '?channel=beta' : ''),
-            // signWithParams: process.argv.length > 3 ? `/a /f ${process.argv[2]} /p ${process.argv[3]} /fd sha256 /tr http://timestamp.digicert.com /td sha256` : undefined
-        }).catch((e) => console.error(`Error while creating installer: ${e.message}`));
+
+        for (const appPath of appPaths) {
+            console.log('WinAppPath', appPath);
+            const appArch = appPath.match(/F-Chat-windows-([a-zA-Z0-9]+)$/)[1];
+            const appArchLong = appArch === 'x64' ? 'x86_64' : 'aarch64';
+            const setupName = `F-Chat-Rising-Setup-win-${appArch}.exe`;
+            const distFinal = path.join(distDir, appArch);
+
+            console.log('DistFinal', distFinal);
+
+            fs.mkdirSync(distFinal, {recursive: true});
+
+            if(fs.existsSync(path.join(distFinal, setupName))) {
+                fs.unlinkSync(path.join(distFinal, setupName));
+            }
+
+            const nupkgName = path.join(distFinal, `fchat-${pkg.version}-full.nupkg`);
+            const deltaName = path.join(distFinal, `fchat-${pkg.version}-delta.nupkg`);
+
+            if(fs.existsSync(nupkgName)) fs.unlinkSync(nupkgName);
+            if(fs.existsSync(deltaName)) fs.unlinkSync(deltaName);
+
+            if(process.argv.length <= 3) console.warn('Warning: Creating unsigned installer');
+
+            try {
+                await require('electron-winstaller').createWindowsInstaller({
+                    appDirectory: appPath,
+                    outputDirectory: distFinal,
+                    iconUrl: 'file:///%localappdata%\\fchat\\app.ico',
+                    setupIcon: icon,
+                    noMsi: true,
+                    exe: 'F-Chat.exe',
+                    title: 'F-Chat Rising',
+                    setupExe: setupName,
+                    name: 'fchat'
+                    // remoteReleases: 'https://client.f-list.net/win32/' + (isBeta ? '?channel=beta' : ''),
+                    // signWithParams: process.argv.length > 3 ? `/a /f ${process.argv[2]} /p ${process.argv[3]} /fd sha256 /tr http://timestamp.digicert.com /td sha256` : undefined
+                });
+            } catch (e) {
+                console.error(`Error while creating installer: ${e.message}`);
+                throw e;
+            }
+        }
     } else if(process.platform === 'darwin') {
         console.log('Creating Mac DMG');
 
