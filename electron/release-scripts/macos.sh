@@ -1,0 +1,33 @@
+#!/bin/bash -ex
+
+if [ -z "${1}" ]
+then
+  echo "Usage: ${0} RELEASE_VERSION"
+fi
+
+RELEASE_VERSION="${1}"
+RELEASE_PATH="${HOME}/fchat-rising-dist/${RELEASE_VERSION}"
+DIST_PATH="${HOME}/fchat-rising/electron/dist"
+
+
+cd "/${HOME}/fchat-rising"
+git checkout master
+git pull
+yarn
+
+mkdir -p "${RELEASE_PATH}"
+rm -rf "${DIST_PATH}"
+
+cd electron
+yarn build:dist
+node pack.js
+
+
+
+cp "${DIST_PATH}/F-Chat Rising Intel.dmg" "${RELEASE_PATH}/F-Chat-Rising-${RELEASE_VERSION}-macos-intel.dmg"
+rm -f "${RELEASE_PATH}/F-Chat-Rising-${RELEASE_VERSION}-macos-intel.zip"
+zip --junk-paths "${RELEASE_PATH}/F-Chat-Rising-${RELEASE_VERSION}-macos-intel.zip" "${DIST_PATH}/F-Chat Rising Intel.dmg"
+
+cp "${DIST_PATH}/F-Chat Rising M1.dmg" "${RELEASE_PATH}/F-Chat-Rising-${RELEASE_VERSION}-macos-m1.dmg"
+rm -f "${RELEASE_PATH}/F-Chat-Rising-${RELEASE_VERSION}-macos-m1.zip"
+zip --junk-paths "${RELEASE_PATH}/F-Chat-Rising-${RELEASE_VERSION}-macos-m1.zip" "${DIST_PATH}/F-Chat Rising M1.dmg"

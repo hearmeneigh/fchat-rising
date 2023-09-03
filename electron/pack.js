@@ -4,6 +4,7 @@ const pkg = require(path.join(__dirname, 'package.json'));
 const fs = require('fs');
 const child_process = require('child_process');
 const _ = require('lodash');
+const axios = require('axios');
 
 const distDir = path.join(__dirname, 'dist');
 const isBeta = pkg.version.indexOf('beta') !== -1;
@@ -55,7 +56,7 @@ require('electron-packager')({
     osxSign: process.argv.length > 2 ? {identity: process.argv[2]} : false,
     prune: false,
     arch: process.platform === 'darwin' ? ['x64', 'arm64'] : ['x64', 'arm64'],
-}).then((appPaths) => {
+}).then(async (appPaths) => {
     if (process.env.SKIP_INSTALLER) {
         return;
     }
@@ -120,19 +121,39 @@ require('electron-packager')({
     } else {
         console.log('Creating Linux AppImage');
 
+        async function downloadAppImageTool(appImageBase) {
+            const localArch = process.arch === 'x64' ? 'x86_64' : 'aarch64';
+            const res = await axios.get(`https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-${localArch}.AppImage`);
+            const appImagePath = path.join(appImageBase, 'appimagetool.AppImage');
+
+            fs.writeFileSync(appImagePath, res.data);
+            fs.chmodSync(appImagePath, 0o755);
+
+            const result = child_process.spawnSync(appImagePath, ['--appimage-extract'], {cwd: appImageBase, env: { ...process.env }});
+
+            if (result.status !== 0) {
+                console.log('Run failed', 'APPIMAGE EXTRACT', {status: result.status, call: result.error?.syscall, args: result.error?.spawnargs, path: result.error?.path, code: result.error?.code, stdout: String(result.stdout), stderr: String(result.stderr) });
+            }
+
+            return appImagePath;
+        }
+
+        const appImageBase = path.join(distDir, 'downloaded');
+        fs.mkdirSync(appImageBase, {recursive: true});
+
+        const appImagePath = await downloadAppImageTool(appImageBase);
+
         for (const appPath of appPaths) {
             const appArch = appPath.match(/F-Chat-linux-([a-zA-Z0-9]+)$/)[1];
             const appArchLong = appArch === 'x64' ? 'x86_64' : 'aarch64';
             const buildPath = path.join(__dirname, 'build');
-            const distFinal = path.join(distDir, appArch);
 
             fs.renameSync(path.join(appPath, 'F-Chat'), path.join(appPath, 'AppRun'));
             fs.copyFileSync(path.join(buildPath, 'icon.png'), path.join(appPath, 'icon.png'));
 
             const libDir = path.join(appPath, 'usr', 'lib'), libSource = path.join(buildPath, 'linux-libs');
-            fs.mkdirSync(libDir, {recursive: true});
 
-            fs.mkdirSync(distFinal, {recursive: true});
+            fs.mkdirSync(libDir, {recursive: true});
 
             for(const file of fs.readdirSync(libSource)) {
                 fs.copyFileSync(path.join(libSource, file), path.join(libDir, file));
@@ -141,33 +162,23 @@ require('electron-packager')({
             fs.symlinkSync(path.join(appPath, 'icon.png'), path.join(appPath, '.DirIcon'));
             fs.writeFileSync(path.join(appPath, 'fchat.desktop'), '[Desktop Entry]\nName=F-Chat\nExec=AppRun\nIcon=icon\nType=Application\nCategories=GTK;GNOME;Utility;');
 
-            require('axios').get(`https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-${appArchLong}.AppImage`, {responseType: 'stream'}).then((res) => {
-                const downloaded = path.join(distFinal, 'appimagetool.AppImage');
-                const stream = fs.createWriteStream(downloaded);
-                res.data.pipe(stream);
-                stream.on('close', () => {
-                    const args = [appPath, 'fchat.AppImage', '-u', 'gh-releases-zsync|hearmeneigh|fchat-rising|latest|F-Chat-Rising-*-linux.AppImage.zsync'];
+            const args = [appPath, 'fchat.AppImage', '-u', 'gh-releases-zsync|hearmeneigh|fchat-rising|latest|F-Chat-Rising-*-linux.AppImage.zsync'];
 
-                    if(process.argv.length > 2) args.push('-s', '--sign-key', process.argv[2]);
-                    else console.warn('Warning: Creating unsigned AppImage');
+            if(process.argv.length > 2) {
+                args.push('-s', '--sign-key', process.argv[2]);
+            } else {
+                console.warn('Warning: Creating unsigned AppImage');
+            }
 
-                    if(process.argv.length > 3) args.push('--sign-args', `--no-tty  --pinentry-mode loopback --yes --passphrase=${process.argv[3]}`);
+            if(process.argv.length > 3) {
+                args.push('--sign-args', `--no-tty  --pinentry-mode loopback --yes --passphrase=${process.argv[3]}`);
+            }
 
-                    fs.chmodSync(downloaded, 0o755);
+            const appRunResult = child_process.spawnSync(path.join(distFinal, 'squashfs-root', 'AppRun'), args, {cwd: distFinal, env: {ARCH: appArchLong }});
 
-                    const extResult = child_process.spawnSync(downloaded, ['--appimage-extract'], {cwd: distFinal, env: { ...process.env, ARCH: appArchLong }});
-
-                    if (extResult.status !== 0) {
-                        console.log('Run failed', 'EXTRACT', appArch, {status: extResult.status, call: extResult.error?.syscall, args: extResult.error?.spawnargs, path: extResult.error?.path, code: extResult.error?.code, stdout: String(extResult.stdout), stderr: String(extResult.stderr) });
-                    }
-
-                    const appRunResult = child_process.spawnSync(path.join(distFinal, 'squashfs-root', 'AppRun'), args, {cwd: distFinal, env: {ARCH: appArchLong }});
-
-                    if (appRunResult.status !== 0) {
-                        console.log('Run failed', 'APPRUN', appArch, {status: appRunResult.status, call: appRunResult.error?.syscall, args: appRunResult.error?.spawnargs, path: appRunResult.error?.path, code: appRunResult.error?.code, stdout: String(appRunResult.stdout), stderr: String(appRunResult.stderr) });
-                    }
-                });
-            }, (e) => console.error('HTTP error', e));
+            if (appRunResult.status !== 0) {
+                console.log('Run failed', 'APPRUN', appArch, {status: appRunResult.status, call: appRunResult.error?.syscall, args: appRunResult.error?.spawnargs, path: appRunResult.error?.path, code: appRunResult.error?.code, stdout: String(appRunResult.stdout), stderr: String(appRunResult.stderr) });
+            }
         }
     }
 }, (e) => console.log(`Error while packaging: ${e.message}`));
