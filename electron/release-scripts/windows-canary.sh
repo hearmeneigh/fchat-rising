@@ -13,3 +13,4 @@ rm -rf "${DIST_PATH}"
 
 cd electron
 yarn build
+node pack.js
