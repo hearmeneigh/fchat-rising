@@ -119,11 +119,10 @@ require('electron-packager')({
         });
     } else {
         console.log('Creating Linux AppImage');
-        console.log('APPPATHS', appPaths);
 
         for (const appPath of appPaths) {
             const appArch = appPath.match(/F-Chat-linux-([a-zA-Z0-9]+)$/)[1];
-            const appArchLong = appArch === 'x64' ? 'x86_64' : 'arm64';
+            const appArchLong = appArch === 'x64' ? 'x86_64' : 'aarch64';
             const buildPath = path.join(__dirname, 'build');
             const distFinal = path.join(distDir, appArch);
 
@@ -132,6 +131,8 @@ require('electron-packager')({
 
             const libDir = path.join(appPath, 'usr', 'lib'), libSource = path.join(buildPath, 'linux-libs');
             fs.mkdirSync(libDir, {recursive: true});
+
+            fs.mkdirSync(distFinal, {recursive: true});
 
             for(const file of fs.readdirSync(libSource)) {
                 fs.copyFileSync(path.join(libSource, file), path.join(libDir, file));
@@ -146,19 +147,27 @@ require('electron-packager')({
                 res.data.pipe(stream);
                 stream.on('close', () => {
                     const args = [appPath, 'fchat.AppImage', '-u', 'gh-releases-zsync|hearmeneigh|fchat-rising|latest|F-Chat-Rising-*-linux.AppImage.zsync'];
+
                     if(process.argv.length > 2) args.push('-s', '--sign-key', process.argv[2]);
                     else console.warn('Warning: Creating unsigned AppImage');
-                    console.log('Dist DIR', distFinal);
+
                     if(process.argv.length > 3) args.push('--sign-args', `--no-tty  --pinentry-mode loopback --yes --passphrase=${process.argv[3]}`);
+
                     fs.chmodSync(downloaded, 0o755);
 
-                    child_process.spawn(downloaded, ['--appimage-extract'], {cwd: distFinal}).on('close', () => {
-                        const child = child_process.spawn(path.join(distFinal, 'squashfs-root', 'AppRun'), args, {cwd: distDir, env: {ARCH: appArchLong }});
-                        child.stdout.on('data', (data) => console.log(data.toString()));
-                        child.stderr.on('data', (data) => console.error(data.toString()));
-                    });
+                    const extResult = child_process.spawnSync(downloaded, ['--appimage-extract'], {cwd: distFinal, env: { ...process.env, ARCH: appArchLong }});
+
+                    if (extResult.status !== 0) {
+                        console.log('Run failed', 'EXTRACT', appArch, {status: extResult.status, call: extResult.error?.syscall, args: extResult.error?.spawnargs, path: extResult.error?.path, code: extResult.error?.code, stdout: String(extResult.stdout), stderr: String(extResult.stderr) });
+                    }
+
+                    const appRunResult = child_process.spawnSync(path.join(distFinal, 'squashfs-root', 'AppRun'), args, {cwd: distFinal, env: {ARCH: appArchLong }});
+
+                    if (appRunResult.status !== 0) {
+                        console.log('Run failed', 'APPRUN', appArch, {status: appRunResult.status, call: appRunResult.error?.syscall, args: appRunResult.error?.spawnargs, path: appRunResult.error?.path, code: appRunResult.error?.code, stdout: String(appRunResult.stdout), stderr: String(appRunResult.stderr) });
+                    }
                 });
-            }, (e) => console.error(`HTTP error: ${e.message}`));
+            }, (e) => console.error('HTTP error', e));
         }
     }
 }, (e) => console.log(`Error while packaging: ${e.message}`));
