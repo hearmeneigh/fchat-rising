@@ -122,34 +122,39 @@ require('electron-packager')({
         console.log('APPPATHS', appPaths);
 
         for (const appPath of appPaths) {
-            fs.renameSync(path.join(appPath, 'F-Chat'), path.join(appPath, 'AppRun'));
-            fs.copyFileSync(path.join(__dirname, 'build', 'icon.png'), path.join(appPath, 'icon.png'));
-
-            const appArch = appPath.match(/F-Chat-linux-([a-zA-Z0-9]+)\//)[1];
+            const appArch = appPath.match(/F-Chat-linux-([a-zA-Z0-9]+)$/)[1];
             const appArchLong = appArch === 'x64' ? 'x86_64' : 'arm64';
+            const buildPath = path.join(__dirname, 'build');
+            const distFinal = path.join(distDir, appArch);
 
-            const libDir = path.join(appPath, 'usr', 'lib'), libSource = path.join(__dirname, 'build', 'linux-libs');
+            fs.renameSync(path.join(appPath, 'F-Chat'), path.join(appPath, 'AppRun'));
+            fs.copyFileSync(path.join(buildPath, 'icon.png'), path.join(appPath, 'icon.png'));
+
+            const libDir = path.join(appPath, 'usr', 'lib'), libSource = path.join(buildPath, 'linux-libs');
             fs.mkdirSync(libDir, {recursive: true});
 
             for(const file of fs.readdirSync(libSource)) {
                 fs.copyFileSync(path.join(libSource, file), path.join(libDir, file));
+            }
+
+		console.log('SYMLINK', path.join(appPath, 'icon.png'), path.join(appPath, '.DirIcon'));
                 fs.symlinkSync(path.join(appPath, 'icon.png'), path.join(appPath, '.DirIcon'));
                 fs.writeFileSync(path.join(appPath, 'fchat.desktop'), '[Desktop Entry]\nName=F-Chat\nExec=AppRun\nIcon=icon\nType=Application\nCategories=GTK;GNOME;Utility;');
 
                 require('axios').get(`https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-${appArchLong}.AppImage`, {responseType: 'stream'}).then((res) => {
-                    const downloaded = path.join(distDir, 'appimagetool.AppImage');
+                    const downloaded = path.join(distFinal, 'appimagetool.AppImage');
                     const stream = fs.createWriteStream(downloaded);
                     res.data.pipe(stream);
                     stream.on('close', () => {
                         const args = [appPath, 'fchat.AppImage', '-u', 'gh-releases-zsync|hearmeneigh|fchat-rising|latest|F-Chat-Rising-*-linux.AppImage.zsync'];
                         if(process.argv.length > 2) args.push('-s', '--sign-key', process.argv[2]);
                         else console.warn('Warning: Creating unsigned AppImage');
-                        console.log('Dist DIR', distDir);
+                        console.log('Dist DIR', distFinal);
                         if(process.argv.length > 3) args.push('--sign-args', `--no-tty  --pinentry-mode loopback --yes --passphrase=${process.argv[3]}`);
                         fs.chmodSync(downloaded, 0o755);
 
-                        child_process.spawn(downloaded, ['--appimage-extract'], {cwd: distDir}).on('close', () => {
-                            const child = child_process.spawn(path.join(distDir, `F-Chat-linux-${appArch}`, 'AppRun'), args, {cwd: distDir, env: {ARCH: appArchLong }});
+                        child_process.spawn(downloaded, ['--appimage-extract'], {cwd: distFinal}).on('close', () => {
+                            const child = child_process.spawn(path.join(distFinal, 'squashfs-root', 'AppRun'), args, {cwd: distDir, env: {ARCH: appArchLong }});
                             child.stdout.on('data', (data) => console.log(data.toString()));
                             child.stderr.on('data', (data) => console.error(data.toString()));
                         });
