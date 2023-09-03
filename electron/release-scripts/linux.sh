@@ -22,8 +22,8 @@ cd electron
 yarn build:dist
 node pack.js
 
-cp "${DIST_PATH}/fchat.arm64.AppImage" "${RELEASE_PATH}/F-Chat-Rising-${RELEASE_VERSION}-linux-arm64.AppImage"
-cp "${DIST_PATH}/fchat.arm64.AppImage.zsync" "${RELEASE_PATH}/F-Chat-Rising-${RELEASE_VERSION}-linux-arm64.AppImage.zsync"
+cp "${DIST_PATH}/fchat.arm64.AppImage" "${RELEASE_PATH}/F-Chat-Rising-linux-arm64.AppImage"
+cp "${DIST_PATH}/fchat.arm64.AppImage.zsync" "${RELEASE_PATH}/F-Chat-Rising-linux-arm64.AppImage.zsync"
 
-cp "${DIST_PATH}/fchat.x64.AppImage" "${RELEASE_PATH}/F-Chat-Rising-${RELEASE_VERSION}-linux-x64.AppImage"
-cp "${DIST_PATH}/fchat.x64.AppImage.zsync" "${RELEASE_PATH}/F-Chat-Rising-${RELEASE_VERSION}-linux-x64.AppImage.zsync"
+cp "${DIST_PATH}/fchat.x64.AppImage" "${RELEASE_PATH}/F-Chat-Rising-linux-x64.AppImage"
+cp "${DIST_PATH}/fchat.x64.AppImage.zsync" "${RELEASE_PATH}/F-Chat-Rising-linux-x64.AppImage.zsync"

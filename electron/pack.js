@@ -167,7 +167,7 @@ require('electron-packager')({
             fs.symlinkSync(path.join(appPath, 'icon.png'), path.join(appPath, '.DirIcon'));
             fs.writeFileSync(path.join(appPath, 'fchat.desktop'), '[Desktop Entry]\nName=F-Chat\nExec=AppRun\nIcon=icon\nType=Application\nCategories=GTK;GNOME;Utility;');
 
-            const args = [appPath, `fchat.${appArch}.AppImage`, '-u', `gh-releases-zsync|hearmeneigh|fchat-rising|latest|F-Chat-Rising-*-linux-${appArch}.AppImage.zsync`];
+            const args = [appPath, `fchat.${appArch}.AppImage`, '-u', `gh-releases-zsync|hearmeneigh|fchat-rising|latest|F-Chat-Rising-linux-${appArch}.AppImage.zsync`];
 
             if(process.argv.length > 2) {
                 args.push('-s', '--sign-key', process.argv[2]);
