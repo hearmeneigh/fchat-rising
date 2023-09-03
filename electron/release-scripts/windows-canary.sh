@@ -2,6 +2,8 @@
 
 DIST_PATH="${HOME}/fchat-rising/electron/dist"
 
+export NODE_OPTIONS=--openssl-legacy-provider
+
 cd "${HOME}/fchat-rising"
 git checkout canary
 git pull

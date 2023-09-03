@@ -6,6 +6,8 @@ then
   exit 1
 fi
 
+export NODE_OPTIONS=--openssl-legacy-provider
+
 RELEASE_VERSION="${1}"
 RELEASE_PATH="${HOME}/fchat-rising-dist/${RELEASE_VERSION}"
 DIST_PATH="${HOME}/fchat-rising/electron/dist"

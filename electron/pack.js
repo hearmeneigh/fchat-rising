@@ -67,7 +67,7 @@ require('electron-packager')({
 
         for (const appPath of appPaths) {
             console.log('WinAppPath', appPath);
-            const appArch = appPath.match(/F-Chat-windows-([a-zA-Z0-9]+)$/)[1];
+            const appArch = appPath.match(/F-Chat-win32-([a-zA-Z0-9]+)$/)[1];
             const appArchLong = appArch === 'x64' ? 'x86_64' : 'aarch64';
             const setupName = `F-Chat-Rising-Setup-win-${appArch}.exe`;
             const distFinal = path.join(distDir, appArch);
