@@ -137,30 +137,28 @@ require('electron-packager')({
                 fs.copyFileSync(path.join(libSource, file), path.join(libDir, file));
             }
 
-		console.log('SYMLINK', path.join(appPath, 'icon.png'), path.join(appPath, '.DirIcon'));
-                fs.symlinkSync(path.join(appPath, 'icon.png'), path.join(appPath, '.DirIcon'));
-                fs.writeFileSync(path.join(appPath, 'fchat.desktop'), '[Desktop Entry]\nName=F-Chat\nExec=AppRun\nIcon=icon\nType=Application\nCategories=GTK;GNOME;Utility;');
+            fs.symlinkSync(path.join(appPath, 'icon.png'), path.join(appPath, '.DirIcon'));
+            fs.writeFileSync(path.join(appPath, 'fchat.desktop'), '[Desktop Entry]\nName=F-Chat\nExec=AppRun\nIcon=icon\nType=Application\nCategories=GTK;GNOME;Utility;');
 
-                require('axios').get(`https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-${appArchLong}.AppImage`, {responseType: 'stream'}).then((res) => {
-                    const downloaded = path.join(distFinal, 'appimagetool.AppImage');
-                    const stream = fs.createWriteStream(downloaded);
-                    res.data.pipe(stream);
-                    stream.on('close', () => {
-                        const args = [appPath, 'fchat.AppImage', '-u', 'gh-releases-zsync|hearmeneigh|fchat-rising|latest|F-Chat-Rising-*-linux.AppImage.zsync'];
-                        if(process.argv.length > 2) args.push('-s', '--sign-key', process.argv[2]);
-                        else console.warn('Warning: Creating unsigned AppImage');
-                        console.log('Dist DIR', distFinal);
-                        if(process.argv.length > 3) args.push('--sign-args', `--no-tty  --pinentry-mode loopback --yes --passphrase=${process.argv[3]}`);
-                        fs.chmodSync(downloaded, 0o755);
+            require('axios').get(`https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-${appArchLong}.AppImage`, {responseType: 'stream'}).then((res) => {
+                const downloaded = path.join(distFinal, 'appimagetool.AppImage');
+                const stream = fs.createWriteStream(downloaded);
+                res.data.pipe(stream);
+                stream.on('close', () => {
+                    const args = [appPath, 'fchat.AppImage', '-u', 'gh-releases-zsync|hearmeneigh|fchat-rising|latest|F-Chat-Rising-*-linux.AppImage.zsync'];
+                    if(process.argv.length > 2) args.push('-s', '--sign-key', process.argv[2]);
+                    else console.warn('Warning: Creating unsigned AppImage');
+                    console.log('Dist DIR', distFinal);
+                    if(process.argv.length > 3) args.push('--sign-args', `--no-tty  --pinentry-mode loopback --yes --passphrase=${process.argv[3]}`);
+                    fs.chmodSync(downloaded, 0o755);
 
-                        child_process.spawn(downloaded, ['--appimage-extract'], {cwd: distFinal}).on('close', () => {
-                            const child = child_process.spawn(path.join(distFinal, 'squashfs-root', 'AppRun'), args, {cwd: distDir, env: {ARCH: appArchLong }});
-                            child.stdout.on('data', (data) => console.log(data.toString()));
-                            child.stderr.on('data', (data) => console.error(data.toString()));
-                        });
+                    child_process.spawn(downloaded, ['--appimage-extract'], {cwd: distFinal}).on('close', () => {
+                        const child = child_process.spawn(path.join(distFinal, 'squashfs-root', 'AppRun'), args, {cwd: distDir, env: {ARCH: appArchLong }});
+                        child.stdout.on('data', (data) => console.log(data.toString()));
+                        child.stderr.on('data', (data) => console.error(data.toString()));
                     });
-                }, (e) => console.error(`HTTP error: ${e.message}`));
-            }
+                });
+            }, (e) => console.error(`HTTP error: ${e.message}`));
         }
     }
 }, (e) => console.log(`Error while packaging: ${e.message}`));
