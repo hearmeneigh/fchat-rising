@@ -24,3 +24,5 @@ cd electron
 yarn build:dist
 node pack.js
 
+cp "${DIST_PATH}/arm64/F-Chat-Rising-Setup-win-arm64.exe" "${RELEASE_PATH}/F-Chat-Rising-win-arm64.exe"
+cp "${DIST_PATH}/arm64/F-Chat-Rising-Setup-win-x64.exe" "${RELEASE_PATH}/F-Chat-Rising-win-x64.exe"
