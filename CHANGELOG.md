@@ -5,7 +5,7 @@
   * Post Ads and Ad Editor have been merged together into My Ads
   * Profile Helper now only shows up if you have anything to fix; otherwise the profile helper can be found in the Settings menu
 
-## 1.24.0
+## 1.24.1
 * Hotfix to address issue with multiple tabs
 
 ## 1.24.0
