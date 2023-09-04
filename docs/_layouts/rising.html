@@ -11,7 +11,7 @@
     <style>
         .download_link {
           clear: both;
-          margin-left: 25px;
+          margin-left: 18px;
         }
 
         .download_link a {
@@ -20,7 +20,8 @@
 
 
         .download_link a:hover {
-          filter: brightness(1.2);
+          filter: brightness(1.4);
+          text-decoration: none;
         }
 
 
@@ -55,7 +56,8 @@
 
 
         .download_link.win,
-        .download_link.mac {
+        .download_link.mac,
+        .download_link.linux {
           margin-bottom: 6px;
         }
 
@@ -82,11 +84,12 @@
         }
 
         #downloads_small h3 small a {
-          color: #7d7d7d;
+          color: #c0942c;
         }
 
         #downloads_small h3 small a:hover {
-          color: #9a9a9a;
+          filter: brightness(1.4);
+          text-decoration: none;
         }
 
 
@@ -172,7 +175,7 @@
 
           {% if site.show_downloads %}
             <section id="downloads_small">
-              <h3>Downloads <small>| v{{site.download.version}} | <a href="{{site.changelog}}">Changelog</a></small></h3>
+              <h3>Downloads <small>| v{{site.download.version}} | <a href="{{site.changelog}}">Changelog</a> | <a href="{{site.installurl}}">Installation Help</a></small></h3>
 
               {% for platform in site.download.downloads %}
               <div class="download_link {{platform.type}}">
