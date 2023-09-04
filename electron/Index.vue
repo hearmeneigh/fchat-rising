@@ -115,6 +115,7 @@
     import Axios from 'axios';
     import * as electron from 'electron';
     import * as remote from '@electron/remote';
+    import settings from 'electron-settings';
     import log from 'electron-log'; //tslint:disable-line:match-default-export-name
     import * as fs from 'fs';
     import * as path from 'path';
@@ -201,7 +202,8 @@
     //   }
     // >('keytar/build/Release/keytar.node');
 
-    const keyStore = new SecureStore('fchat-rising-accounts');
+    settings.configure({ electron: remote as any });
+    const keyStore = new SecureStore('fchat-rising-accounts', remote, settings);
 
     // const keyStore = import('keytar');
     //
