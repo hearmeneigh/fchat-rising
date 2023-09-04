@@ -302,10 +302,14 @@
         }
 
         async addTab(): Promise<void> {
+            log.debug('init.window.tab.add.start');
+
             if(this.lockTab) return;
             const tray = new remote.Tray(trayIcon);
             tray.setToolTip(l('title'));
             tray.on('click', (_e) => this.trayClicked(tab));
+
+            log.debug('init.window.tab.add.tray');
 
             const view = new remote.BrowserView(
               {
@@ -320,8 +324,12 @@
               }
             );
 
+            log.debug('init.window.tab.add.view');
+
             const remoteMain = require("@electron/remote/main");
             remoteMain.enable(view.webContents);
+
+            log.debug('init.window.tab.add.remote');
 
             // tab devtools
             // view.webContents.openDevTools();
@@ -330,19 +338,29 @@
               view.webContents.openDevTools({ mode: 'detach' });
             }
 
+            log.debug('init.window.tab.add.devtools');
+
             // console.log('ADD TAB LANGUAGES', getSafeLanguages(this.settings.spellcheckLang), this.settings.spellcheckLang);
             view.webContents.session.setSpellCheckerLanguages(getSafeLanguages(this.settings.spellcheckLang));
 
+            log.debug('init.window.tab.add.spellcheck');
+
             view.setAutoResize({width: true, height: true});
             electron.ipcRenderer.send('tab-added', view.webContents.id);
+
+            log.debug('init.window.tab.add.notify');
+
             const tab = {active: false, view, user: undefined, hasNew: false, tray};
             tray.setContextMenu(remote.Menu.buildFromTemplate(this.createTrayMenu(tab)));
             this.tabs.push(tab);
             this.tabMap[view.webContents.id] = tab;
+
+            log.debug('init.window.tab.add.context');
+
             this.show(tab);
             this.lockTab = true;
 
-            log.debug('init.window.tab.load');
+            log.debug('init.window.tab.add.show');
 
             const indexUrl = url.format({
                 pathname: path.join(__dirname, 'index.html'),
@@ -351,12 +369,16 @@
                 query: {settings: JSON.stringify(this.settings), hasCompletedUpgrades: JSON.stringify(this.hasCompletedUpgrades)}
             });
 
+            log.debug('init.window.tab.add.load-index.start', indexUrl);
+
             await view.webContents.loadURL(indexUrl);
 
-            log.debug('init.window.tab.load.complete', indexUrl);
+            log.debug('init.window.tab.add.load-index.complete', indexUrl);
 
             tab.view.setBounds(getWindowBounds());
             this.lockTab = false;
+
+            log.debug('init.window.tab.add.done');
         }
 
         show(tab: Tab): void {
