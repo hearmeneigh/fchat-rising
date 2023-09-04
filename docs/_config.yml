@@ -52,12 +52,17 @@ changelog: https://github.com/hearmeneigh/fchat-rising/blob/master/CHANGELOG.md
 download:
   version: 1.24.0
 
-  url: https://github.com/hearmeneigh/fchat-rising/releases/download/v%VERSION%/F-Chat-Rising-%VERSION%-%PLATFORM_TAIL%
+  url: https://github.com/hearmeneigh/fchat-rising/releases/latest/download/F-Chat-Rising-%PLATFORM_TAIL%
 
   downloads:
     - type: win
-      name: Windows
-      tail: win.exe
+      name: Windows (x64)
+      tail: win-x64.exe
+      size: 84 MB
+
+    - type: win
+      name: Windows (arm64)
+      tail: win-arm64.exe
       size: 84 MB
 
     - type: mac
@@ -72,7 +77,12 @@ download:
       size: 83 MB
 
     - type: linux
-      name: Linux
-      tail: linux.AppImage
+      name: Linux (x64)
+      tail: linux-x64.AppImage
+      size: 82 MB
+
+    - type: linux
+      name: Linux (arm64)
+      tail: linux-arm64.AppImage
       size: 82 MB
 
