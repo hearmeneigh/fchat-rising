@@ -60,7 +60,7 @@
   "dependencies": {
     "@cliqz/adblocker-electron": "1.23.9",
     "jquery": "^3.6.0",
-    "node-fetch": "2.6.11"
+    "node-fetch": "2.6.12"
   },
   "optionalDependencies": {
     "appdmg": "^0.6.0",
