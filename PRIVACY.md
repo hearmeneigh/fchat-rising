@@ -36,4 +36,4 @@ information such as custom dictionary words. By default, the data is stored in:
 | MacOS                | `~/Library/Application Support/fchat` |
 | Linux                | `~/.config/fchat`                     |
 
-F-List account usernames and passwords are stored in a secure datastore provided by your operating system. For more information, see [node-keytar](https://github.com/atom/node-keytar).
+F-List account usernames and passwords are stored in a secure datastore provided by your operating system. For more information, see [electron-store](https://www.npmjs.com/package/electron-store).

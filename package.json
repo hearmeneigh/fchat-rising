@@ -5,7 +5,7 @@
   "description": "A heavily modded F-Chat 3.0 client for F-List",
   "license": "MIT",
   "devDependencies": {
-    "@electron/remote": "^2.0.8",
+    "@electron/remote": "^2.0.11",
     "@f-list/fork-ts-checker-webpack-plugin": "^3.1.1",
     "@f-list/vue-ts": "^1.0.3",
     "@fortawesome/fontawesome-free": "^5.15.1",
@@ -30,6 +30,7 @@
     "electron-log": "^4.4.3",
     "electron-packager": "^15.4.0",
     "electron-rebuild": "^3.2.7",
+    "electron-store": "^7.0.0",
     "extract-loader": "^5.1.0",
     "file-loader": "^6.2.0",
     "lodash": "^4.17.20",
@@ -59,7 +60,6 @@
   "dependencies": {
     "@cliqz/adblocker-electron": "1.23.9",
     "jquery": "^3.6.0",
-    "keytar": "~7.8.0",
     "node-fetch": "2.6.11"
   },
   "optionalDependencies": {
@@ -80,7 +80,7 @@
     "@cliqz/adblocker-extended-selectors": "1.23.9"
   },
   "scripts": {
-    "postinstall": "electron-rebuild --prebuild-tag-prefix=ignoreprebuilds -f -o keytar",
+    "__removed__postinstall": "electron-rebuild --prebuild-tag-prefix=ignoreprebuilds -f -o keytar",
     "watch": "cd electron && yarn watch",
     "start": "cd electron && yarn start"
   }

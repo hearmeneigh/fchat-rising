@@ -1,11 +1,12 @@
 # Changelog
 
 ## 1.24.0
-* Added ARM64 builds for Linux and Windows
 * Channel owners can now add `[ads: 30min]` in the channel description to limit how often Rising auto-posts ads on the channel
 * Neko/mimi species are now considered human, not anthro
+* Added ARM64 builds for Linux and Windows
 * Fixed a bug that prevented the client from occasionally recognizing gender preferences
 * Fixed more random freezes
+* Abandoned Keytar in favor of [Electron safeStorage](https://www.electronjs.org/docs/latest/api/safe-storage) -- you will need to re-enter your password 
 * New URL: https://hearmeneigh.github.io/fchat-rising/
 
 ## 1.23.5

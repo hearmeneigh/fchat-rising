@@ -136,7 +136,7 @@
     import CharacterPage from '../site/character_page/character_page.vue';
     import WordDefinition from '../learn/dictionary/WordDefinition.vue';
     import ProfileAnalysis from '../learn/recommend/ProfileAnalysis.vue';
-    import {defaultHost, GeneralSettings, nativeRequire} from './common';
+    import {defaultHost, GeneralSettings} from './common';
     import { fixLogs /*SettingsStore, Logs as FSLogs*/ } from './filesystem';
     import * as SlimcatImporter from './importer';
     import _ from 'lodash';
@@ -145,6 +145,7 @@
     import BBCodeTester from '../bbcode/Tester.vue';
     import { BBCodeView } from '../bbcode/view';
     import { EIconStore } from '../learn/eicon/store';
+    import { SecureStore } from './secure-store';
 
     // import ImagePreview from '../chat/preview/ImagePreview.vue';
     // import Bluebird from 'bluebird';
@@ -184,28 +185,30 @@
         }
     );
 
-    log.info('init.chat.keytar.load.start');
-
+    // log.info('init.chat.keytar.load.start');
+    //
     /* tslint:disable: no-any no-unsafe-any */ //because this is hacky
     //
 
-    const keyStore = nativeRequire<
-      {
-        getPassword(service: string, account: string): Promise<string>
-        setPassword(service: string, account: string, password: string): Promise<void>
-        deletePassword(service: string, account: string): Promise<void>
-        findCredentials(service: string): Promise<{ account: string, password: string }>
-        findPassword(service: string): Promise<string>
-        [key: string]: (...args: any[]) => Promise<any>
-      }
-    >('keytar/build/Release/keytar.node');
+    // const keyStore = nativeRequire<
+    //   {
+    //     getPassword(service: string, account: string): Promise<string>
+    //     setPassword(service: string, account: string, password: string): Promise<void>
+    //     deletePassword(service: string, account: string): Promise<void>
+    //     findCredentials(service: string): Promise<{ account: string, password: string }>
+    //     findPassword(service: string): Promise<string>
+    //     [key: string]: (...args: any[]) => Promise<any>
+    //   }
+    // >('keytar/build/Release/keytar.node');
+
+    const keyStore = new SecureStore('fchat-rising-accounts', 'DKhjsLIUD#sdfiHNav9SjenWMeF');
 
     // const keyStore = import('keytar');
     //
     // for(const key in keyStore) keyStore[key] = promisify(<(...args: any[]) => any>keyStore[key].bind(keyStore, 'fchat'));
     //tslint:enable
 
-    log.info('init.chat.keytar.load.done');
+    // log.info('init.chat.keytar.load.done');
 
     @Component({
         components: {
@@ -260,7 +263,7 @@
 
             log.debug('init.chat.cache.done');
 
-            await EIconStore.getSharedStore();
+            void EIconStore.getSharedStore();
 
             log.debug('init.eicons.update.done');
 
@@ -314,8 +317,7 @@
 
             if(this.settings.account.length > 0) this.saveLogin = true;
 
-            keyStore.getPassword('f-list.net', this.settings.account)
-                .then((value: string) => this.password = value, (err: Error) => this.error = err.message);
+            this.password = keyStore.getPassword('f-list.net', this.settings.account) || '';
 
             log.debug('init.chat.keystore.get.done');
 
@@ -397,7 +399,9 @@
             if(this.loggingIn) return;
             this.loggingIn = true;
             try {
-                if(!this.saveLogin) await keyStore.deletePassword('f-list.net', this.settings.account);
+                if(!this.saveLogin) {
+                  keyStore.deletePassword('f-list.net', this.settings.account);
+                }
 
                 core.siteSession.setCredentials(this.settings.account, this.password);
 
@@ -412,7 +416,7 @@
                 }
                 if(this.saveLogin) {
                     electron.ipcRenderer.send('save-login', this.settings.account, this.settings.host);
-                    await keyStore.setPassword('f-list.net', this.settings.account, this.password);
+                    keyStore.setPassword('f-list.net', this.settings.account, this.password);
                 }
                 Socket.host = this.settings.host;
 
