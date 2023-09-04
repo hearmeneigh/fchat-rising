@@ -9,9 +9,10 @@ export class SecureStore {
       accessPropertiesByDotNotation: true,
       clearInvalidConfig: true,
       name: storeName,
+      projectName: storeName,
       watch: true,
       encryptionKey: obfuscationKey // obfuscation only
-    });
+    } as any);
   }
 
   private getKey(domain: string, account: string): string {
