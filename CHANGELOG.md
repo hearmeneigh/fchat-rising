@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.24.0
+## 1.24.1
 * Hotfix to address issue with multiple tabs
 
 ## 1.24.0
