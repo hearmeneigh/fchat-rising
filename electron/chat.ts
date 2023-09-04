@@ -1,4 +1,3 @@
-console.log('CHAT FIRST');
 /**
  * @license
  * MIT License
@@ -37,17 +36,11 @@ console.log('CHAT FIRST');
 
 import * as electron from 'electron';
 
-console.log('CHAT GOT HERE');
-
 import * as remote from '@electron/remote';
 const webContents = remote.getCurrentWebContents();
 
-console.log('CHAT GOT HERE 2');
-
 // tslint:disable-next-line:no-require-imports no-submodule-imports
 require('@electron/remote/main').enable(webContents);
-
-console.log('CHAT GOT HERE 3');
 
 import Axios from 'axios';
 import {exec, execSync} from 'child_process';

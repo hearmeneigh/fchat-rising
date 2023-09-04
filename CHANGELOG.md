@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.24.2
+* Hotfix to address connectivity issues
+
 ## 1.24.1
 * Hotfix to address issue with multiple tabs
 
