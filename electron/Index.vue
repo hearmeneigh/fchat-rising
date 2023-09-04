@@ -201,7 +201,7 @@
     //   }
     // >('keytar/build/Release/keytar.node');
 
-    const keyStore = new SecureStore('fchat-rising-accounts', 'DKhjsLIUD#sdfiHNav9SjenWMeF');
+    const keyStore = new SecureStore('fchat-rising-accounts');
 
     // const keyStore = import('keytar');
     //
@@ -263,7 +263,7 @@
 
             log.debug('init.chat.cache.done');
 
-            void EIconStore.getSharedStore();
+            void EIconStore.getSharedStore(); // intentionally background
 
             log.debug('init.eicons.update.done');
 
@@ -317,7 +317,7 @@
 
             if(this.settings.account.length > 0) this.saveLogin = true;
 
-            this.password = keyStore.getPassword('f-list.net', this.settings.account) || '';
+            this.password = (await keyStore.getPassword('f-list.net', this.settings.account)) || '';
 
             log.debug('init.chat.keystore.get.done');
 
@@ -400,7 +400,7 @@
             this.loggingIn = true;
             try {
                 if(!this.saveLogin) {
-                  keyStore.deletePassword('f-list.net', this.settings.account);
+                  await keyStore.deletePassword('f-list.net', this.settings.account);
                 }
 
                 core.siteSession.setCredentials(this.settings.account, this.password);
@@ -416,7 +416,7 @@
                 }
                 if(this.saveLogin) {
                     electron.ipcRenderer.send('save-login', this.settings.account, this.settings.host);
-                    keyStore.setPassword('f-list.net', this.settings.account, this.password);
+                    await keyStore.setPassword('f-list.net', this.settings.account, this.password);
                 }
                 Socket.host = this.settings.host;
 

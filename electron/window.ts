@@ -22,3 +22,5 @@ export default new Window({
     el: '#app',
     data: {settings}
 });
+
+log.debug('init.window.vue.done');

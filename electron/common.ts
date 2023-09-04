@@ -3,6 +3,8 @@ import * as path from 'path';
 
 import log from 'electron-log'; //tslint:disable-line:match-default-export-name
 
+log.debug('init.common');
+
 export const defaultHost = 'wss://chat.f-list.net/chat2';
 
 function getDefaultLanguage(): string {
@@ -31,11 +33,14 @@ export class GeneralSettings {
     risingDisableWindowsHighContrast =  false;
 }
 
-//tslint:disable
-const Module = require('module');
+// //tslint:disable
+// const Module = require('module');
+//
+// export function nativeRequire<T>(module: string): T {
+//     return Module.prototype.require.call({paths: Module._nodeModulePaths(__dirname)}, module);
+// }
+//
+// //tslint:enable
 
-export function nativeRequire<T>(module: string): T {
-    return Module.prototype.require.call({paths: Module._nodeModulePaths(__dirname)}, module);
-}
+log.debug('init.common.done');
 
-//tslint:enable

@@ -1,54 +1,44 @@
 import * as electronRemote from '@electron/remote';
-import Store from 'electron-store';
+import settings from 'electron-settings';
 
 export class SecureStore {
-  private store: Store<Record<string, string>>;
-
-  constructor(storeName: string, obfuscationKey: string) {
-    this.store = new Store<Record<string, string>>({
-      accessPropertiesByDotNotation: true,
-      clearInvalidConfig: true,
-      name: storeName,
-      projectName: storeName,
-      watch: true,
-      encryptionKey: obfuscationKey // obfuscation only
-    } as any);
+  constructor(protected storeName: string) {
   }
 
   private getKey(domain: string, account: string): string {
-    return `${domain}__${account}`;
+    return `${this.storeName}__${domain}__${account}`.replace(/[^a-zA-Z0-9_]/g, '__');
   }
 
-  setPassword(domain: string, account: string, password: string): void {
+  async setPassword(domain: string, account: string, password: string): Promise<void> {
     if ((electronRemote as any).safeStorage.isEncryptionAvailable() === false) {
       return;
     }
 
     const buffer = (electronRemote as any).safeStorage.encryptString(password);
 
-    this.store.set(this.getKey(domain, account), buffer.toString('binary'));
+    await settings.set(this.getKey(domain, account), buffer.toString('binary'));
   }
 
-  deletePassword(domain: string, account: string): void {
+  async deletePassword(domain: string, account: string): Promise<void> {
     if ((electronRemote as any).safeStorage.isEncryptionAvailable() === false) {
       return;
     }
 
-    this.store.delete(this.getKey(domain, account));
+    await settings.unset(this.getKey(domain, account));
   }
 
-  getPassword(domain: string, account: string): string | null {
+  async getPassword(domain: string, account: string): Promise<string | null> {
     if ((electronRemote as any).safeStorage.isEncryptionAvailable() === false) {
       return null;
     }
 
-    const pw = this.store.get(this.getKey(domain, account));
+    const pw = await settings.get(this.getKey(domain, account));
 
     if (!pw) {
       return null;
     }
 
-    const buffer = Buffer.from(pw, 'binary');
+    const buffer = Buffer.from(pw.toString(), 'binary');
     const decrypted = (electronRemote as any).safeStorage.decryptString(buffer);
 
     return decrypted;

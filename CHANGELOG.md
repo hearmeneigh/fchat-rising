@@ -6,6 +6,9 @@
   * Profile Helper now only shows up if you have anything to fix; otherwise the profile helper can be found in the Settings menu
 
 ## 1.24.0
+* Hotfix to address issue with multiple tabs
+
+## 1.24.0
 * Channel owners can now add `[ads: 30min]` in the channel description to limit how often Rising auto-posts ads on the channel
 * Neko/mimi species are now considered human, not anthro
 * Added ARM64 builds for Linux and Windows
