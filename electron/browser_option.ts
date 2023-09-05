@@ -17,9 +17,8 @@ log.transports.file.maxSize = 5 * 1024 * 1024;
 
 log.info('init.browser_option.vue');
 
-//tslint:disable-next-line:no-unused-expression
-export default new BrowserOption({
-    el: '#browser-option',
+new BrowserOption({
+    el: '#browserOption',
     data: {settings}
 });
 

@@ -31,7 +31,8 @@ export class GeneralSettings {
     risingCacheExpiryDays = 30;
     risingSystemLogLevel: log.LevelOption = 'info';
     risingDisableWindowsHighContrast =  false;
-    browserCommand = '';
+    browserPath = '';
+    browserArgs = '';
 }
 
 // //tslint:disable
