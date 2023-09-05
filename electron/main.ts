@@ -284,6 +284,25 @@ function showPatchNotes(): void {
     electron.shell.openExternal('https://github.com/hearmeneigh/fchat-rising/blob/master/CHANGELOG.md');
 }
 
+function openBrowserSettings(): void {
+    const windowProperties: electron.BrowserWindowConstructorOptions = {
+        center: true,
+        show: false,
+        icon: process.platform === 'win32' ? winIcon : pngIcon,
+        webPreferences: {
+            webviewTag: true, nodeIntegration: true, nodeIntegrationInWorker: true, spellcheck: true,
+            enableRemoteModule: true, contextIsolation: false, partition: 'persist:fchat'
+        } as any
+    };
+
+    const browserWindow = new electron.BrowserWindow(windowProperties);
+    browserWindow.removeMenu();
+    browserWindow.loadFile(path.join(__dirname, 'browser_option.html')).then(r => {
+        console.log(r);
+        browserWindow.show();
+    });
+}
+
 
 let zoomLevel = 0;
 
@@ -528,6 +547,12 @@ function onReady(): void {
                             click: (item: electron.MenuItem) => {
                                 settings.risingDisableWindowsHighContrast = item.checked;
                                 setGeneralSettings(settings);
+                            }
+                        },
+                        {
+                            label: 'Set command for opening clicked links',
+                            click: () => {
+                                openBrowserSettings();
                             }
                         }
                     ]
