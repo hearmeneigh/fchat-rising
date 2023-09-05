@@ -53,6 +53,7 @@ import DownloadItem = electron.DownloadItem;
 import { AdCoordinatorHost } from '../chat/ads/ad-coordinator-host';
 import { IpcMainEvent } from 'electron';
 import { BlockerIntegration } from './blocker/blocker';
+import core from "../chat/core";
 
 //tslint:disable-next-line:no-require-imports
 const pck = require('./package.json');
@@ -290,6 +291,13 @@ function openBrowserSettings(): electron.BrowserWindow | undefined {
         show: false,
         icon: process.platform === 'win32' ? winIcon : pngIcon,
         frame: false,
+        width: 500,
+        height: 350,
+        minWidth: 500,
+        minHeight: 368,
+        maxWidth: 500,
+        maxHeight: 368,
+        maximizable: false,
         webPreferences: {
             webviewTag: true, nodeIntegration: true, nodeIntegrationInWorker: true, spellcheck: true,
             enableRemoteModule: true, contextIsolation: false, partition: 'persist:fchat'
@@ -694,6 +702,23 @@ function onReady(): void {
     electron.ipcMain.on('update-zoom', (_e, zl: number) => {
         // log.info('MENU ZOOM UPDATE', zoomLevel);
         for(const w of electron.webContents.getAllWebContents()) w.send('update-zoom', zl);
+    });
+
+    electron.ipcMain.handle('browser-option-browse', async () => {
+        log.debug('settings.browserOption.browse');
+        console.log('settings.browserOption.browse', JSON.stringify(settings));
+        const dir = electron.dialog.showOpenDialogSync(
+            {
+                defaultPath: settings.browserPath,
+                properties: ['openFile'],
+                filters: [{ name: 'Executables', extensions: ['exe'] }]
+            });
+        if(dir !== undefined) {
+            settings.browserPath = dir[0];
+            setGeneralSettings(settings);
+        }
+
+        return settings.browserPath;
     });
 
     createWindow();

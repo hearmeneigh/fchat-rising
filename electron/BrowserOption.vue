@@ -1,22 +1,52 @@
 <template>
-  <div style="display: flex;flex-direction:column;height:100%" :class="getThemeClass()" @auxclick.prevent>
+  <div class="card-full" style="display:flex;flex-direction:column;height:100%;" :class="getThemeClass()" @auxclick.prevent>
     <div v-html="styling"></div>
     <div style="display:flex;align-items:stretch;border-bottom-width:1px" class="border-bottom" id="window-browser-settings">
-      <h4 style="padding:2px 0">{{l('settings.browserOptionTitle')}}</h4>
+      <h4 style="padding:2px 0">{{l('settings.browserOptionHeader')}}</h4>
       <div style="flex:1;display:flex;justify-content:flex-end;-webkit-app-region:drag" class="btn-group"
            id="windowButtons">
         <i class="far fa-window-minimize btn btn-light" @click.stop="minimize()"></i>
-        <i class="far btn btn-light" :class="'fa-window-' + (isMaximized ? 'restore' : 'maximize')" @click="maximize()"></i>
+<!--        <i class="far btn btn-light" :class="'fa-window-' + (isMaximized ? 'restore' : 'maximize')" @click="maximize()"></i>-->
         <span class="btn btn-light" @click.stop="close()">
                     <i class="fa fa-times fa-lg"></i>
                 </span>
       </div>
     </div>
-    <div style="display:flex; flex-direction: column; height:100%; justify-content: center">
-      <div class="card bg-light" style="width:100%;margin:0 auto">
-        <div class="card-body">
-          <h4 class="card-title">Hello</h4>
-
+    <div class="bg-light" style="display:flex; flex-direction: column; height:100%; justify-content: center; margin: 0;">
+      <div class="card bg-light" style="height:100%;width:100%;">
+        <div class="card-body row" style="height:100%;width:100%;">
+          <h4 class="card-title">{{l('settings.browserOptionTitle')}}</h4>
+          <div class="form-group col-12">
+            <label class="control-label" for="browserPath">{{l('settings.browserOptionPath')}}</label>
+            <div class="row">
+              <div class="col-10">
+                <input class="form-control" id="browserPath" v-model="this.browserPath"/>
+              </div>
+              <div class="col-2">
+                <button class="btn btn-primary" @click.prevent.stop="browseForPath()">{{l('settings.browserOptionBrowse')}}</button>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-12">
+            <label class="control-label" for="browserArgs">{{l('settings.browserOptionArguments')}}</label>
+            <div class="row">
+              <div class="col-12">
+                <input class="form-control" id="browserArgs" v-model="this.browserArgs"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <small class="form-text text-muted">{{l('settings.browserOptionArgumentsHelp')}}</small>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-12">
+            <div class="row">
+              <div class="col-2">
+                <button class="btn btn-primary" @click="">{{l('settings.browserOptionSave')}}</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -24,6 +54,7 @@
 </template>
 
 <script lang="ts">
+import * as electron from 'electron';
 import {Component, Hook} from '@f-list/vue-ts';
 import * as remote from '@electron/remote';
 import Vue from 'vue';
@@ -32,12 +63,13 @@ import {GeneralSettings} from './common';
 import fs from "fs";
 import path from "path";
 import Modal from "../components/Modal.vue";
-import tabs from "../components/tabs";
 import modal from "../components/Modal.vue";
-import core from "../chat/core";
-import BBCodeParser from "../chat/bbcode";
+import tabs from "../components/tabs";
 import logs from "../chat/Logs.vue";
 import chat from "../chat/ChatView.vue";
+import {ipcRenderer} from "electron";
+import {EIconStore} from "../learn/eicon/store";
+import log from "electron-log";
 
 const browserWindow = remote.getCurrentWindow();
 @Component({
@@ -53,7 +85,6 @@ export default class BrowserOption extends Vue {
   browserArgs = '';
 
   get styling(): string {
-    console.log("HELLO");
     try {
       return `<style>${fs.readFileSync(path.join(__dirname, `themes/${this.settings.theme}.css`), 'utf8').toString()}</style>`;
     } catch (e) {
@@ -63,6 +94,12 @@ export default class BrowserOption extends Vue {
       }
       throw e;
     }
+  }
+
+  @Hook('mounted')
+  async mounted(): Promise<void> {
+    this.browserPath = this.settings.browserPath;
+    this.browserArgs = this.settings.browserArgs;
   }
 
   minimize(): void {
@@ -102,19 +139,29 @@ export default class BrowserOption extends Vue {
     }
   }
 
-  async load(): Promise<void> {
-    this.browserPath = this.settings.browserPath;
-    this.browserArgs = this.settings.browserArgs;
-  }
-
   async submit(): Promise<void> {
     this.settings.browserPath = this.browserPath;
     this.settings.browserArgs = this.browserArgs;
+  }
+
+  browseForPath(): void {
+    ipcRenderer.invoke('browser-option-browse').then((result) => {
+      this.browserPath = result;
+    });
   }
 }
 </script>
 
 <style lang="scss">
+  .card-full {
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+  }
+
   #windowButtons .btn {
     border-top: 0;
     font-size: 14px;

@@ -32,7 +32,7 @@ export class GeneralSettings {
     risingSystemLogLevel: log.LevelOption = 'info';
     risingDisableWindowsHighContrast =  false;
     browserPath = '';
-    browserArgs = '';
+    browserArgs = '%s';
 }
 
 // //tslint:disable
