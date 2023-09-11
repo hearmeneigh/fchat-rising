@@ -20,7 +20,7 @@
             <label class="control-label" for="browserPath">{{l('settings.browserOptionPath')}}</label>
             <div class="row">
               <div class="col-10">
-                <input class="form-control" id="browserPath" v-model="this.browserPath"/>
+                <input class="form-control" id="browserPath" v-model="browserPath"/>
               </div>
               <div class="col-2">
                 <button class="btn btn-primary" @click.prevent.stop="browseForPath()">{{l('settings.browserOptionBrowse')}}</button>
@@ -31,7 +31,7 @@
             <label class="control-label" for="browserArgs">{{l('settings.browserOptionArguments')}}</label>
             <div class="row">
               <div class="col-12">
-                <input class="form-control" id="browserArgs" v-model="this.browserArgs"/>
+                <input class="form-control" id="browserArgs" v-model="browserArgs"/>
               </div>
             </div>
             <div class="row">
@@ -43,7 +43,7 @@
           <div class="form-group col-12">
             <div class="row">
               <div class="col-2">
-                <button class="btn btn-primary" @click="">{{l('settings.browserOptionSave')}}</button>
+                <button class="btn btn-primary"  @click.prevent.stop="submit()">{{l('settings.browserOptionSave')}}</button>
               </div>
             </div>
           </div>
@@ -139,9 +139,9 @@ export default class BrowserOption extends Vue {
     }
   }
 
-  async submit(): Promise<void> {
-    this.settings.browserPath = this.browserPath;
-    this.settings.browserArgs = this.browserArgs;
+  submit(): void {
+    ipcRenderer.send('browser-option-update', this.browserPath, this.browserArgs);
+    this.close();
   }
 
   browseForPath(): void {
