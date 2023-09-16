@@ -178,10 +178,15 @@ function openURLExternally(linkUrl: string): void {
         fs.existsSync(settings.browserPath) &&
         fs.lstatSync(settings.browserPath).isFile()) {
         // encode URL so if it contains spaces, it remains a single argument for the browser
-        linkUrl= encodeURI(linkUrl);
+        linkUrl = encodeURI(linkUrl);
 
-        // replace %s in arguments with URL, otherwise add the URL at the end
-        let link = settings.browserArgs.includes('%s') ? settings.browserArgs.replace('%s', linkUrl) : `${settings.browserArgs} ${linkUrl}`;
+        if(!settings.browserArgs.includes('%s')) {
+            // append %s to params if it is not already there
+            settings.browserArgs += ' %s';
+        }
+
+        // replace %s in arguments with URL and encapsulate in quotes to prevent issues with spaces and special characters in the path
+        let link = settings.browserArgs.replace('%s', '\"'+linkUrl+'\"');
 
         const execFile = require('child_process').exec;
         execFile(`"${settings.browserPath}" ${link}`);
