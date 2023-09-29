@@ -496,8 +496,7 @@
         }
 
         async openProfileInBrowser(): Promise<void> {
-            electron.ipcRenderer.send('open-url-externally', `https://www.f-list.net/c/${this.profileName}`);
-            //await remote.shell.openExternal(`https://www.f-list.net/c/${this.profileName}`);
+            await remote.shell.openExternal(`https://www.f-list.net/c/${this.profileName}`);
 
             // tslint:disable-next-line: no-any no-unsafe-any
             (this.$refs.profileViewer as any).hide();
@@ -629,8 +628,7 @@
 
 
         async openWordDefinitionInBrowser(): Promise<void> {
-          electron.ipcRenderer.send('open-url-externally', (this.$refs.wordDefinitionLookup as any).getWebUrl());
-          //await remote.shell.openExternal((this.$refs.wordDefinitionLookup as any).getWebUrl());
+          await remote.shell.openExternal((this.$refs.wordDefinitionLookup as any).getWebUrl());
 
           // tslint:disable-next-line: no-any no-unsafe-any
           (this.$refs.wordDefinitionViewer as any).hide();

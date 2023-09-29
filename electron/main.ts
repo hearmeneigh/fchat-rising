@@ -53,7 +53,6 @@ import DownloadItem = electron.DownloadItem;
 import { AdCoordinatorHost } from '../chat/ads/ad-coordinator-host';
 import { IpcMainEvent } from 'electron';
 import { BlockerIntegration } from './blocker/blocker';
-import core from "../chat/core";
 
 //tslint:disable-next-line:no-require-imports
 const pck = require('./package.json');
@@ -172,43 +171,14 @@ async function addSpellcheckerItems(menu: electron.Menu): Promise<void> {
         }));
 }
 
-function openURLExternally(linkUrl: string): void {
-    // check if user set a path, whether it exists and if it is a file
-    if(settings.browserPath !== '' &&
-        fs.existsSync(settings.browserPath) &&
-        fs.lstatSync(settings.browserPath).isFile()) {
-        // encode URL so if it contains spaces, it remains a single argument for the browser
-        linkUrl = encodeURI(linkUrl);
-
-        if(!settings.browserArgs.includes('%s')) {
-            // append %s to params if it is not already there
-            settings.browserArgs += ' %s';
-        }
-
-        // replace %s in arguments with URL and encapsulate in quotes to prevent issues with spaces and special characters in the path
-        let link = settings.browserArgs.replace('%s', '\"'+linkUrl+'\"');
-
-        const execFile = require('child_process').exec;
-        execFile(`"${settings.browserPath}" ${link}`);
-    } else {
-        electron.shell.openExternal(linkUrl);
-    }
-}
-
 function setUpWebContents(webContents: electron.WebContents): void {
     remoteMain.enable(webContents);
 
     const openLinkExternally = (e: Event, linkUrl: string) => {
         e.preventDefault();
         const profileMatch = linkUrl.match(/^https?:\/\/(www\.)?f-list.net\/c\/([^/#]+)\/?#?/);
-        if(profileMatch !== null && settings.profileViewer) {
-            webContents.send('open-profile', decodeURIComponent(profileMatch[2]));
-            return;
-        }
-
-        // otherwise, try to open externally
-        openURLExternally(linkUrl);
-
+        if(profileMatch !== null && settings.profileViewer) webContents.send('open-profile', decodeURIComponent(profileMatch[2]));
+        else return electron.shell.openExternal(linkUrl);
     };
 
     webContents.setVisualZoomLevelLimits(1, 5);
@@ -311,39 +281,7 @@ function createWindow(): electron.BrowserWindow | undefined {
 
 function showPatchNotes(): void {
     //tslint:disable-next-line: no-floating-promises
-    openURLExternally('https://github.com/hearmeneigh/fchat-rising/blob/master/CHANGELOG.md');
-}
-
-function openBrowserSettings(): electron.BrowserWindow | undefined {
-    const windowProperties: electron.BrowserWindowConstructorOptions = {
-        center: true,
-        show: false,
-        icon: process.platform === 'win32' ? winIcon : pngIcon,
-        frame: false,
-        width: 500,
-        height: 350,
-        minWidth: 500,
-        minHeight: 368,
-        maxWidth: 500,
-        maxHeight: 368,
-        maximizable: false,
-        webPreferences: {
-            webviewTag: true, nodeIntegration: true, nodeIntegrationInWorker: true, spellcheck: true,
-            enableRemoteModule: true, contextIsolation: false, partition: 'persist:fchat'
-        } as any
-    };
-
-    const browserWindow = new electron.BrowserWindow(windowProperties);
-    remoteMain.enable(browserWindow.webContents);
-    browserWindow.loadFile(path.join(__dirname, 'browser_option.html'), {
-        query: { settings: JSON.stringify(settings), import: shouldImportSettings ? 'true' : '' }
-    });
-
-    browserWindow.once('ready-to-show', () => {
-        browserWindow.show();
-    });
-
-    return browserWindow;
+    electron.shell.openExternal('https://github.com/hearmeneigh/fchat-rising/blob/master/CHANGELOG.md');
 }
 
 
@@ -591,12 +529,6 @@ function onReady(): void {
                                 settings.risingDisableWindowsHighContrast = item.checked;
                                 setGeneralSettings(settings);
                             }
-                        },
-                        {
-                            label: l('settings.browserOption'),
-                            click: () => {
-                                openBrowserSettings();
-                            }
                         }
                     ]
                 },
@@ -644,23 +576,23 @@ function onReady(): void {
             submenu: [
                 {
                     label: l('help.fchat'),
-                    click: () => openURLExternally('https://github.com/hearmeneigh/fchat-rising/blob/master/README.md')
+                    click: () => electron.shell.openExternal('https://github.com/hearmeneigh/fchat-rising/blob/master/README.md')
                 },
                 // {
                 //     label: l('help.feedback'),
-                //     click: () => openURLExternally('https://goo.gl/forms/WnLt3Qm3TPt64jQt2')
+                //     click: () => electron.shell.openExternal('https://goo.gl/forms/WnLt3Qm3TPt64jQt2')
                 // },
                 {
                     label: l('help.rules'),
-                    click: () => openURLExternally('https://wiki.f-list.net/Rules')
+                    click: () => electron.shell.openExternal('https://wiki.f-list.net/Rules')
                 },
                 {
                     label: l('help.faq'),
-                    click: () => openURLExternally('https://wiki.f-list.net/Frequently_Asked_Questions')
+                    click: () => electron.shell.openExternal('https://wiki.f-list.net/Frequently_Asked_Questions')
                 },
                 {
                     label: l('help.report'),
-                    click: () => openURLExternally('https://wiki.f-list.net/How_to_Report_a_User#In_chat')
+                    click: () => electron.shell.openExternal('https://wiki.f-list.net/How_to_Report_a_User#In_chat')
                 },
                 {label: l('version', app.getVersion()), click: showPatchNotes}
             ]
@@ -731,35 +663,6 @@ function onReady(): void {
     electron.ipcMain.on('update-zoom', (_e, zl: number) => {
         // log.info('MENU ZOOM UPDATE', zoomLevel);
         for(const w of electron.webContents.getAllWebContents()) w.send('update-zoom', zl);
-    });
-
-    electron.ipcMain.handle('browser-option-browse', async () => {
-        log.debug('settings.browserOption.browse');
-        console.log('settings.browserOption.browse', JSON.stringify(settings));
-        const dir = electron.dialog.showOpenDialogSync(
-            {
-                defaultPath: settings.browserPath,
-                properties: ['openFile'],
-                filters: [{ name: 'Executables', extensions: ['exe'] }]
-            });
-        if(dir !== undefined) {
-            return dir[0];
-        }
-
-        // we keep the current path if the user cancels the dialog
-        return settings.browserPath;
-    });
-
-    electron.ipcMain.on('browser-option-update', (_e, _path: string, _args: string) => {
-        log.debug('Browser Path settings update:', _path, _args);
-        // store the new path and args in our general settings
-        settings.browserPath = _path;
-        settings.browserArgs = _args;
-        setGeneralSettings(settings);
-    });
-
-    electron.ipcMain.on('open-url-externally', (_e, _url: string) => {
-        openURLExternally(_url);
     });
 
     createWindow();
