@@ -177,8 +177,16 @@ function openURLExternally(linkUrl: string): void {
     if(settings.browserPath !== '' &&
         fs.existsSync(settings.browserPath) &&
         fs.lstatSync(settings.browserPath).isFile()) {
-        // encode URL so if it contains spaces, it remains a single argument for the browser
-        linkUrl = encodeURI(linkUrl);
+
+        // check if URL is already encoded
+        // (this should work almost all the time, but there might be edge-cases with very unusual URLs)
+        let isEncoded = (linkUrl !== decodeURI(linkUrl));
+        // only encode URL if it isn't encoded yet
+        if(!isEncoded) {
+            // encode URL so if it contains spaces, it remains a single argument for the browser
+            linkUrl = encodeURI(linkUrl);
+        }
+
 
         if(!settings.browserArgs.includes('%s')) {
             // append %s to params if it is not already there
