@@ -173,11 +173,22 @@ async function addSpellcheckerItems(menu: electron.Menu): Promise<void> {
 }
 
 function openURLExternally(linkUrl: string): void {
-    // check if user set a path, whether it exists and if it is a file
-    if(settings.browserPath !== '' &&
-        fs.existsSync(settings.browserPath) &&
-        fs.lstatSync(settings.browserPath).isFile()) {
+    // console.log('openURLExternally()', JSON.stringify(settings));
+    // console.log('openURLExternally() -> path set?', settings.browserPath !== '');
+    // console.log('openURLExternally() -> path exists?', fs.existsSync(settings.browserPath));
+    // console.log('openURLExternally() -> path points to file?', fs.lstatSync(settings.browserPath).isFile());
 
+    const os = require('os');
+    // check if user set a path, whether it exists and if it is a file or an .app path
+    let isValid = (settings.browserPath !== '' && fs.existsSync(settings.browserPath));
+    if (os.platform() === "darwin") {
+        // is there a better way for this on macos?
+        isValid = (isValid && settings.browserPath.endsWith('.app'));
+    } else {
+        isValid = (isValid && fs.lstatSync(settings.browserPath).isFile());
+    }
+    
+    if(isValid) {
         // check if URL is already encoded
         // (this should work almost all the time, but there might be edge-cases with very unusual URLs)
         let isEncoded = (linkUrl !== decodeURI(linkUrl));
@@ -197,7 +208,15 @@ function openURLExternally(linkUrl: string): void {
         let link = settings.browserArgs.replace('%s', '\"'+linkUrl+'\"');
 
         const execFile = require('child_process').exec;
-        execFile(`"${settings.browserPath}" ${link}`);
+        if (os.platform() === "darwin") {
+            // NOTE: This is seemingly bugged on MacOS when setting Safari as the external browser while using a different default browser.
+            // In that case, this will open the URL in both the selected application AND the default browser.
+            // Other browsers work fine. (Tested with Chrome with Firefox as the default browser.)
+            // https://developer.apple.com/forums/thread/685385
+            execFile(`open -a "${settings.browserPath}" ${link}`);
+        } else {
+            execFile(`"${settings.browserPath}" ${link}`);
+        }
     } else {
         electron.shell.openExternal(linkUrl);
     }
