@@ -744,11 +744,24 @@ function onReady(): void {
     electron.ipcMain.handle('browser-option-browse', async () => {
         log.debug('settings.browserOption.browse');
         console.log('settings.browserOption.browse', JSON.stringify(settings));
+
+        const os = require('os');
+        let filters;
+        if(os.platform() === "win32") {
+            filters = [{ name: 'Executables', extensions: ['exe'] }];
+        } else if (os.platform() === "darwin") {
+            filters = [{ name: 'Executables', extensions: ['app'] }];
+        } else {
+            // linux and anything else that might be supported
+            // no specific extension for executables
+            filters = [{ name: 'Executables', extensions: ['*'] }];
+        }
+
         const dir = electron.dialog.showOpenDialogSync(
             {
                 defaultPath: settings.browserPath,
                 properties: ['openFile'],
-                filters: [{ name: 'Executables', extensions: ['exe'] }]
+                filters: filters
             });
         if(dir !== undefined) {
             return dir[0];
