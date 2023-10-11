@@ -341,17 +341,22 @@ function showPatchNotes(): void {
 }
 
 function openBrowserSettings(): electron.BrowserWindow | undefined {
+    let desiredHeight = 500;
+    if(process.platform === 'darwin') {
+        desiredHeight = 750;
+    }
+
     const windowProperties: electron.BrowserWindowConstructorOptions = {
         center: true,
         show: false,
         icon: process.platform === 'win32' ? winIcon : pngIcon,
         frame: false,
-        width: 500,
-        height: 350,
-        minWidth: 500,
-        minHeight: 368,
-        maxWidth: 500,
-        maxHeight: 368,
+        width: 650,
+        height: desiredHeight,
+        minWidth: 650,
+        minHeight: desiredHeight,
+        maxWidth: 650,
+        maxHeight: desiredHeight,
         maximizable: false,
         webPreferences: {
             webviewTag: true, nodeIntegration: true, nodeIntegrationInWorker: true, spellcheck: true,

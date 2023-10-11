@@ -17,6 +17,21 @@
         <div class="card-body row" style="height:100%;width:100%;">
           <h4 class="card-title">{{l('settings.browserOptionTitle')}}</h4>
           <div class="form-group col-12">
+            <div class="row">
+              <div class="col-12">
+                <div class="warning">
+              <h5>Danger Zone!</h5>
+              <div>This is an advanced setting. By changing this setting to an unsupported program (e.g. not a browser), you might not be able to open links from F-Chat anymore.</div>
+
+              <div v-if="isMac"><hr/>
+              <p>Mac User: As of writing, MacOS has a bug in how it handles opening links.</p>
+              <p>When your default browser is something other than Safari and you select Safari in this settings window, links might be opened twice.</p>
+              <p>Once in Safari and a second time in your default browser. This tends to happen when Safari is not running when clicking a link.</p></div>
+              </div>
+            </div>
+            </div>
+          </div>
+          <div class="form-group col-12">
             <label class="control-label" for="browserPath">{{l('settings.browserOptionPath')}}</label>
             <div class="row">
               <div class="col-10">
@@ -83,6 +98,7 @@ export default class BrowserOption extends Vue {
   hasCompletedUpgrades = false;
   browserPath = '';
   browserArgs = '';
+  isMac = process.platform === 'darwin';
 
   get styling(): string {
     try {
@@ -197,6 +213,16 @@ export default class BrowserOption extends Vue {
     }
   }
 
+  .warning {
+      border: 1px solid var(--warning);
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 3px;
+
+      div {
+        margin-top: 10px;
+      }
+    }
 
   .disableWindowsHighContrast, .disableWindowsHighContrast * {
     forced-color-adjust: none;
