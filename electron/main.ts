@@ -178,10 +178,9 @@ function openURLExternally(linkUrl: string): void {
     // console.log('openURLExternally() -> path exists?', fs.existsSync(settings.browserPath));
     // console.log('openURLExternally() -> path points to file?', fs.lstatSync(settings.browserPath).isFile());
 
-    const os = require('os');
     // check if user set a path, whether it exists and if it is a file or an .app path
     let isValid = (settings.browserPath !== '' && fs.existsSync(settings.browserPath));
-    if (os.platform() === "darwin") {
+    if (process.platform === "darwin") {
         // is there a better way for this on macos?
         isValid = (isValid && settings.browserPath.endsWith('.app'));
     } else {
@@ -208,7 +207,7 @@ function openURLExternally(linkUrl: string): void {
         let link = settings.browserArgs.replace('%s', '\"'+linkUrl+'\"');
 
         const execFile = require('child_process').exec;
-        if (os.platform() === "darwin") {
+        if (process.platform === "darwin") {
             // NOTE: This is seemingly bugged on MacOS when setting Safari as the external browser while using a different default browser.
             // In that case, this will open the URL in both the selected application AND the default browser.
             // Other browsers work fine. (Tested with Chrome with Firefox as the default browser.)
@@ -764,11 +763,10 @@ function onReady(): void {
         log.debug('settings.browserOption.browse');
         console.log('settings.browserOption.browse', JSON.stringify(settings));
 
-        const os = require('os');
         let filters;
-        if(os.platform() === "win32") {
+        if(process.platform === "win32") {
             filters = [{ name: 'Executables', extensions: ['exe'] }];
-        } else if (os.platform() === "darwin") {
+        } else if (process.platform === "darwin") {
             filters = [{ name: 'Executables', extensions: ['app'] }];
         } else {
             // linux and anything else that might be supported
