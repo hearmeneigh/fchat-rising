@@ -177,15 +177,43 @@ function openURLExternally(linkUrl: string): void {
     // console.log('openURLExternally() -> path set?', settings.browserPath !== '');
     // console.log('openURLExternally() -> path exists?', fs.existsSync(settings.browserPath));
     // console.log('openURLExternally() -> path points to file?', fs.lstatSync(settings.browserPath).isFile());
+    // console.log('openURLExternally() -> path points to directory?', fs.lstatSync(settings.browserPath).isDirectory());
+
+    try {
+        fs.accessSync(settings.browserPath, fs.constants.X_OK);
+        console.log('can exec');
+    } catch (err) {
+        console.error('cannot exec');
+    }
 
     // check if user set a path, whether it exists and if it is a file or an .app path
     let isValid = (settings.browserPath !== '' && fs.existsSync(settings.browserPath));
-    if (process.platform === "darwin") {
-        // is there a better way for this on macos?
-        isValid = (isValid && settings.browserPath.endsWith('.app'));
-    } else {
-        isValid = (isValid && fs.lstatSync(settings.browserPath).isFile());
+    // if (process.platform === "darwin") {
+    //     // is there a better way for this on macos?
+    //     isValid = (isValid && settings.browserPath.endsWith('.app'));
+    // } else if (process.platform === "linux") {
+    //     // isFile() doesn't like symlinks, so we check if the user can execute the selected path
+    //     let canExec = false;
+    //     try {
+    //         fs.accessSync(settings.browserPath, fs.constants.X_OK);
+    //         canExec = true;
+    //     } catch (err) {
+    //         log.error("Selected browser cannot is not executable by user.");
+    //     }
+    //     isValid = (isValid && canExec);
+    // } else {
+    //     isValid = (isValid && fs.lstatSync(settings.browserPath).isFile());
+    // }
+
+    // we check if the user can execute whatever is located at the selected path
+    let canExec = false;
+    try {
+        fs.accessSync(settings.browserPath, fs.constants.X_OK);
+        canExec = true;
+    } catch (err) {
+        log.error("Selected browser cannot is not executable by user.");
     }
+    isValid = (isValid && canExec);
     
     if(isValid) {
         // check if URL is already encoded
