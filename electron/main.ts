@@ -173,80 +173,54 @@ async function addSpellcheckerItems(menu: electron.Menu): Promise<void> {
 }
 
 function openURLExternally(linkUrl: string): void {
-    // console.log('openURLExternally()', JSON.stringify(settings));
-    // console.log('openURLExternally() -> path set?', settings.browserPath !== '');
-    // console.log('openURLExternally() -> path exists?', fs.existsSync(settings.browserPath));
-    // console.log('openURLExternally() -> path points to file?', fs.lstatSync(settings.browserPath).isFile());
-    // console.log('openURLExternally() -> path points to directory?', fs.lstatSync(settings.browserPath).isDirectory());
 
-    try {
-        fs.accessSync(settings.browserPath, fs.constants.X_OK);
-        console.log('can exec');
-    } catch (err) {
-        console.error('cannot exec');
-    }
+    // check if user set a path and whether it exists
+    const pathIsValid = (settings.browserPath !== '' && fs.existsSync(settings.browserPath));
 
-    // check if user set a path, whether it exists and if it is a file or an .app path
-    let isValid = (settings.browserPath !== '' && fs.existsSync(settings.browserPath));
-    // if (process.platform === "darwin") {
-    //     // is there a better way for this on macos?
-    //     isValid = (isValid && settings.browserPath.endsWith('.app'));
-    // } else if (process.platform === "linux") {
-    //     // isFile() doesn't like symlinks, so we check if the user can execute the selected path
-    //     let canExec = false;
-    //     try {
-    //         fs.accessSync(settings.browserPath, fs.constants.X_OK);
-    //         canExec = true;
-    //     } catch (err) {
-    //         log.error("Selected browser cannot is not executable by user.");
-    //     }
-    //     isValid = (isValid && canExec);
-    // } else {
-    //     isValid = (isValid && fs.lstatSync(settings.browserPath).isFile());
-    // }
-
-    // we check if the user can execute whatever is located at the selected path
-    let canExec = false;
-    try {
-        fs.accessSync(settings.browserPath, fs.constants.X_OK);
-        canExec = true;
-    } catch (err) {
-        log.error("Selected browser cannot is not executable by user.");
-    }
-    isValid = (isValid && canExec);
-    
-    if(isValid) {
-        // check if URL is already encoded
-        // (this should work almost all the time, but there might be edge-cases with very unusual URLs)
-        let isEncoded = (linkUrl !== decodeURI(linkUrl));
-        // only encode URL if it isn't encoded yet
-        if(!isEncoded) {
-            // encode URL so if it contains spaces, it remains a single argument for the browser
-            linkUrl = encodeURI(linkUrl);
+    if(pathIsValid) {
+        // also check if the user can execute whatever is located at the selected path
+        let fileIsExecutable = false;
+        try {
+            fs.accessSync(settings.browserPath, fs.constants.X_OK);
+            fileIsExecutable = true;
+        } catch (err) {
+            log.error(`Selected browser is not executable by user. Path: "${settings.browserPath}"`);
         }
 
+        if (fileIsExecutable) {
+            // check if URL is already encoded
+            // (this should work almost all the time, but there might be edge-cases with very unusual URLs)
+            let isEncoded = (linkUrl !== decodeURI(linkUrl));
+            // only encode URL if it isn't encoded yet
+            if (!isEncoded) {
+                // encode URL so if it contains spaces, it remains a single argument for the browser
+                linkUrl = encodeURI(linkUrl);
+            }
 
-        if(!settings.browserArgs.includes('%s')) {
-            // append %s to params if it is not already there
-            settings.browserArgs += ' %s';
+
+            if (!settings.browserArgs.includes('%s')) {
+                // append %s to params if it is not already there
+                settings.browserArgs += ' %s';
+            }
+
+            // replace %s in arguments with URL and encapsulate in quotes to prevent issues with spaces and special characters in the path
+            let link = settings.browserArgs.replace('%s', '\"' + linkUrl + '\"');
+
+            const execFile = require('child_process').exec;
+            if (process.platform === "darwin") {
+                // NOTE: This is seemingly bugged on MacOS when setting Safari as the external browser while using a different default browser.
+                // In that case, this will open the URL in both the selected application AND the default browser.
+                // Other browsers work fine. (Tested with Chrome with Firefox as the default browser.)
+                // https://developer.apple.com/forums/thread/685385
+                execFile(`open -a "${settings.browserPath}" ${link}`);
+            } else {
+                execFile(`"${settings.browserPath}" ${link}`);
+            }
+            return;
         }
-
-        // replace %s in arguments with URL and encapsulate in quotes to prevent issues with spaces and special characters in the path
-        let link = settings.browserArgs.replace('%s', '\"'+linkUrl+'\"');
-
-        const execFile = require('child_process').exec;
-        if (process.platform === "darwin") {
-            // NOTE: This is seemingly bugged on MacOS when setting Safari as the external browser while using a different default browser.
-            // In that case, this will open the URL in both the selected application AND the default browser.
-            // Other browsers work fine. (Tested with Chrome with Firefox as the default browser.)
-            // https://developer.apple.com/forums/thread/685385
-            execFile(`open -a "${settings.browserPath}" ${link}`);
-        } else {
-            execFile(`"${settings.browserPath}" ${link}`);
-        }
-    } else {
-        electron.shell.openExternal(linkUrl);
     }
+
+    electron.shell.openExternal(linkUrl);
 }
 
 function setUpWebContents(webContents: electron.WebContents): void {
