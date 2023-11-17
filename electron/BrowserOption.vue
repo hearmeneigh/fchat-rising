@@ -21,7 +21,7 @@
               <div class="col-12">
                 <div class="warning">
               <h5>Danger Zone!</h5>
-              <div>This is an advanced setting. By changing this setting to an unsupported program (e.g. not a browser), you might not be able to open links from F-Chat anymore.</div>
+              <div>This is an advanced setting. By changing this setting to an unsupported program (i.e. not a browser), you might not be able to open links from F-Chat anymore.</div>
 
               <div v-if="isMac"><hr/>
               <p>Mac User: As of writing, MacOS has a bug in how it handles opening links.</p>
@@ -56,9 +56,13 @@
             </div>
           </div>
           <div class="form-group col-12">
-            <div class="row">
+            <div class="row no-gutters">
               <div class="col-2">
-                <button class="btn btn-primary"  @click.prevent.stop="submit()">{{l('settings.browserOptionSave')}}</button>
+                <button class="btn btn-primary" @click.prevent.stop="submit()">{{l('settings.browserOptionSave')}}</button>
+              </div>
+              <div class="col"></div>
+              <div class="col-4">
+                <button class="btn btn-danger" style="float: right;" @click.prevent.stop="resetToDefault()">{{l('settings.browserOptionReset')}}</button>
               </div>
             </div>
           </div>
@@ -158,6 +162,11 @@ export default class BrowserOption extends Vue {
   submit(): void {
     ipcRenderer.send('browser-option-update', this.browserPath, this.browserArgs);
     this.close();
+  }
+
+  resetToDefault(): void {
+    this.browserPath = '';
+    this.browserArgs = '';
   }
 
   browseForPath(): void {

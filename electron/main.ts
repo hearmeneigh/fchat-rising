@@ -197,7 +197,6 @@ function openURLExternally(linkUrl: string): void {
                 linkUrl = encodeURI(linkUrl);
             }
 
-
             if (!settings.browserArgs.includes('%s')) {
                 // append %s to params if it is not already there
                 settings.browserArgs += ' %s';
@@ -343,7 +342,7 @@ function showPatchNotes(): void {
 }
 
 function openBrowserSettings(): electron.BrowserWindow | undefined {
-    let desiredHeight = 500;
+    let desiredHeight = 520;
     if(process.platform === 'darwin') {
         desiredHeight = 750;
     }
