@@ -73,7 +73,11 @@ export class StandardBBCodeParser extends CoreBBCodeParser {
             icon.className = 'fas fa-chevron-down';
             icon.style.marginRight = '10px';
             headerText.appendChild(icon);
-            headerText.appendChild(document.createTextNode(param));
+						// HACK: to allow [hr] in header part
+						param = Utils.replaceAll(param, "[hr]", "<hr>");
+  		      const headerText2 = parser.createElement("div");
+      		  headerText2.innerHTML = param;
+        		headerText.appendChild(headerText2);
             outer.appendChild(headerText);
             const body = parser.createElement('div');
             body.className = 'bbcode-collapse-body';
