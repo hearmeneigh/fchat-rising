@@ -197,6 +197,7 @@ Current log location: {1}`,
     'settings.browserOptionArgumentsHelp': 'Arguments are separated by spaces. Use %s to insert the URL.',
     'settings.browserOptionBrowse': 'Browse',
     'settings.browserOptionSave': 'Save',
+    'settings.browserOptionReset': 'Reset to default',
     'fixLogs.action': 'Fix corrupted logs',
     'fixLogs.text': `There are a few reason log files can become corrupted - log files from old versions with bugs that have since been fixed or incomplete file operations caused by computer crashes are the most common.
 If one of your log files is corrupted, you may get an "Unknown Type" error when you log in or when you open a specific tab. You may also experience other issues.

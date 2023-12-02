@@ -173,26 +173,53 @@ async function addSpellcheckerItems(menu: electron.Menu): Promise<void> {
 }
 
 function openURLExternally(linkUrl: string): void {
-    // check if user set a path, whether it exists and if it is a file
-    if(settings.browserPath !== '' &&
-        fs.existsSync(settings.browserPath) &&
-        fs.lstatSync(settings.browserPath).isFile()) {
-        // encode URL so if it contains spaces, it remains a single argument for the browser
-        linkUrl = encodeURI(linkUrl);
 
-        if(!settings.browserArgs.includes('%s')) {
-            // append %s to params if it is not already there
-            settings.browserArgs += ' %s';
+    // check if user set a path and whether it exists
+    const pathIsValid = (settings.browserPath !== '' && fs.existsSync(settings.browserPath));
+
+    if(pathIsValid) {
+        // also check if the user can execute whatever is located at the selected path
+        let fileIsExecutable = false;
+        try {
+            fs.accessSync(settings.browserPath, fs.constants.X_OK);
+            fileIsExecutable = true;
+        } catch (err) {
+            log.error(`Selected browser is not executable by user. Path: "${settings.browserPath}"`);
         }
 
-        // replace %s in arguments with URL and encapsulate in quotes to prevent issues with spaces and special characters in the path
-        let link = settings.browserArgs.replace('%s', '\"'+linkUrl+'\"');
+        if (fileIsExecutable) {
+            // check if URL is already encoded
+            // (this should work almost all the time, but there might be edge-cases with very unusual URLs)
+            let isEncoded = (linkUrl !== decodeURI(linkUrl));
+            // only encode URL if it isn't encoded yet
+            if (!isEncoded) {
+                // encode URL so if it contains spaces, it remains a single argument for the browser
+                linkUrl = encodeURI(linkUrl);
+            }
 
-        const execFile = require('child_process').exec;
-        execFile(`"${settings.browserPath}" ${link}`);
-    } else {
-        electron.shell.openExternal(linkUrl);
+            if (!settings.browserArgs.includes('%s')) {
+                // append %s to params if it is not already there
+                settings.browserArgs += ' %s';
+            }
+
+            // replace %s in arguments with URL and encapsulate in quotes to prevent issues with spaces and special characters in the path
+            let link = settings.browserArgs.replace('%s', '\"' + linkUrl + '\"');
+
+            const execFile = require('child_process').exec;
+            if (process.platform === "darwin") {
+                // NOTE: This is seemingly bugged on MacOS when setting Safari as the external browser while using a different default browser.
+                // In that case, this will open the URL in both the selected application AND the default browser.
+                // Other browsers work fine. (Tested with Chrome with Firefox as the default browser.)
+                // https://developer.apple.com/forums/thread/685385
+                execFile(`open -a "${settings.browserPath}" ${link}`);
+            } else {
+                execFile(`"${settings.browserPath}" ${link}`);
+            }
+            return;
+        }
     }
+
+    electron.shell.openExternal(linkUrl);
 }
 
 function setUpWebContents(webContents: electron.WebContents): void {
@@ -315,17 +342,22 @@ function showPatchNotes(): void {
 }
 
 function openBrowserSettings(): electron.BrowserWindow | undefined {
+    let desiredHeight = 520;
+    if(process.platform === 'darwin') {
+        desiredHeight = 750;
+    }
+
     const windowProperties: electron.BrowserWindowConstructorOptions = {
         center: true,
         show: false,
         icon: process.platform === 'win32' ? winIcon : pngIcon,
         frame: false,
-        width: 500,
-        height: 350,
-        minWidth: 500,
-        minHeight: 368,
-        maxWidth: 500,
-        maxHeight: 368,
+        width: 650,
+        height: desiredHeight,
+        minWidth: 650,
+        minHeight: desiredHeight,
+        maxWidth: 650,
+        maxHeight: desiredHeight,
         maximizable: false,
         webPreferences: {
             webviewTag: true, nodeIntegration: true, nodeIntegrationInWorker: true, spellcheck: true,
@@ -736,11 +768,23 @@ function onReady(): void {
     electron.ipcMain.handle('browser-option-browse', async () => {
         log.debug('settings.browserOption.browse');
         console.log('settings.browserOption.browse', JSON.stringify(settings));
+
+        let filters;
+        if(process.platform === "win32") {
+            filters = [{ name: 'Executables', extensions: ['exe'] }];
+        } else if (process.platform === "darwin") {
+            filters = [{ name: 'Executables', extensions: ['app'] }];
+        } else {
+            // linux and anything else that might be supported
+            // no specific extension for executables
+            filters = [{ name: 'Executables', extensions: ['*'] }];
+        }
+
         const dir = electron.dialog.showOpenDialogSync(
             {
                 defaultPath: settings.browserPath,
                 properties: ['openFile'],
-                filters: [{ name: 'Executables', extensions: ['exe'] }]
+                filters: filters
             });
         if(dir !== undefined) {
             return dir[0];
