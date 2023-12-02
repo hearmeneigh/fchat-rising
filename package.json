@@ -12,7 +12,6 @@
     "@types/bluebird": "3.5.32",
     "@types/lodash": "4.14.162",
     "@types/node": "16.18.32",
-    "@types/node-fetch": "2.6.4",
     "@types/vue-clickaway": "2.2.0",
     "@types/qs": "^6.9.5",
     "@types/request-promise": "^4.1.46",
@@ -22,7 +21,7 @@
     "async": "^0.9.0",
     "axios": "^0.21.4",
     "bluebird": "~3.7.2",
-    "bootstrap": "^4.5.3",
+    "bootstrap": "^4.6.2",
     "copy-webpack-plugin": "^6.2.1",
     "css-loader": "^5.0.0",
     "date-fns": "2.29.3",
@@ -59,13 +58,13 @@
   },
   "dependencies": {
     "@cliqz/adblocker-electron": "^1.26.12",
-    "jquery": "^3.6.0",
-    "node-fetch": "2.6.11"
+    "jquery": "^3.7.1",
+    "node-fetch": "^2.7.0"
   },
   "optionalDependencies": {
     "appdmg": "^0.6.0",
     "electron-squirrel-startup": "^1.0.0",
-    "electron-winstaller": "^5.0.0"
+    "electron-winstaller": "^5.2.1"
   },
   "resolutions": {
     "vue": "2.6.12",
