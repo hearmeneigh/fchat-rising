@@ -53,6 +53,7 @@ import DownloadItem = electron.DownloadItem;
 import { AdCoordinatorHost } from '../chat/ads/ad-coordinator-host';
 import { IpcMainEvent } from 'electron';
 import { BlockerIntegration } from './blocker/blocker';
+import core from "../chat/core";
 
 //tslint:disable-next-line:no-require-imports
 const pck = require('./package.json');
@@ -171,14 +172,70 @@ async function addSpellcheckerItems(menu: electron.Menu): Promise<void> {
         }));
 }
 
+function openURLExternally(linkUrl: string): void {
+
+    // check if user set a path and whether it exists
+    const pathIsValid = (settings.browserPath !== '' && fs.existsSync(settings.browserPath));
+
+    if(pathIsValid) {
+        // also check if the user can execute whatever is located at the selected path
+        let fileIsExecutable = false;
+        try {
+            fs.accessSync(settings.browserPath, fs.constants.X_OK);
+            fileIsExecutable = true;
+        } catch (err) {
+            log.error(`Selected browser is not executable by user. Path: "${settings.browserPath}"`);
+        }
+
+        if (fileIsExecutable) {
+            // check if URL is already encoded
+            // (this should work almost all the time, but there might be edge-cases with very unusual URLs)
+            let isEncoded = (linkUrl !== decodeURI(linkUrl));
+            // only encode URL if it isn't encoded yet
+            if (!isEncoded) {
+                // encode URL so if it contains spaces, it remains a single argument for the browser
+                linkUrl = encodeURI(linkUrl);
+            }
+
+            if (!settings.browserArgs.includes('%s')) {
+                // append %s to params if it is not already there
+                settings.browserArgs += ' %s';
+            }
+
+            // replace %s in arguments with URL and encapsulate in quotes to prevent issues with spaces and special characters in the path
+            let link = settings.browserArgs.replace('%s', '\"' + linkUrl + '\"');
+
+            const execFile = require('child_process').exec;
+            if (process.platform === "darwin") {
+                // NOTE: This is seemingly bugged on MacOS when setting Safari as the external browser while using a different default browser.
+                // In that case, this will open the URL in both the selected application AND the default browser.
+                // Other browsers work fine. (Tested with Chrome with Firefox as the default browser.)
+                // https://developer.apple.com/forums/thread/685385
+                execFile(`open -a "${settings.browserPath}" ${link}`);
+            } else {
+                execFile(`"${settings.browserPath}" ${link}`);
+            }
+            return;
+        }
+    }
+
+    electron.shell.openExternal(linkUrl);
+}
+
 function setUpWebContents(webContents: electron.WebContents): void {
     remoteMain.enable(webContents);
 
     const openLinkExternally = (e: Event, linkUrl: string) => {
         e.preventDefault();
         const profileMatch = linkUrl.match(/^https?:\/\/(www\.)?f-list.net\/c\/([^/#]+)\/?#?/);
-        if(profileMatch !== null && settings.profileViewer) webContents.send('open-profile', decodeURIComponent(profileMatch[2]));
-        else return electron.shell.openExternal(linkUrl);
+        if(profileMatch !== null && settings.profileViewer) {
+            webContents.send('open-profile', decodeURIComponent(profileMatch[2]));
+            return;
+        }
+
+        // otherwise, try to open externally
+        openURLExternally(linkUrl);
+
     };
 
     webContents.setVisualZoomLevelLimits(1, 5);
@@ -281,7 +338,44 @@ function createWindow(): electron.BrowserWindow | undefined {
 
 function showPatchNotes(): void {
     //tslint:disable-next-line: no-floating-promises
-    electron.shell.openExternal('https://github.com/hearmeneigh/fchat-rising/blob/master/CHANGELOG.md');
+    openURLExternally('https://github.com/hearmeneigh/fchat-rising/blob/master/CHANGELOG.md');
+}
+
+function openBrowserSettings(): electron.BrowserWindow | undefined {
+    let desiredHeight = 520;
+    if(process.platform === 'darwin') {
+        desiredHeight = 750;
+    }
+
+    const windowProperties: electron.BrowserWindowConstructorOptions = {
+        center: true,
+        show: false,
+        icon: process.platform === 'win32' ? winIcon : pngIcon,
+        frame: false,
+        width: 650,
+        height: desiredHeight,
+        minWidth: 650,
+        minHeight: desiredHeight,
+        maxWidth: 650,
+        maxHeight: desiredHeight,
+        maximizable: false,
+        webPreferences: {
+            webviewTag: true, nodeIntegration: true, nodeIntegrationInWorker: true, spellcheck: true,
+            enableRemoteModule: true, contextIsolation: false, partition: 'persist:fchat'
+        } as any
+    };
+
+    const browserWindow = new electron.BrowserWindow(windowProperties);
+    remoteMain.enable(browserWindow.webContents);
+    browserWindow.loadFile(path.join(__dirname, 'browser_option.html'), {
+        query: { settings: JSON.stringify(settings), import: shouldImportSettings ? 'true' : '' }
+    });
+
+    browserWindow.once('ready-to-show', () => {
+        browserWindow.show();
+    });
+
+    return browserWindow;
 }
 
 
@@ -529,6 +623,12 @@ function onReady(): void {
                                 settings.risingDisableWindowsHighContrast = item.checked;
                                 setGeneralSettings(settings);
                             }
+                        },
+                        {
+                            label: l('settings.browserOption'),
+                            click: () => {
+                                openBrowserSettings();
+                            }
                         }
                     ]
                 },
@@ -576,23 +676,23 @@ function onReady(): void {
             submenu: [
                 {
                     label: l('help.fchat'),
-                    click: () => electron.shell.openExternal('https://github.com/hearmeneigh/fchat-rising/blob/master/README.md')
+                    click: () => openURLExternally('https://github.com/hearmeneigh/fchat-rising/blob/master/README.md')
                 },
                 // {
                 //     label: l('help.feedback'),
-                //     click: () => electron.shell.openExternal('https://goo.gl/forms/WnLt3Qm3TPt64jQt2')
+                //     click: () => openURLExternally('https://goo.gl/forms/WnLt3Qm3TPt64jQt2')
                 // },
                 {
                     label: l('help.rules'),
-                    click: () => electron.shell.openExternal('https://wiki.f-list.net/Rules')
+                    click: () => openURLExternally('https://wiki.f-list.net/Rules')
                 },
                 {
                     label: l('help.faq'),
-                    click: () => electron.shell.openExternal('https://wiki.f-list.net/Frequently_Asked_Questions')
+                    click: () => openURLExternally('https://wiki.f-list.net/Frequently_Asked_Questions')
                 },
                 {
                     label: l('help.report'),
-                    click: () => electron.shell.openExternal('https://wiki.f-list.net/How_to_Report_a_User#In_chat')
+                    click: () => openURLExternally('https://wiki.f-list.net/How_to_Report_a_User#In_chat')
                 },
                 {label: l('version', app.getVersion()), click: showPatchNotes}
             ]
@@ -663,6 +763,47 @@ function onReady(): void {
     electron.ipcMain.on('update-zoom', (_e, zl: number) => {
         // log.info('MENU ZOOM UPDATE', zoomLevel);
         for(const w of electron.webContents.getAllWebContents()) w.send('update-zoom', zl);
+    });
+
+    electron.ipcMain.handle('browser-option-browse', async () => {
+        log.debug('settings.browserOption.browse');
+        console.log('settings.browserOption.browse', JSON.stringify(settings));
+
+        let filters;
+        if(process.platform === "win32") {
+            filters = [{ name: 'Executables', extensions: ['exe'] }];
+        } else if (process.platform === "darwin") {
+            filters = [{ name: 'Executables', extensions: ['app'] }];
+        } else {
+            // linux and anything else that might be supported
+            // no specific extension for executables
+            filters = [{ name: 'Executables', extensions: ['*'] }];
+        }
+
+        const dir = electron.dialog.showOpenDialogSync(
+            {
+                defaultPath: settings.browserPath,
+                properties: ['openFile'],
+                filters: filters
+            });
+        if(dir !== undefined) {
+            return dir[0];
+        }
+
+        // we keep the current path if the user cancels the dialog
+        return settings.browserPath;
+    });
+
+    electron.ipcMain.on('browser-option-update', (_e, _path: string, _args: string) => {
+        log.debug('Browser Path settings update:', _path, _args);
+        // store the new path and args in our general settings
+        settings.browserPath = _path;
+        settings.browserArgs = _args;
+        setGeneralSettings(settings);
+    });
+
+    electron.ipcMain.on('open-url-externally', (_e, _url: string) => {
+        openURLExternally(_url);
     });
 
     createWindow();

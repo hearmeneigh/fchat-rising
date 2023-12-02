@@ -47,7 +47,8 @@ const mainConfig = {
 }, rendererConfig = {
     entry: {
         chat: [path.join(__dirname, 'chat.ts'), path.join(__dirname, 'index.html')],
-        window: [path.join(__dirname, 'window.ts'), path.join(__dirname, 'window.html'), path.join(__dirname, 'build', 'tray@2x.png')]
+        window: [path.join(__dirname, 'window.ts'), path.join(__dirname, 'window.html'), path.join(__dirname, 'build', 'tray@2x.png')],
+        browser_option: [path.join(__dirname, 'browser_option.ts'), path.join(__dirname, 'browser_option.html'), path.join(__dirname, 'build', 'tray@2x.png')]
     },
     output: {
         path: __dirname + '/app',
