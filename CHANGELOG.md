@@ -1,10 +1,5 @@
 # Changelog
 
-## Canary
-* Cleaned up top menu
-  * Post Ads and Ad Editor have been merged together into My Ads
-  * Profile Helper now only shows up if you have anything to fix; otherwise the profile helper can be found in the Settings menu
-
 ## 1.25.0
 * Added option for switching browsers (Credit: [@greyhoof](https://github.com/greyhoof))
 * Fixed broken adblocker
