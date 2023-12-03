@@ -9,8 +9,8 @@
 * Added option for switching browsers (Credit: [@greyhoof](https://github.com/greyhoof))
 * Fixed broken adblocker
 * Fixed incorrect BBCode rendering of `[collapse=[hr]test[hr]]` (Credit: [@Abeehiltz](https://github.com/Abeehiltz))
+* Fixed TikTok previews
 * Switched `node-sass` to `sass` for ARM64 compatibility (Credit: [@WhiteHusky](https://github.com/WhiteHusky))
-
 
 ## 1.24.2
 * Hotfix to address connectivity issues
