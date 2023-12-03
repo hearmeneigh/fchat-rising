@@ -181,6 +181,11 @@ export class ImageDomMutator {
             this.getBaseJsMutatorScript([/*'#__flistCore', '#player', */ '#photoImageSection img', 'video', 'img', '#player'], false)
         );
 
+        this.add(
+            'tiktokstalk.com',
+            this.getBaseJsMutatorScript(['video'], false, [], true, true)
+        );
+
 
         this.add(
             'gifmixxx.com',

@@ -90,7 +90,7 @@ export class AdManager {
     }
 
     private determineNextAdDelayMs(chanConv: Conversation.ChannelConversation): number {
-        const match = chanConv.channel.description.toLowerCase().match(/\[\s*ads:\s*([0-9.]+)\s*(m|min|minutes?|h|hr|hours?|s|secs?|seconds?)\s*]/);
+        const match = chanConv.channel.description.toLowerCase().match(/\[\s*ads:\s*([0-9.]+)\s*(m|mins?|minutes?|h|hrs?|hours?|s|secs?|seconds?)\.?\s*]/);
 
         if (!match) {
             return AdManager.POST_DELAY;
@@ -105,7 +105,7 @@ export class AdManager {
             mul = 60 * 1000; // minutes
         }
 
-        return Math.max((n * mul) - (Date.now() - chanConv.nextAd), AdManager.POST_DELAY);
+        return Math.max((n * mul) - Math.max(Date.now() - chanConv.nextAd, 0), AdManager.POST_DELAY);
     }
 
     private async sendNextPost(): Promise<void> {

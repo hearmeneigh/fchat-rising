@@ -303,6 +303,11 @@ export class SettingsStore implements Settings.Store {
     async get<K extends keyof Settings.Keys>(key: K, character?: string): Promise<Settings.Keys[K] | undefined> {
         try {
             const file = path.join(getSettingsDir(character), key);
+
+            if (!fs.existsSync(file)) {
+                return undefined;
+            }
+
             return <Settings.Keys[K]>JSON.parse(fs.readFileSync(file, 'utf8'));
         } catch(e) {
             console.error('READ KEY FAILURE', e, key, character);
