@@ -560,7 +560,7 @@
 
 
         async executeJavaScript(js: string | undefined, context: string = 'unknown', logDetails?: any): Promise<any> {
-            console.log('EXECUTE JS', js);
+            // console.log('EXECUTE JS', js);
 
             if (!this.runJs) return;
 
