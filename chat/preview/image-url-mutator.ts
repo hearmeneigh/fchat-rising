@@ -34,12 +34,30 @@ export class ImageUrlMutator {
 
     protected init(): void {
         this.add(
+          /^https?:\/\/(www\.)?tiktok\.com\//,
+          async(url: string, _match: RegExpMatchArray): Promise<string> => {
+            const result = await Axios.get(
+              `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`,
+              {
+                responseType: 'json'
+              }
+            );
+
+            const userId = result.data.author_unique_id;
+            const videoId = result.data.embed_product_id;
+
+            return `https://www.tiktokstalk.com/user/${userId}/${videoId}/`;
+          }
+        );
+
+        this.add(
             /^http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?[\w\?=]*)?/,
             async(_url: string, match: RegExpMatchArray): Promise<string> => {
                 const videoId = match[1]
                 return `https://yewtu.be/embed/${videoId}?autoplay=1`
             }
         );
+
         this.add(
            /^https?:\/\/.*twitter.com\/(.*)/,
            async(url: string, match: RegExpMatchArray): Promise<string> => {

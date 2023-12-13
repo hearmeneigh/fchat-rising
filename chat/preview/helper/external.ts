@@ -110,10 +110,11 @@ export class ExternalImagePreviewHelper extends ImagePreviewHelper {
             this.ratio = null;
 
             webview.stop();
+            webview.setAudioMuted(true);
 
             // Broken promise chain on purpose
             // tslint:disable-next-line:no-floating-promises
-            this.urlMutator.resolve(url)
+            void this.urlMutator.resolve(url)
                 .then(
                     async(finalUrl: string) => {
                         if (this.debug)
@@ -121,7 +122,9 @@ export class ExternalImagePreviewHelper extends ImagePreviewHelper {
 
                         webview.stop();
 
-                        return webview.loadURL(finalUrl);
+                        await webview.loadURL(finalUrl);
+
+                        webview.setAudioMuted(true);
                     }
                 )
                 .catch(

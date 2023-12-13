@@ -80,7 +80,7 @@ class FListImagePreviewDomMutator {
 
         const img = selected.filter(el => (el !== body)).shift();
 
-        this.debug('detectImage.found', !!img, img);
+        this.debug('detectImage.found', !!img, img, body);
 
         return img;
     }

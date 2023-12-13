@@ -1,6 +1,6 @@
 {
   "name": "f-list-rising",
-  "version": "1.24.2",
+  "version": "1.25.0",
   "author": "The F-List Team and and Mister Stallion (Esq.)",
   "description": "A heavily modded F-Chat 3.0 client for F-List",
   "license": "MIT",
@@ -12,7 +12,6 @@
     "@types/bluebird": "3.5.32",
     "@types/lodash": "4.14.162",
     "@types/node": "16.18.32",
-    "@types/node-fetch": "2.6.4",
     "@types/vue-clickaway": "2.2.0",
     "@types/qs": "^6.9.5",
     "@types/request-promise": "^4.1.46",
@@ -22,7 +21,7 @@
     "async": "^0.9.0",
     "axios": "^0.21.4",
     "bluebird": "~3.7.2",
-    "bootstrap": "^4.5.3",
+    "bootstrap": "^4.6.2",
     "copy-webpack-plugin": "^6.2.1",
     "css-loader": "^5.0.0",
     "date-fns": "2.29.3",
@@ -34,7 +33,7 @@
     "extract-loader": "^5.1.0",
     "file-loader": "^6.2.0",
     "lodash": "^4.17.20",
-    "node-sass": "^7.0.1",
+    "sass": "^1.68.0",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
     "qs": "^6.9.4",
     "raven-js": "^3.27.2",
@@ -58,14 +57,14 @@
     "webpack": "5.8.0"
   },
   "dependencies": {
-    "@cliqz/adblocker-electron": "1.23.9",
-    "jquery": "^3.6.0",
-    "node-fetch": "2.6.11"
+    "@cliqz/adblocker-electron": "^1.26.12",
+    "jquery": "^3.7.1",
+    "node-fetch": "^2.7.0"
   },
   "optionalDependencies": {
     "appdmg": "^0.6.0",
     "electron-squirrel-startup": "^1.0.0",
-    "electron-winstaller": "^5.0.0"
+    "electron-winstaller": "^5.2.1"
   },
   "resolutions": {
     "vue": "2.6.12",
@@ -73,11 +72,7 @@
     "vue-loader": "15.9.8",
     "vue-template-compiler": "2.6.12",
     "@types/bluebird": "3.5.32",
-    "@types/node": "16.18.32",
-    "@cliqz/adblocker": "1.23.9",
-    "@cliqz/adblocker-content": "1.23.9",
-    "@cliqz/adblocker-electron-preload": "1.23.9",
-    "@cliqz/adblocker-extended-selectors": "1.23.9"
+    "@types/node": "16.18.32"
   },
   "scripts": {
     "__removed__postinstall": "electron-rebuild --prebuild-tag-prefix=ignoreprebuilds -f -o keytar",

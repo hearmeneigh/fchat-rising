@@ -10,7 +10,7 @@ export class BlockerIntegration {
   protected static readonly adBlockerLists = [
       'https://easylist.to/easylist/easylist.txt',
       'https://easylist.to/easylist/easyprivacy.txt', // EasyPrivacy
-      'https://easylist-downloads.adblockplus.org/easylist-cookie.txt', // Easy Cookies
+      'https://secure.fanboy.co.nz/fanboy-cookiemonster.txt', // Easy Cookies
       'https://easylist.to/easylist/fanboy-social.txt', // Fanboy Social
       'https://easylist.to/easylist/fanboy-annoyance.txt', // Fanboy Annoyances
       'https://filters.adtidy.org/extension/chromium/filters/2.txt', // AdGuard Base

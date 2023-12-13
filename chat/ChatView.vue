@@ -2,8 +2,8 @@
     <div style="height:100%; display: flex; position: relative;" id="chatView" @click="userMenuHandle" @contextmenu="userMenuHandle" @touchstart.passive="userMenuHandle"
         @touchend="userMenuHandle">
         <sidebar id="sidebar" :label="l('chat.menu')" icon="fa-bars">
-            <img :src="characterImage(ownCharacter.name)" v-if="showAvatars" style="float:left;margin-right:5px;width:60px"/>
-            <a target="_blank" :href="ownCharacterLink" class="btn" style="margin-right:5px">{{ownCharacter.name}}</a>
+            <img :src="characterImage(ownCharacter.name)" v-if="showAvatars" style="float:left;margin-right:5px;margin-top:5px;width:70px"/>
+            <a target="_blank" :href="ownCharacterLink" class="btn" style="display:block">{{ownCharacter.name}}</a>
             <a href="#" @click.prevent="logOut()" class="btn"><i class="fas fa-sign-out-alt"></i>{{l('chat.logout')}}</a><br/>
             <div>
                 {{l('chat.status')}}

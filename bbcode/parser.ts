@@ -127,7 +127,10 @@ export class BBCodeParser {
             isAllowed = (name) => self.isAllowed(name) && parentAllowed(name);
             currentTag = this._currentTag = {tag: self.tag, line: this._line, column: this._column};
         }
-        let tagStart = -1, paramStart = -1, mark = start;
+        let tagStart = -1, 
+				    paramStart = -1, 
+						mark = start, 
+						isInCollapseParam = false;
         for(let i = start; i < input.length; ++i) {
             const c = input[i];
             ++this._column;
@@ -135,12 +138,22 @@ export class BBCodeParser {
                 ++this._line;
                 this._column = 1;
             }
-            if(c === '[') {
+            if(c === '[' && !isInCollapseParam) {
                 tagStart = i;
                 paramStart = -1;
-            } else if(c === '=' && paramStart === -1)
-                paramStart = i;
+            } else if(c === '=' && paramStart === -1)	{
+							paramStart = i;
+			
+							const paramIndex = paramStart === -1 ? i : paramStart;
+							let tagKey = input
+								.substring(tagStart + 1, paramIndex)
+								.trim()
+								.toLowerCase();
+			
+							if (tagKey == "collapse") isInCollapseParam = true;
+						}				
             else if(c === ']') {
+							
                 const paramIndex = paramStart === -1 ? i : paramStart;
                 let tagKey = input.substring(tagStart + 1, paramIndex).trim().toLowerCase();
                 if(tagKey.length === 0) {
@@ -154,6 +167,17 @@ export class BBCodeParser {
                     tagStart = -1;
                     continue;
                 }
+								if (isInCollapseParam) {
+									let fullTagKey = input
+										.substring(tagStart + 1, i + 1)
+										.trim()
+										.toLowerCase();
+									if (fullTagKey.endsWith("[hr]")) {
+										continue;
+									}
+								}
+				
+								isInCollapseParam = false;
                 if(!close) {
                     const tag = this._tags[tagKey]!;
                     const allowed = isAllowed(tagKey);

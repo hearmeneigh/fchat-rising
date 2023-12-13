@@ -24,9 +24,9 @@
               <div>This is an advanced setting. By changing this setting to an unsupported program (i.e. not a browser), you might not be able to open links from F-Chat anymore.</div>
 
               <div v-if="isMac"><hr/>
-              <p>Mac User: As of writing, MacOS has a bug in how it handles opening links.</p>
-              <p>When your default browser is something other than Safari and you select Safari in this settings window, links might be opened twice.</p>
-              <p>Once in Safari and a second time in your default browser. This tends to happen when Safari is not running when clicking a link.</p></div>
+                <p>Mac User: As of writing, MacOS has a bug in how it handles opening links.</p>
+                <p>When your default browser is something other than Safari and you select Safari in this settings window, links might be opened twice.</p>
+                <p>Once in Safari and a second time in your default browser. This tends to happen when Safari is not running when clicking a link.</p></div>
               </div>
             </div>
             </div>
@@ -57,12 +57,12 @@
           </div>
           <div class="form-group col-12">
             <div class="row no-gutters">
-              <div class="col-2">
-                <button class="btn btn-primary" @click.prevent.stop="submit()">{{l('settings.browserOptionSave')}}</button>
-              </div>
-              <div class="col"></div>
               <div class="col-4">
                 <button class="btn btn-danger" style="float: right;" @click.prevent.stop="resetToDefault()">{{l('settings.browserOptionReset')}}</button>
+              </div>
+              <div class="col"></div>
+              <div class="col-2">
+                <button class="btn btn-primary" @click.prevent.stop="submit()">{{l('settings.browserOptionSave')}}</button>
               </div>
             </div>
           </div>
