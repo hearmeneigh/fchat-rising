@@ -188,14 +188,15 @@ function openURLExternally(linkUrl: string): void {
         }
 
         if (fileIsExecutable) {
-            // check if URL is already encoded
-            // (this should work almost all the time, but there might be edge-cases with very unusual URLs)
-            let isEncoded = (linkUrl !== decodeURI(linkUrl));
-            // only encode URL if it isn't encoded yet
-            if (!isEncoded) {
-                // encode URL so if it contains spaces, it remains a single argument for the browser
-                linkUrl = encodeURI(linkUrl);
-            }
+            // regular expression that looks for an encoded % symbol followed by two hexadecimal characters
+            // using this expression, we can find parts of the URL that were encoded twice
+            const re = new RegExp('%25([0-9a-f]{2})', 'ig');
+
+            // encode the URL no matter what
+            linkUrl = encodeURI(linkUrl);
+
+            // eliminate double-encoding using expression above
+            linkUrl = linkUrl.replace(re, '%$1');
 
             if (!settings.browserArgs.includes('%s')) {
                 // append %s to params if it is not already there
