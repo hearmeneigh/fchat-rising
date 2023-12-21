@@ -281,16 +281,18 @@
           setTimeout(() => (this.$refs['eIconSelector'] as any).setFocus(), 50);
         }
 
-        onSelectEIcon(eiconId: string): void {
-          this.eiconApply(eiconId);
+        onSelectEIcon(eiconId: string, shift: boolean): void {
+          this.eiconApply(eiconId, shift);
         }
 
-        eiconApply(eiconId: string): void {
+        eiconApply(eiconId: string, shift: boolean): void {
           const button = this.getButtonByTag('eicon');
 
           this.applyButtonEffect(button, undefined, eiconId);
 
-          this.dismissEIconSelector();
+          if (!shift) {
+            this.dismissEIconSelector();
+          }
         }
 
         apply(button: EditorButton): void {

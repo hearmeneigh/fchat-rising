@@ -56,7 +56,7 @@
         <div class="carousel slide w-100 results">
           <div class="carousel-inner w-100" role="listbox">
             <div class="carousel-item" v-for="eicon in results" role="img" :aria-label="eicon" tabindex="0">
-              <img class="eicon" :alt="eicon" :src="'https://static.f-list.net/images/eicon/' + eicon + '.gif'" :title="eicon" role="button" :aria-label="eicon" @click.prevent.stop="selectIcon(eicon)">
+              <img class="eicon" :alt="eicon" :src="'https://static.f-list.net/images/eicon/' + eicon + '.gif'" :title="eicon" role="button" :aria-label="eicon" @click.prevent.stop="selectIcon(eicon, $event)">
 
               <div class="btn favorite-toggle" :class="{ favorited: isFavorite(eicon) }" @click.prevent.stop="toggleFavorite(eicon)" role="button" :aria-label="isFavorite(eicon) ? 'Remove from favorites' : 'Add to favorites'">
                 <i class="fas fa-thumbtack"></i>
@@ -85,7 +85,7 @@ import CustomDialog from '../components/custom_dialog';
 })
 export default class EIconSelector extends CustomDialog {
   @Prop
-  readonly onSelect?: (eicon: string) => void;
+  readonly onSelect?: (eicon: string, shift: boolean) => void;
 
   store: EIconStore | undefined;
   results: string[] = [];
@@ -139,9 +139,9 @@ export default class EIconSelector extends CustomDialog {
   getCategoryResults(category: string): string[] {
     switch(category) {
       case 'expressions':
-        return ['coolemoji', 'coughing emoji', 'flushedemoji', 'eyerollemoji', 'laughingemoji', 'grinning emoji', 'party emoji',
-        'pensiveemoji', 'lipbite emoji', 'nauseous emoji', 'angryemoji', 'facialemoji', 'clapemoji', 'heart eyes', 'kissing heart',
-        'cowboy emoji', 'cowemoji', 'eggplantemoji', 'peachemoji', 'melting emoji', 'poopemoji', 'thinkingemoji', 'triumphemoji',
+        return ['coolemoji', 'coughing emoji', 'flushedemoji', 'eyerollemoji', 'cryinglaughing', 'grinning emoji', 'party emoji',
+        'pensiveemoji', 'lipbite emoji', 'nauseous emoji', 'angryemoji', 'love2', 'clapemoji', 'heart eyes', 'kissing heart',
+        'flusteredcowboy', 'cowemoji', 'eggplantemoji', 'peachemoji', 'melting emoji', 'poopy', 'thinkingemoji', 'triumphemoji',
         'uwuemoji', 'voremoji', 'skullemoji', 'smugemoji', 'heartflooshed', 'blushpanic', 'fluttersorry', 'snake emoji', 'horseeyes', 'thehorse',
         'catblob', 'catblobangery', 'splashemoji', 'tonguemoji', 'blobhugs', 'lickscreen', 'eyes emoji', 'nerdmeme', 'horsepls',
         'e62pog', 'thirstytwi', 'bangfingerbang', 'chefs kiss', 'excuse me', 'psychopath', 'ashemote3', 'whentheohitsright',
@@ -151,7 +151,7 @@ export default class EIconSelector extends CustomDialog {
 
       case 'symbols':
         return ['loveslove', 'pimpdcash', 'pls stop', 'paw2', 'gender-female', 'gender-male', 'gendershemale', 'gender-cuntboy', 'gender-mherm',
-        'gender-transgender', 'usflag', 'europeflag', 'lgbt', 'transflag', 'yaoilove', 'sunnyuhsuperlove', 'discovered', 'thbun',
+        'gender-transgender', 'usflag', 'europeflag', 'lgbt', 'transflag', 'sunnyuhsuperlove', 'discovered', 'thbun',
         'goldcoin1', 'star', 'full moon', 'sunshine', 'pinetree', 'carrots1', 'smashletter', 'chemicalscience', 'ghostbuster',
         'cuckquean', 'goldendicegmgolddicegif', 'pentagramo', 'sexsymbol', 'idnd1', 'instagram', 'twitterlogo', 'snapchaticon',
         'tiktok', 'twitchlogo', 'discord', 'uber', 'google', 'nvidia', 'playstation',
@@ -166,27 +166,27 @@ export default class EIconSelector extends CustomDialog {
         'chorse', 'knotslutbubble', 'toofuckinghot', 'pbmr', 'imabimbo', 'dicefuck', 'ciaig', 'horseslut', 'fatdick', 'tomboypussy',
         'breakthesubs', 'fuckingnya', 'iltclion', 'suckfuckobey', 'shemale', 'breedmaster', 'imastepfordwife', 'prier ahegao',
         'buttslutbb', 'notgayoranything', 'onlyfans', 'horsecockneed', 'crimes', 'breed143', 'nagagross', 'willrim', 'muskslut',
-        '4lewdbubble', 'thatslewd', 'hypnosiss', 'imahypnoslut', 'sheepsass2', 'imahugeslut', 'notahealslut', 'ratedmilf',
+        '4lewdbubble', 'shimathatlewd', 'hypnosiss', 'imahypnoslut', 'sheepsass2', 'imahugeslut', 'notahealslut', 'ratedmilf',
         'ratedstud', 'ratedslut', '5lewdbubble', 'xarcuminme', 'xarcumonme', 'choke me', 'iamgoingtopunchyou', 'snapmychoker',
-        'rude1', 'fuckbun', 'iamindanger', 'fuckingelves', 'slutmug', 'helpicantstopsuckingcocks', 'talkpooltoy', 'thatskindahot', 'ygod',
+        'rude1', 'fuckbun', 'iamindanger', 'fuckingelves', 'sluttery', 'helpicantstopsuckingcocks', 'talkpooltoy', 'thatskindahot', 'ygod',
         'simpbait', 'eyesuphere', 'fuckpiggy', 'peggable2', 'sydeanothere', 'nothingcan', 'pawslut', 'stupidboys', 'corpsestare-',
         'dinnersex', 'plappening', 'fallout-standby', 'inbagg', 'request denied', 'goodboy0', 'goodending', 'milky2', 'howbadcanibe',
         'gwanna', 'spitinmouth', 'bathwater'];
 
       case 'sexual':
-        return ['kissspink', 'paytonkiss', 'coralbutt4', 'capstrip', 'pinkundress', 'slavefidget', 'jhab1', 'caninelover', 'pole',
+        return ['kissspink', 'paytonkiss', 'coralbutt4', 'capstrip', 'pinkundress', 'collaredpet', 'jhab1', 'caninelover', 'pole',
         'rorobutt2', 'fingerlick', 'lapgrind', 'jackthighs', 'a condom', 'wolf abs', 'musclefuck2', 'verobutt3', 'bumsqueeze',
-        'realahegao4', 'influencerhater', 'assfucker', 'gagged2', 'ballsack3', 'fingering wolf', 'sloppy01', 'sybian', 'femboibate1',
-        'floppyhorsecock', 'blackshem1', 'fingersucc', 'vullylick', 'freyasuckfingers', 'cmontakeit', 'jessi flash', 'poju-butt',
-        'cheegrope2', 'patr1', 'ahega01 2', 'handjob1nuke', 'harmanfingers', 'rorysheath2', 'hermione1', '2buttw1', 'dropsqueeze',
-        'lixlove', 'bbctitjob6', 'appreciativetease', 'bimbolick', 'subj3', 'salivashare', 'ballsworship3', 'wolfsknot2', 'gaykiss',
-        'slurpkiss', 'absbulge', 'cockiss', 'horsedick11', 'knot1', 'g4ebulge', 'blackadamrough', 'dogewank', 'flaunt', 'cummiefj', 'lovetosuck',
-        'worship', 'hopelessly in love', 'knotts', 'cockloveeee', 'donglove', 'woowyknotjob', 'cummz', 'every drop', 'edgyoops',
-        'orccummies2', 'oralcreampie100px', 'horseoral9a', 'swallowit', 'sinahegao', 'gayicon2', 'slut4', 'hossspurties2', 'cumringgag',
-        'jillbimbogiffell2', 'artistry01'];
+        'realahegao4', 'influencerhater', 'assfucker', 'gagged2', 'ballsack3', 'fingerblast3', 'sloppy01', 'sybian',
+        'floppyhorsecock', 'blackshem1', 'fingersucc', 'vullylick', 'fingersucc', 'cmontakeit', 'jessi flash', 'poju-butt',
+        'cheegrope2', 'patr1', 'ahega01 2', 'handjob1nuke', 'harmanfingers', 'hermione1', '2buttw1', 'dropsqueeze',
+        'lixlove', 'bbctitjob6', 'appreciativetease', 'bimbowhisper', 'subj3', 'salivashare', 'ballsworship3', 'wolfsknot2', 'gaykiss',
+        'slurpkiss', 'absbulge', 'cockiss', 'horsedick11', 'knot1', 'g4ebulge', 'blackadamrough', 'knotdog', 'flaunt', 'cummiefj', 'lovetosuck',
+        'worship', 'hopelessly in love', 'knotts', 'cockloveeee', 'donglove', 'knotjob2', 'cummz', 'every drop', 'edgyoops',
+        'orccummies2', 'oralcreampie100px', 'horseoral9a', 'swallowit', 'realahegao4', 'gayicon2', 'slut4', 'hossspurties2', 'cumringgag',
+        'jillbimbogiffell2'];
 
       case 'memes':
-        return ['guncock', 'michaelguns', 'wegotabadass', 'gonnabang', 'flirting101', 'monkeymeme', 'monkeymeme2', 'horsenoises',
+        return ['guncock', 'michaelguns', 'watchbadass', 'gonnabang', 'flirting101', 'monkeymeme', 'monkeymeme2', 'horsenoises',
         'nyancat', 'gayb', 'fortasshole', 'dickletsign', 'sausageface', 'siren0', 'apologize to god', 'jabbalick', 'zeldawink',
         'whatislove', 'surprisemothafucka', 'females', 'thanksihateit', 'hell is this', 'confused travolta', 'no words', 'coffindance',
         'homelander', 'thatsapenis', 'pennyhee', 'kermitbusiness', 'goodbye', 'rickle', 'shiamagic', 'oag', ];
@@ -198,9 +198,11 @@ export default class EIconSelector extends CustomDialog {
     return [];
   }
 
-  selectIcon(eicon: string): void {
+  selectIcon(eicon: string, event: MouseEvent): void {
+    const shift = event.shiftKey;
+
     if (this.onSelect) {
-      this.onSelect(eicon);
+      this.onSelect(eicon, shift);
     }
   }
 
