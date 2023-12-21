@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.25.1
+* Shift-clicking in eicon selector adds the icon without closing the selector
+* Minor updates to browser switching
+
 ## 1.25.0
 * Added option for switching browsers (Credit: [@greyhoof](https://github.com/greyhoof))
 * Fixed broken adblocker

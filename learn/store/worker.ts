@@ -3,6 +3,7 @@ import { PermanentIndexedStore, ProfileRecord } from './types';
 import { CharacterImage, SimpleCharacter } from '../../interfaces';
 
 import { WorkerClient } from './worker/client';
+import log from 'electron-log';
 
 
 export class WorkerStore implements PermanentIndexedStore {
@@ -31,6 +32,8 @@ export class WorkerStore implements PermanentIndexedStore {
         // fix custom kinks to prevent hangs
 
         if (record && Array.isArray(record.profileData.character.customs)) {
+            log.warn('character.customs.strange.worker.getProfile', {name: record.profileData.character.name, record, customs: record.profileData.character.customs});
+
             // fix customs because it will crash the client
             const customsObject: ProfileRecord['profileData']['character']['customs'] = {};
 
@@ -39,6 +42,8 @@ export class WorkerStore implements PermanentIndexedStore {
             }
 
             record.profileData.character.customs = customsObject;
+
+            await this.storeProfile(record.profileData);
         }
 
         return record;
