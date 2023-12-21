@@ -51,7 +51,7 @@ changelog: https://github.com/hearmeneigh/fchat-rising/blob/master/CHANGELOG.md
 installurl: https://github.com/hearmeneigh/fchat-rising/wiki
 
 download:
-  version: 1.25.0
+  version: 1.25.1
 
   url: https://github.com/hearmeneigh/fchat-rising/releases/latest/download/F-Chat-Rising-%PLATFORM_TAIL%
 
