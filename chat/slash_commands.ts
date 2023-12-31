@@ -107,253 +107,349 @@ export interface Command {
     exec(context: Conversation, ...params: (string | number | undefined)[]): void
 }
 
-const commands: {readonly [key: string]: Command | undefined} = {
+const commands: { readonly [key: string]: Command | undefined } = {
     me: {
-        exec: () => 'stub',
+        exec: () => "stub",
         context: CommandContext.Channel | CommandContext.Private,
-        params: [{type: ParamType.String}]
+        params: [{ type: ParamType.String }],
     },
     reward: {
-        exec: (_, character: string) => core.connection.send('RWD', {character}),
+        exec: (_, character: string) =>
+            core.connection.send("RWD", { character }),
         permission: Permission.Admin,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     greports: {
         permission: Permission.ChannelMod,
-        exec: () => core.connection.send('PCR')
+        exec: () => core.connection.send("PCR"),
     },
     join: {
-        exec: (_, channel: string) => core.connection.send('JCH', {channel}),
-        params: [{type: ParamType.String}]
+        exec: (_, channel: string) => core.connection.send("JCH", { channel }),
+        params: [{ type: ParamType.String }],
     },
     close: {
         exec: (conv: PrivateConversation | ChannelConversation) => conv.close(),
-        context: CommandContext.Private | CommandContext.Channel
+        context: CommandContext.Private | CommandContext.Channel,
     },
     priv: {
-        exec: (_, character: string) => core.conversations.getPrivate(core.characters.get(character)).show(),
-        params: [{type: ParamType.Character}]
+        exec: (_, character: string) =>
+            core.conversations
+                .getPrivate(core.characters.get(character))
+                .show(),
+        params: [{ type: ParamType.Character }],
     },
     uptime: {
-        exec: () => core.connection.send('UPT')
+        exec: () => core.connection.send("UPT"),
     },
     clear: {
-        exec: (conv: Conversation) => conv.clear()
+        exec: (conv: Conversation) => conv.clear(),
     },
     status: {
-        exec: (_, status: Character.Status, statusmsg: string = '') => core.connection.send('STA', {status, statusmsg}),
-        params: [{type: ParamType.Enum, options: userStatuses}, {type: ParamType.String, optional: true}]
+        exec: (_, status: Character.Status, statusmsg: string = "") =>
+            core.connection.send("STA", { status, statusmsg }),
+        params: [
+            { type: ParamType.Enum, options: userStatuses },
+            { type: ParamType.String, optional: true },
+        ],
     },
     roll: {
-        exec: (conv: ChannelConversation | PrivateConversation, dice: string) => {
-            if(Conversation.isChannel(conv)) core.connection.send('RLL', {channel: conv.channel.id, dice});
-            else core.connection.send('RLL', {recipient: conv.character.name, dice});
+        exec: (
+            conv: ChannelConversation | PrivateConversation,
+            dice: string
+        ) => { 
+            if (dice.toLocaleLowerCase() === "inf") {
+                conv.infoText = "Inf took many lives during its reign. Thankfully, you have been spared.";
+                return;
+            }
+            else if (Conversation.isChannel(conv))
+                core.connection.send("RLL", { channel: conv.channel.id, dice });
+            else 
+                core.connection.send("RLL", {
+                    recipient: conv.character.name,
+                    dice,
+                });
         },
         context: CommandContext.Channel | CommandContext.Private,
-        params: [{type: ParamType.String}]
+        params: [{ type: ParamType.String }],
     },
     bottle: {
         exec: (conv: ChannelConversation | PrivateConversation) => {
-            if(Conversation.isChannel(conv)) core.connection.send('RLL', {channel: conv.channel.id, dice: 'bottle'});
-            else core.connection.send('RLL', {recipient: conv.character.name, dice: 'bottle'});
+            if (Conversation.isChannel(conv))
+                core.connection.send("RLL", {
+                    channel: conv.channel.id,
+                    dice: "bottle",
+                });
+            else
+                core.connection.send("RLL", {
+                    recipient: conv.character.name,
+                    dice: "bottle",
+                });
         },
-        context: CommandContext.Channel | CommandContext.Private
+        context: CommandContext.Channel | CommandContext.Private,
     },
     warn: {
-        exec: () => 'stub',
+        exec: () => "stub",
         permission: Permission.RoomOp,
         context: CommandContext.Channel,
-        params: [{type: ParamType.String}]
+        params: [{ type: ParamType.String }],
     },
     kick: {
         exec: (conv: ChannelConversation, character: string) =>
-            core.connection.send('CKU', {channel: conv.channel.id, character}),
+            core.connection.send("CKU", {
+                channel: conv.channel.id,
+                character,
+            }),
         permission: Permission.RoomOp,
         context: CommandContext.Channel,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     ban: {
         exec: (conv: ChannelConversation, character: string) =>
-            core.connection.send('CBU', {channel: conv.channel.id, character}),
+            core.connection.send("CBU", {
+                channel: conv.channel.id,
+                character,
+            }),
         permission: Permission.RoomOp,
         context: CommandContext.Channel,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     unban: {
         exec: (conv: ChannelConversation, character: string) =>
-            core.connection.send('CUB', {channel: conv.channel.id, character}),
+            core.connection.send("CUB", {
+                channel: conv.channel.id,
+                character,
+            }),
         permission: Permission.RoomOp,
         context: CommandContext.Channel,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     banlist: {
-        exec: (conv: ChannelConversation) => core.connection.send('CBL', {channel: conv.channel.id}),
+        exec: (conv: ChannelConversation) =>
+            core.connection.send("CBL", { channel: conv.channel.id }),
         permission: Permission.RoomOp,
-        context: CommandContext.Channel
+        context: CommandContext.Channel,
     },
     timeout: {
         exec: (conv: ChannelConversation, character: string, length: number) =>
-            core.connection.send('CTU', {channel: conv.channel.id, character, length}),
+            core.connection.send("CTU", {
+                channel: conv.channel.id,
+                character,
+                length,
+            }),
         permission: Permission.RoomOp,
         context: CommandContext.Channel,
-        params: [{type: ParamType.Character, delimiter: ','}, {type: ParamType.Number, validator: (x) => x >= 1}]
+        params: [
+            { type: ParamType.Character, delimiter: "," },
+            { type: ParamType.Number, validator: (x) => x >= 1 },
+        ],
     },
     gkick: {
-        exec: (_, character: string) => core.connection.send('KIK', {character}),
+        exec: (_, character: string) =>
+            core.connection.send("KIK", { character }),
         permission: Permission.ChatOp,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     gban: {
-        exec: (_, character: string) => core.connection.send('ACB', {character}),
+        exec: (_, character: string) =>
+            core.connection.send("ACB", { character }),
         permission: Permission.ChatOp,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     gunban: {
-        exec: (_, character: string) => core.connection.send('UNB', {character}),
+        exec: (_, character: string) =>
+            core.connection.send("UNB", { character }),
         permission: Permission.ChatOp,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     gtimeout: {
         exec: (_, character: string, time: number, reason: string) =>
-            core.connection.send('TMO', {character, time, reason}),
+            core.connection.send("TMO", { character, time, reason }),
         permission: Permission.ChatOp,
-        params: [{type: ParamType.Character, delimiter: ','}, {type: ParamType.Number, validator: (x) => x >= 1}, {type: ParamType.String}]
+        params: [
+            { type: ParamType.Character, delimiter: "," },
+            { type: ParamType.Number, validator: (x) => x >= 1 },
+            { type: ParamType.String },
+        ],
     },
     setowner: {
         exec: (conv: ChannelConversation, character: string) =>
-            core.connection.send('CSO', {channel: conv.channel.id, character}),
+            core.connection.send("CSO", {
+                channel: conv.channel.id,
+                character,
+            }),
         permission: Permission.RoomOwner,
         context: CommandContext.Channel,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     ignore: {
-        exec: (_, character: string) => core.connection.send('IGN', {action: 'add', character}),
-        params: [{type: ParamType.Character}]
+        exec: (_, character: string) =>
+            core.connection.send("IGN", { action: "add", character }),
+        params: [{ type: ParamType.Character }],
     },
     unignore: {
-        exec: (_, character: string) => core.connection.send('IGN', {action: 'delete', character}),
-        params: [{type: ParamType.Character}]
+        exec: (_, character: string) =>
+            core.connection.send("IGN", { action: "delete", character }),
+        params: [{ type: ParamType.Character }],
     },
     ignorelist: {
-        exec: (conv: Conversation) => conv.infoText = l('chat.ignoreList', core.characters.ignoreList.join(', '))
+        exec: (conv: Conversation) =>
+            (conv.infoText = l(
+                "chat.ignoreList",
+                core.characters.ignoreList.join(", ")
+            )),
     },
     makeroom: {
-        exec: (_, channel: string) => core.connection.send('CCR', {channel}),
-        params: [{type: ParamType.String}]
+        exec: (_, channel: string) => core.connection.send("CCR", { channel }),
+        params: [{ type: ParamType.String }],
     },
     gop: {
-        exec: (_, character: string) => core.connection.send('AOP', {character}),
+        exec: (_, character: string) =>
+            core.connection.send("AOP", { character }),
         permission: Permission.Admin,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     gdeop: {
-        exec: (_, character: string) => core.connection.send('DOP', {character}),
+        exec: (_, character: string) =>
+            core.connection.send("DOP", { character }),
         permission: Permission.Admin,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     op: {
         exec: (conv: ChannelConversation, character: string) =>
-            core.connection.send('COA', {channel: conv.channel.id, character}),
+            core.connection.send("COA", {
+                channel: conv.channel.id,
+                character,
+            }),
         permission: Permission.RoomOwner,
         context: CommandContext.Channel,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     deop: {
         exec: (conv: ChannelConversation, character: string) =>
-            core.connection.send('COR', {channel: conv.channel.id, character}),
+            core.connection.send("COR", {
+                channel: conv.channel.id,
+                character,
+            }),
         permission: Permission.RoomOwner,
         context: CommandContext.Channel,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     scop: {
-        exec: (_, character: string) => core.connection.send('SCP', {action: 'add', character}),
+        exec: (_, character: string) =>
+            core.connection.send("SCP", { action: "add", character }),
         permission: Permission.Admin,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     scdeop: {
-        exec: (_, character: string) => core.connection.send('SCP', {action: 'remove', character}),
+        exec: (_, character: string) =>
+            core.connection.send("SCP", { action: "remove", character }),
         permission: Permission.Admin,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     oplist: {
-        exec: (conv: ChannelConversation) => core.connection.send('COL', {channel: conv.channel.id}),
-        context: CommandContext.Channel
+        exec: (conv: ChannelConversation) =>
+            core.connection.send("COL", { channel: conv.channel.id }),
+        context: CommandContext.Channel,
     },
     invite: {
         exec: (conv: ChannelConversation, character: string) =>
-            core.connection.send('CIU', {channel: conv.channel.id, character}),
+            core.connection.send("CIU", {
+                channel: conv.channel.id,
+                character,
+            }),
         permission: Permission.RoomOp,
         context: CommandContext.Channel,
-        params: [{type: ParamType.Character}]
+        params: [{ type: ParamType.Character }],
     },
     closeroom: {
-        exec: (conv: ChannelConversation) => core.connection.send('RST', {channel: conv.channel.id, status: 'private'}),
-        permission: Permission.RoomOwner,
-        context: CommandContext.Channel
-    },
-    openroom: {
-        exec: (conv: ChannelConversation) => core.connection.send('RST', {channel: conv.channel.id, status: 'public'}),
-        permission: Permission.RoomOwner,
-        context: CommandContext.Channel
-    },
-    setmode: {
-        exec: (conv: ChannelConversation, mode: 'ads' | 'chat' | 'both') =>
-            core.connection.send('RMO', {channel: conv.channel.id, mode}),
+        exec: (conv: ChannelConversation) =>
+            core.connection.send("RST", {
+                channel: conv.channel.id,
+                status: "private",
+            }),
         permission: Permission.RoomOwner,
         context: CommandContext.Channel,
-        params: [{type: ParamType.Enum, options: ['ads', 'chat', 'both']}]
+    },
+    openroom: {
+        exec: (conv: ChannelConversation) =>
+            core.connection.send("RST", {
+                channel: conv.channel.id,
+                status: "public",
+            }),
+        permission: Permission.RoomOwner,
+        context: CommandContext.Channel,
+    },
+    setmode: {
+        exec: (conv: ChannelConversation, mode: "ads" | "chat" | "both") =>
+            core.connection.send("RMO", { channel: conv.channel.id, mode }),
+        permission: Permission.RoomOwner,
+        context: CommandContext.Channel,
+        params: [{ type: ParamType.Enum, options: ["ads", "chat", "both"] }],
     },
     setdescription: {
         exec: (conv: ChannelConversation, description: string) =>
-            core.connection.send('CDS', {channel: conv.channel.id, description}),
+            core.connection.send("CDS", {
+                channel: conv.channel.id,
+                description,
+            }),
         permission: Permission.RoomOp,
         context: CommandContext.Channel,
-        params: [{type: ParamType.String}]
+        params: [{ type: ParamType.String }],
     },
     code: {
         exec: (conv: ChannelConversation) => {
             const active = <HTMLElement>document.activeElement;
-            const elm = document.createElement('textarea');
+            const elm = document.createElement("textarea");
             elm.value = `[session=${conv.channel.name}]${conv.channel.id}[/session]`;
             document.body.appendChild(elm);
             elm.select();
-            document.execCommand('copy');
+            document.execCommand("copy");
             document.body.removeChild(elm);
             active.focus();
-            conv.infoText = l('commands.code.success');
+            conv.infoText = l("commands.code.success");
         },
         permission: Permission.RoomOwner,
-        context: CommandContext.Channel
+        context: CommandContext.Channel,
     },
     killchannel: {
-        exec: (conv: ChannelConversation) => core.connection.send('KIC', {channel: conv.channel.id}),
+        exec: (conv: ChannelConversation) =>
+            core.connection.send("KIC", { channel: conv.channel.id }),
         permission: Permission.RoomOwner,
-        context: CommandContext.Channel
+        context: CommandContext.Channel,
     },
     createchannel: {
-        exec: (_, channel: string) => core.connection.send('CRC', {channel}),
+        exec: (_, channel: string) => core.connection.send("CRC", { channel }),
         permission: Permission.ChatOp,
-        params: [{type: ParamType.String}]
+        params: [{ type: ParamType.String }],
     },
     broadcast: {
-        exec: (_, message: string) => core.connection.send('BRO', {message}),
+        exec: (_, message: string) => core.connection.send("BRO", { message }),
         permission: Permission.Admin,
-        params: [{type: ParamType.String}]
+        params: [{ type: ParamType.String }],
     },
     reloadconfig: {
-        exec: (_, save?: 'save') => core.connection.send('RLD', save !== undefined ? {save} : undefined),
+        exec: (_, save?: "save") =>
+            core.connection.send(
+                "RLD",
+                save !== undefined ? { save } : undefined
+            ),
         permission: Permission.Admin,
-        params: [{type: ParamType.Enum, options: ['save'], optional: true}]
+        params: [{ type: ParamType.Enum, options: ["save"], optional: true }],
     },
     xyzzy: {
-        exec: (_, command: string, arg: string) => core.connection.send('ZZZ', {command, arg}),
+        exec: (_, command: string, arg: string) =>
+            core.connection.send("ZZZ", { command, arg }),
         permission: Permission.Admin,
-        params: [{type: ParamType.String, delimiter: ' '}, {type: ParamType.String}]
+        params: [
+            { type: ParamType.String, delimiter: " " },
+            { type: ParamType.String },
+        ],
     },
     elf: {
-        exec: (conv: Conversation) => conv.infoText = elf[Math.floor(Math.random() * elf.length)],
-        documented: false
-    }
+        exec: (conv: Conversation) =>
+            (conv.infoText = elf[Math.floor(Math.random() * elf.length)]),
+        documented: false,
+    },
 };
 
 const elf = [ //Ceran is to be thanked for most of these.
