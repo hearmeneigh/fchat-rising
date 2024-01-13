@@ -142,7 +142,9 @@ export default class AdLauncherDialog extends CustomDialog {
     e.preventDefault();
     e.stopPropagation();
 
-    _.each(this.channels, (c) => c.value = newValue);
+    _.each(this.channels, (c) => {
+      c.value = newValue
+    });
   }
 
   submit(e: Event) {
