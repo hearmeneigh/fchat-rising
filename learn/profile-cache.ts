@@ -8,6 +8,7 @@ import { PermanentIndexedStore } from './store/types';
 import { CharacterImage, SimpleCharacter } from '../interfaces';
 import { Scoring } from './matcher-types';
 import { matchesSmartFilters } from './filter/smart-filter';
+import * as remote from '@electron/remote';
 
 
 export interface MetaRecord {
@@ -148,6 +149,54 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
         }
     }
 
+    isSafeImageURL(url: string): boolean {
+        if (url.match(/^https?:\/\/static\.f-list\.net\//i)) {
+            return true;
+        }
+
+        if (url.match(/^https?:\/\/([a-z0-9\-.]+\.)?imgur\.com\//i)) {
+            return true;
+        }
+
+        if (url.match(/^https?:\/\/([a-z0-9\-.]+\.)?freeimage\.host\//i)) {
+            return true;
+        }
+
+        if (url.match(/^https?:\/\/([a-z0-9\-.]+\.)?iili\.io\//i)) {
+            return true;
+        }
+
+        if (url.match(/^https?:\/\/([a-z0-9\-.]+\.)?redgifs\.com\//i)) {
+            return true;
+        }
+
+        if (url.match(/^https?:\/\/([a-z0-9\-.]+\.)?e621\.net\//i)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    updateOverrides(c: ComplexCharacter): void {
+        const match = c.character.description.match(/\[url=(.*?)]\s*?Rising\s*?Portrait\s*?\[\/url]/i);
+
+        if (match && match[1]) {
+            const avatarUrl = match[1].trim();
+
+            if (!this.isSafeImageURL(avatarUrl)) {
+                return;
+            }
+
+            if (c.character.name === core.characters.ownCharacter.name) {
+                const parent = remote.getCurrentWindow().webContents;
+
+                parent.send('update-avatar-url', c.character.name, avatarUrl);
+            }
+
+            core.characters.setOverride(c.character.name, 'avatarUrl', avatarUrl);
+        }
+    }
+
 
     async register(c: ComplexCharacter, skipStore: boolean = false): Promise<CharacterCacheRecord> {
         const k = AsyncCache.nameKey(c.character.name);
@@ -157,6 +206,8 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
         if (score === 0) {
             console.log(`Storing score 0 for character ${c.character.name}`);
         }
+
+        this.updateOverrides(c);
 
         // const totalScoreDimensions = match ? Matcher.countScoresTotal(match) : 0;
         // const dimensionsAtScoreLevel = match ? (Matcher.countScoresAtLevel(match, score) || 0) : 0;

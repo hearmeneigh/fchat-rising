@@ -1,4 +1,5 @@
 import { Character as CharacterProfile } from '../site/character_page/interfaces';
+import { CharacterOverrides } from './characters';
 
 //tslint:disable:no-shadowed-variable
 export namespace Connection {
@@ -170,7 +171,8 @@ export namespace Character {
 
         readonly ownProfile: CharacterProfile;
 
-        get(name: string): Character
+        get(name: string): Character;
+        setOverride(name: string, type: keyof CharacterOverrides, value: any): void;
     }
 
     export interface Character {
@@ -182,6 +184,7 @@ export namespace Character {
         readonly isBookmarked: boolean
         readonly isChatOp: boolean
         readonly isIgnored: boolean
+        readonly overrides: CharacterOverrides
     }
 }
 

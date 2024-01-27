@@ -26,6 +26,17 @@ When the 'Link Preview' feature is used, F-Chat Rising will connect to the URL b
   * Twitter previews are proxied through `api.fxtwitter.com`
   * YouTube previews are proxied through `yewtu.be`
 
+## High-Quality Portraits
+When 'High-Quality Portraits' feature is used, F-Chat Rising may connect to the following additional domains:
+
+* iili.io
+* e621.net
+* imgur.com
+* freeimage.host
+* redgifs.com
+
+If you are concerned about your security or privacy, consider disabling the high quality portraits feature in F-Chat Rising settings.
+
 ## Locally Stored Data
 F-Chat Rising stores data on your computer. This data contains conversation logs, settings, cache, and other
 information such as custom dictionary words. By default, the data is stored in:

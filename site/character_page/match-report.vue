@@ -4,7 +4,7 @@
 
         <div class="scores you">
             <h3>
-                <img :src="avatarUrl(characterMatch.you.you.name)" class="thumbnail"/>
+                <img :src="getAvatarUrl(characterMatch.you.you.name)" class="thumbnail"/>
                 {{characterMatch.you.you.name}}
                 <small v-if="characterMatch.youMultiSpecies" class="species">as {{getSpeciesStr(characterMatch.you)}}</small>
             </h3>
@@ -20,7 +20,7 @@
 
         <div class="scores them">
             <h3>
-                <img :src="avatarUrl(characterMatch.them.you.name)" class="thumbnail" />
+                <img :src="getAvatarUrl(characterMatch.them.you.name)" class="thumbnail" />
                 {{characterMatch.them.you.name}}
                 <small v-if="characterMatch.themMultiSpecies" class="species">as {{getSpeciesStr(characterMatch.them)}}</small>
             </h3>
@@ -54,8 +54,6 @@
         // @Prop({required: true})
         // readonly minimized = false;
 
-        readonly avatarUrl = Utils.avatarURL;
-
         isMinimized = false;
 
 
@@ -69,6 +67,16 @@
         // onMinimizedChange(): void {
         //     this.isMinimized = this.minimized;
         // }
+
+        getAvatarUrl(name: string) {
+          const c = core.characters.get(name);
+
+          if (c.overrides.avatarUrl) {
+            return c.overrides.avatarUrl;
+          }
+
+          return Utils.avatarURL(name);
+        }
 
         getScoreClass(score: Score): CssClassMap {
             const classes: CssClassMap = {};

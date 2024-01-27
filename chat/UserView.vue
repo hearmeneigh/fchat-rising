@@ -95,7 +95,8 @@ export function getStatusClasses(
       smartFilterIcon = 'user-filter fas fa-filter';
     }
 
-    const gender = character.gender !== undefined ? character.gender.toLowerCase() : 'none';
+    const baseGender = character.overrides.gender || character.gender;
+    const gender = baseGender !== undefined ? baseGender.toLowerCase() : 'none';
 
     const isBookmark = (showBookmark) && (core.connection.isOpen) && (core.state.settings.colorBookmarks) &&
         ((character.isFriend) || (character.isBookmarked));
@@ -208,6 +209,11 @@ export default class UserView extends Vue {
       this.update();
     }
 
+    @Watch('character.overrides.avatarUrl')
+    onAvatarUrlUpdate(): void {
+      this.update();
+    }
+
     update(): void {
       // console.log('user.view.update', this.character.name);
 
@@ -219,7 +225,7 @@ export default class UserView extends Vue {
       this.matchClass = res.matchClass;
       this.matchScore = res.matchScore;
       this.userClass = res.userClass;
-      this.avatarUrl = characterImage(this.character.name);
+      this.avatarUrl = this.character.overrides.avatarUrl || characterImage(this.character.name);
     }
 
 

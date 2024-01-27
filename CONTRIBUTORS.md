@@ -12,3 +12,8 @@ This project contains contributions from:
 * [Abeehiltz](https://github.com/Abeehiltz)
 * [greyhoof](https://github.com/greyhoof)
 * [F-List Team](https://github.com/f-list) (original F-Chat 3.0 client)
+
+
+## Acknowledgements
+Some emojis designed by [OpenMoji](https://openmoji.org/) – the open-source emoji and icon project. License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#)
+

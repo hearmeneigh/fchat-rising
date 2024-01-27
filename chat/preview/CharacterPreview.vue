@@ -2,7 +2,7 @@
   <div class="character-preview">
     <div v-if="match && character" class="row">
       <div class="col-2">
-        <img :src="avatarUrl(character.character.name)" class="character-avatar">
+        <img :src="getAvatarUrl()" class="character-avatar">
       </div>
 
       <div class="col-10">
@@ -140,7 +140,7 @@ export default class CharacterPreview extends Vue {
   subDomRole?: string;
 
   formatTime = formatTime;
-  readonly avatarUrl = Utils.avatarURL;
+  // readonly avatarUrl = Utils.avatarURL;
 
   TagId = TagId;
   Score = Score;
@@ -150,6 +150,13 @@ export default class CharacterPreview extends Vue {
 
   conversation?: Conversation.Message[];
 
+  getAvatarUrl(): string {
+    if (this.onlineCharacter && this.onlineCharacter.overrides.avatarUrl) {
+      return this.onlineCharacter.overrides.avatarUrl;
+    }
+
+    return Utils.avatarURL(this.characterName || this.character?.character.name || '');
+  }
 
   @Hook('mounted')
   mounted(): void {

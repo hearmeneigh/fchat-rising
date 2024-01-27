@@ -1,12 +1,19 @@
 import {isToday} from 'date-fns';
 import {Keys} from '../keys';
 import {Character, Conversation, Settings as ISettings} from './interfaces';
+import core from './core';
 
 export function profileLink(this: any | never, character: string): string {
     return `https://www.f-list.net/c/${character}`;
 }
 
 export function characterImage(this: any | never, character: string): string {
+    const c = core.characters.get(character);
+
+    if (c.overrides.avatarUrl) {
+        return c.overrides.avatarUrl;
+    }
+
     return `https://static.f-list.net/images/avatar/${character.toLowerCase()}.png`;
 }
 

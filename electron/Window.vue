@@ -10,7 +10,7 @@
                 <li v-for="(tab,index) in tabs" :key="'tab-' + index" class="nav-item" @click.middle="remove(tab)">
                     <a href="#" @click.prevent="show(tab)" class="nav-link tab"
                         :class="{active: tab === activeTab, hasNew: tab.hasNew && tab !== activeTab}">
-                        <img v-if="tab.user" :src="'https://static.f-list.net/images/avatar/' + tab.user.toLowerCase() + '.png'"/>
+                        <img v-if="tab.user || tab.avatarUrl" :src="getAvatarImage(tab)"/>
                         <span class="d-sm-inline d-none">{{tab.user || l('window.newTab')}}</span>
                         <a href="#" :aria-label="l('action.close')" style="margin-left:10px;padding:0;color:inherit;text-decoration:none"
                             @click.stop="remove(tab)"><i class="fa fa-times"></i>
@@ -108,6 +108,7 @@
         view: Electron.BrowserView
         hasNew: boolean
         tray: Electron.Tray
+        avatarUrl?: string;
     }
 
     // console.log(require('./build/tray.png').default);
@@ -192,6 +193,16 @@
                 menu.unshift({label: tab.user, enabled: false}, {type: 'separator'});
                 tab.tray.setContextMenu(remote.Menu.buildFromTemplate(menu));
             });
+            electron.ipcRenderer.on('update-avatar-url', (_e: Event, characterName: string, url: string) => {
+                const tab = this.tabs.find((tab) => tab.user === characterName);
+
+                if (!tab) {
+                  return;
+                }
+
+                Vue.set(tab, 'avatarUrl', url);
+                // tab.avatarUrl = url;
+            });
             electron.ipcRenderer.on('disconnect', (_e: Event, id: number) => {
                 const tab = this.tabMap[id];
                 if(tab.hasNew) {
@@ -268,6 +279,14 @@
             this.isMaximized = browserWindow.isMaximized();
 
             log.debug('init.window.mounted');
+        }
+
+        getAvatarImage(tab: Tab) {
+          if (tab.avatarUrl) {
+            return tab.avatarUrl;
+          }
+
+          return 'https://static.f-list.net/images/avatar/' + (tab.user || '').toLowerCase() + '.png';
         }
 
         destroyAllTabs(): void {
@@ -481,6 +500,7 @@
 
             img {
                 height: 28px;
+                width: 28px;
                 margin: -5px 3px -5px -5px;
             }
         }

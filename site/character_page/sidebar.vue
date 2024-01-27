@@ -1,7 +1,7 @@
 <template>
     <div id="character-page-sidebar" class="card bg-light">
         <div class="card-body">
-            <img :src="avatarUrl(character.character.name)" class="character-avatar" style="width: 100%; height: auto;">
+            <img :src="getAvatarUrl()" class="character-avatar" style="width: 100%; height: auto;">
 
             <div v-if="character.character.title" class="character-title">{{ character.character.title }}</div>
             <character-action-menu :character="character" @rename="showRename()" @delete="showDelete()"
@@ -106,6 +106,7 @@
     import { MatchReport } from '../../learn/matcher';
     import MemoDialog from './memo_dialog.vue';
     import ReportDialog from './report_dialog.vue';
+    import core from '../../chat/core';
 
     interface ShowableVueDialog extends Vue {
         show(): void
@@ -151,6 +152,16 @@
         readonly shared: SharedStore = Store;
         readonly quickInfoIds: ReadonlyArray<number> = [1, 3, 2, 49, 9, 29, 15, 41, 25]; // Do not sort these.
         readonly avatarUrl = Utils.avatarURL;
+
+        getAvatarUrl(): string {
+          const onlineCharacter = core.characters.get(this.character.character.name);
+
+          if (onlineCharacter && onlineCharacter.overrides.avatarUrl) {
+            return onlineCharacter.overrides.avatarUrl;
+          }
+
+          return Utils.avatarURL(this.character.character.name);
+        }
 
         badgeClass(badgeName: string): string {
             return `character-badge-${badgeName.replace('.', '-')}`;

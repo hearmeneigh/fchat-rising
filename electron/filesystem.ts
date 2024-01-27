@@ -135,7 +135,7 @@ export function fixLogs(character: string): void {
                 fs.readSync(fd, buffer, 0, 50100, pos);
                 const deserialized = deserializeMessage(buffer, 0, (name) => ({
                     gender: 'None', status: 'online', statusText: '', isFriend: false, isBookmarked: false, isChatOp: false,
-                    isIgnored: false, name
+                    isIgnored: false, name, overrides: {}
                 }));
                 const time = deserialized.message.time;
                 const day = Math.floor(time.getTime() / dayMs - time.getTimezoneOffset() / 1440);

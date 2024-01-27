@@ -1,15 +1,34 @@
 # Changelog
 
+## Canary
+* High-quality portraits
+  * Add the following anywhere in your character's profile to enable high-quality portrait:
+    * `[url=https://some.domain.ext/path/to/image.png]Rising Portrait[/url]`
+    * Replace `https://some.domain.ext/path/to/image.png` with the URL to your portrait.
+    * The URL must point directly to an image resource, such as PNG, GIF, or JPG (think of it as `<img src="YOUR URL" />`).
+  * Yes, animations are supported! (GIF, APNG, AVIF, WebP)
+  * The image must be hosted on one of the following services:
+    * `f-list.net` (profile images and inline images are supported)
+    * [e621.net](https://e621.net)
+    * [imgur.com](https://imgur.com)
+    * [freeimage.host](https://freeimage.host)
+    * [redgifs.com](https://redgifs.com)
+  * High-quality portraits are only visible to other F-Chat Rising users; users on other clients will see your regular portrait.
+  * If your image is not a square, [you're gonna have a bad time](https://www.youtube.com/watch?v=6Ls5j5iz2eA).
+* [YiffBot 4000](https://www.f-list.net/c/YiffBot%204000) integration
+* Fix "select/unselect all" behavior in Post Ads (credit: [@FatCatClient](https://github.com/FatCatClient))
+* Extended emoji support (credit: [@FatCatClient](https://github.com/FatCatClient))
+
 ## 1.25.1
 * Shift-clicking in eicon selector adds the icon without closing the selector
 * Minor updates to browser switching
 
 ## 1.25.0
-* Added option for switching browsers (Credit: [@greyhoof](https://github.com/greyhoof))
+* Added option for switching browsers (credit: [@greyhoof](https://github.com/greyhoof))
 * Fixed broken adblocker
-* Fixed incorrect BBCode rendering of `[collapse=[hr]test[hr]]` (Credit: [@Abeehiltz](https://github.com/Abeehiltz))
+* Fixed incorrect BBCode rendering of `[collapse=[hr]test[hr]]` (credit: [@Abeehiltz](https://github.com/Abeehiltz))
 * Fixed TikTok previews
-* Switched `node-sass` to `sass` for ARM64 compatibility (Credit: [@WhiteHusky](https://github.com/WhiteHusky))
+* Switched `node-sass` to `sass` for ARM64 compatibility (credit: [@WhiteHusky](https://github.com/WhiteHusky))
 
 ## 1.24.2
 * Hotfix to address connectivity issues

@@ -12,9 +12,16 @@ class Character implements Interfaces.Character {
     isBookmarked = false;
     isChatOp = false;
     isIgnored = false;
+    overrides: CharacterOverrides = {};
 
     constructor(public name: string) {
     }
+}
+
+export interface CharacterOverrides {
+    avatarUrl?: string;
+    gender?: Interfaces.Gender;
+    status?: Interfaces.Status;
 }
 
 class State implements Interfaces.State {
@@ -54,6 +61,14 @@ class State implements Interfaces.State {
         }
         character.status = status;
         character.statusText = decodeHTML(text);
+    }
+
+    setOverride(name: string, type: 'avatarUrl', value: string | undefined): void;
+    setOverride(name: string, type: 'gender', value: Interfaces.Gender | undefined): void;
+    setOverride(name: string, type: 'status', value: Interfaces.Status | undefined): void;
+    setOverride(name: string, type: keyof CharacterOverrides, value: any): void {
+        const char = this.get(name);
+        char.overrides[type] = value;
     }
 
     async resolveOwnProfile(): Promise<void> {
