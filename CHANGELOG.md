@@ -1,17 +1,19 @@
 # Changelog
 
-## Canary
+## 1.26.0
 * High-quality portraits
+  * Override the default 100x100px portrait with a high-resolution image 
   * Add the following anywhere in your character's profile to enable high-quality portrait:
     * `[url=https://some.domain.ext/path/to/image.png]Rising Portrait[/url]`
     * Replace `https://some.domain.ext/path/to/image.png` with the URL to your portrait.
     * The URL must point directly to an image resource, such as PNG, GIF, or JPG (think of it as `<img src="YOUR URL" />`).
+    * You will need to refresh the character profile in F-Chat Rising to see the new portrait.
   * Yes, animations are supported! (GIF, APNG, AVIF, WebP)
   * The image must be hosted on one of the following services:
-    * `f-list.net` (profile images and inline images are supported)
+    * `f-list.net` (profile image URLs and inline image URLs are supported)
     * [e621.net](https://e621.net)
     * [imgur.com](https://imgur.com)
-    * [freeimage.host](https://freeimage.host)
+    * [freeimage.host](https://freeimage.host) and its short-url `iili.io`
     * [redgifs.com](https://redgifs.com)
   * High-quality portraits are only visible to other F-Chat Rising users; users on other clients will see your regular portrait.
   * If your image is not a square, [you're gonna have a bad time](https://www.youtube.com/watch?v=6Ls5j5iz2eA).
