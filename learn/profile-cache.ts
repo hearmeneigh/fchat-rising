@@ -184,7 +184,7 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
             const avatarUrl = match[1].trim();
 
             if (!this.isSafeImageURL(avatarUrl)) {
-                log.info('portrait.hq.invalid.domain', { url: avatarUrl });
+                log.info('portrait.hq.invalid.domain', { name: c.character.name, url: avatarUrl });
                 return;
             }
 
@@ -194,7 +194,7 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
                 parent.send('update-avatar-url', c.character.name, avatarUrl);
             }
 
-            log.info('portrait.hq.url', { url: avatarUrl });
+            log.info('portrait.hq.url', { name: c.character.name, url: avatarUrl });
             core.characters.setOverride(c.character.name, 'avatarUrl', avatarUrl);
         }
     }
