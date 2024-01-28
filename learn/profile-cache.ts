@@ -9,7 +9,7 @@ import { CharacterImage, SimpleCharacter } from '../interfaces';
 import { Scoring } from './matcher-types';
 import { matchesSmartFilters } from './filter/smart-filter';
 import * as remote from '@electron/remote';
-
+import log from 'electron-log'; //tslint:disable-line:match-default-export-name
 
 export interface MetaRecord {
     images: CharacterImage[] | null;
@@ -83,10 +83,10 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
             return null;
         }
 
-        if (false) {
-            console.log(`Retrieve '${name}' for channel '${fromChannel}, gap: ${(Date.now() - this.lastFetch)}ms`);
-            this.lastFetch = Date.now();
-        }
+        // if (false) {
+        //     log.info(`Retrieve '${name}' for channel '${fromChannel}, gap: ${(Date.now() - this.lastFetch)}ms`);
+        //     this.lastFetch = Date.now();
+        // }
 
         const pd = await this.store.getProfile(name);
 
@@ -184,6 +184,7 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
             const avatarUrl = match[1].trim();
 
             if (!this.isSafeImageURL(avatarUrl)) {
+                log.info('portrait.hq.invalid.domain', { url: avatarUrl });
                 return;
             }
 
@@ -193,6 +194,7 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
                 parent.send('update-avatar-url', c.character.name, avatarUrl);
             }
 
+            log.info('portrait.hq.url', { url: avatarUrl });
             core.characters.setOverride(c.character.name, 'avatarUrl', avatarUrl);
         }
     }
@@ -204,7 +206,7 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
         let score = (!match || match.score === null) ? Scoring.NEUTRAL : match.score;
 
         if (score === 0) {
-            console.log(`Storing score 0 for character ${c.character.name}`);
+            log.info('cache.profile.store.zero.score', { name: c.character.name });
         }
 
         this.updateOverrides(c);
