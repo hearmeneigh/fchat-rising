@@ -1,6 +1,6 @@
 # Changelog
 
-## Canary
+## 1.26.1
 * Added high-quality portrait check to Profile Helper
 * Added option for disabling high-quality portraits
 * Added cleaner `[quote][/quote]` style for profiles
