@@ -63,6 +63,7 @@ export class Settings implements ISettings {
     risingColorblindMode = false;
     risingShowPortraitNearInput = true;
     risingShowPortraitInMessage = true;
+    risingShowHighQualityPortraits = true;
 
     risingFilter = {
         hideAds: false,

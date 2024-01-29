@@ -1,5 +1,11 @@
 # Changelog
 
+## Canary
+* Added high-quality portrait check to Profile Helper
+* Added option for disabling high-quality portraits
+* Added cleaner `[quote][/quote]` style for profiles
+* Fixed Redgifs previews (again)
+
 ## 1.26.0
 * High-quality portraits
   * Override the default 100x100px portrait with a high-resolution image 
@@ -18,7 +24,7 @@
   * High-quality portraits are only visible to other F-Chat Rising users; users on other clients will see your regular portrait.
   * If your image is not a square, [you're gonna have a bad time](https://www.youtube.com/watch?v=6Ls5j5iz2eA).
 * [YiffBot 4000](https://www.f-list.net/c/YiffBot%204000) integration
-* Fix "select/unselect all" behavior in Post Ads (credit: [@FatCatClient](https://github.com/FatCatClient))
+* Fixed "select/unselect all" behavior in Post Ads (credit: [@FatCatClient](https://github.com/FatCatClient))
 * Extended emoji support (credit: [@FatCatClient](https://github.com/FatCatClient))
 
 ## 1.25.1

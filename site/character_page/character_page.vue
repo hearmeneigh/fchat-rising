@@ -39,7 +39,7 @@
                                 <div role="tabpanel" v-show="tab === '0'" id="overview">
                                     <match-report :characterMatch="characterMatch" v-if="shouldShowMatch()"></match-report>
 
-                                    <div style="margin-bottom:10px">
+                                    <div style="margin-bottom:10px" class="character-description">
                                         <bbcode :text="character.character.description"></bbcode>
                                     </div>
 
@@ -932,6 +932,25 @@
         top: -1rem;
         z-index: 10000;
         background: var(--headerBackgroundMaskColor) !important;
+    }
+
+    .character-description .bbcode {
+      white-space: pre-line !important;
+
+      blockquote {
+        margin: 0;
+        background-color: var(--characterImageWrapperBg);
+        padding: 1em;
+        border-radius: 3px;
+
+        .quoteHeader {
+          border-bottom: 1px solid;
+          text-transform: uppercase;
+          font-weight: bold;
+          font-size: 80%;
+          opacity: 0.7;
+        }
+      }
     }
 
 </style>

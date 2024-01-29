@@ -212,6 +212,13 @@
                     Show character portrait with each message
                 </label>
             </div>
+
+            <div class="form-group">
+                <label class="control-label" for="risingShowHighQualityPortraits">
+                    <input type="checkbox" id="risingShowHighQualityPortraits" v-model="risingShowHighQualityPortraits"/>
+                    Show high-quality portraits
+                </label>
+            </div>
         </div>
 
         <div v-show="selectedTab === '3'">
@@ -383,6 +390,7 @@
 
         risingShowPortraitNearInput!: boolean;
         risingShowPortraitInMessage!: boolean;
+        risingShowHighQualityPortraits!: boolean;
 
         risingFilter!: SmartFilterSettings = {} as any;
 
@@ -427,6 +435,7 @@
             this.risingColorblindMode = settings.risingColorblindMode;
             this.risingShowPortraitNearInput = settings.risingShowPortraitNearInput;
             this.risingShowPortraitInMessage = settings.risingShowPortraitInMessage;
+            this.risingShowHighQualityPortraits = settings.risingShowHighQualityPortraits;
 
             this.risingFilter = settings.risingFilter;
         }
@@ -490,6 +499,7 @@
                 risingShowUnreadOfflineCount: this.risingShowUnreadOfflineCount,
                 risingShowPortraitNearInput: this.risingShowPortraitNearInput,
                 risingShowPortraitInMessage: this.risingShowPortraitInMessage,
+                risingShowHighQualityPortraits: this.risingShowHighQualityPortraits,
 
                 risingColorblindMode: this.risingColorblindMode,
                 risingFilter: {

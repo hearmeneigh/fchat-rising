@@ -52,6 +52,7 @@
                 </template>
             </div>
         </div>
+        <div class="search-yiffbot-suggestion" v-if="isYiffBot4000Online()" @click.prevent="showYiffBot4000()"><div class="btn">No luck? Try AI play with <span>YiffBot 4000</span></div></div>
     </modal>
 </template>
 
@@ -93,7 +94,6 @@
       character: Character;
       profile: CharacterCacheRecord | null;
     }
-
 
     function sort(resultX: SearchResult, resultY: SearchResult): number {
         const x = resultX.character;
@@ -185,6 +185,29 @@
         // tslint:disable-next-line no-any
         scoreWatcher: ((event: any) => void) | null = null;
 
+        isYiffBot4000Online(): boolean {
+          return core.characters.get('YiffBot 4000').status !== 'offline';
+        }
+
+        showYiffBot4000(): void {
+          const character = core.characters.get('YiffBot 4000');
+
+          if (character.status === 'offline') {
+            return;
+          }
+
+          const conversation = core.conversations.getPrivate(character);
+
+          conversation.show();
+          this.hide();
+
+          const last = _.last(conversation.messages);
+
+          if (!last || last.time.getTime() < Date.now() - 1000 * 60 * 30) {
+            conversation.enteredText = 'Hello!';
+            conversation.send();
+          }
+        }
 
         @Hook('created')
         async created(): Promise<void> {
@@ -694,6 +717,25 @@
 
         .search-spinner {
             // float: right;
+        }
+
+        .search-yiffbot-suggestion .btn {
+          padding-left: 5px;
+          padding-right: 5px;
+          margin-top: 1em;
+          margin-bottom: 0;
+          padding-top: 0;
+          padding-bottom: 0;
+          background-color: var(--secondary);
+
+          &:hover {
+            background-color: var(--blue);
+          }
+
+          span {
+            color: var(--yellow);
+            font-weight: bold;
+          }
         }
     }
 </style>

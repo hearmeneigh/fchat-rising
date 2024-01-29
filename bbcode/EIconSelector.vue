@@ -151,8 +151,8 @@ export default class EIconSelector extends CustomDialog {
 
       case 'symbols':
         return ['loveslove', 'pimpdcash', 'pls stop', 'paw2', 'gender-female', 'gender-male', 'gendershemale', 'gender-cuntboy', 'gender-mherm',
-        'gender-transgender', 'usflag', 'europeflag', 'lgbt', 'transflag', 'sunnyuhsuperlove', 'discovered', 'thbun',
-        'goldcoin1', 'star', 'full moon', 'sunshine', 'pinetree', 'carrots1', 'smashletter', 'chemicalscience', 'ghostbuster',
+        'gender-transgender', 'usflag', 'europeflag', 'lgbt', 'transflag', 'sunnyuhsuperlove', 'discovered',
+        'goldcoin1', 'star', 'full moon', 'sunshine', 'pinetree', 'carrots1', 'smashletter', 'ghostbuster',
         'cuckquean', 'goldendicegmgolddicegif', 'pentagramo', 'sexsymbol', 'idnd1', 'instagram', 'twitterlogo', 'snapchaticon',
         'tiktok', 'twitchlogo', 'discord', 'uber', 'google', 'nvidia', 'playstation',
         'suitclubs', 'suitdiamonds', 'suithearts', 'suitspades', 'chainscuffs',
@@ -164,11 +164,11 @@ export default class EIconSelector extends CustomDialog {
       case 'bubbles':
         return ['takemetohornyjail', 'notcashmoney', 'lickme', 'iacs', 'imahugeslut', 'fuckyouasshole', 'bubblecute', 'pat my head',
         'chorse', 'knotslutbubble', 'toofuckinghot', 'pbmr', 'imabimbo', 'dicefuck', 'ciaig', 'horseslut', 'fatdick', 'tomboypussy',
-        'breakthesubs', 'fuckingnya', 'iltclion', 'suckfuckobey', 'shemale', 'breedmaster', 'imastepfordwife', 'prier ahegao',
+        'breakthesubs', 'fuckingnya', 'iltclion', 'suckfuckobey', 'shemale', 'breedmaster', 'imastepfordwife', 'ahegaoalert2',
         'buttslutbb', 'notgayoranything', 'onlyfans', 'horsecockneed', 'crimes', 'breed143', 'nagagross', 'willrim', 'muskslut',
         '4lewdbubble', 'shimathatlewd', 'hypnosiss', 'imahypnoslut', 'sheepsass2', 'imahugeslut', 'notahealslut', 'ratedmilf',
         'ratedstud', 'ratedslut', '5lewdbubble', 'xarcuminme', 'xarcumonme', 'choke me', 'iamgoingtopunchyou', 'snapmychoker',
-        'rude1', 'fuckbun', 'iamindanger', 'fuckingelves', 'sluttery', 'helpicantstopsuckingcocks', 'talkpooltoy', 'thatskindahot', 'ygod',
+        'rude1', 'fuckbun', 'iamindanger', 'elves', 'sluttery', 'helpicantstopsuckingcocks', 'talkpooltoy', 'thatskindahot', 'ygod',
         'simpbait', 'eyesuphere', 'fuckpiggy', 'peggable2', 'sydeanothere', 'nothingcan', 'pawslut', 'stupidboys', 'corpsestare-',
         'dinnersex', 'plappening', 'fallout-standby', 'inbagg', 'request denied', 'goodboy0', 'goodending', 'milky2', 'howbadcanibe',
         'gwanna', 'spitinmouth', 'bathwater'];
@@ -178,15 +178,15 @@ export default class EIconSelector extends CustomDialog {
         'rorobutt2', 'fingerlick', 'lapgrind', 'jackthighs', 'a condom', 'wolf abs', 'musclefuck2', 'verobutt3', 'bumsqueeze',
         'realahegao4', 'influencerhater', 'assfucker', 'gagged2', 'ballsack3', 'fingerblast3', 'sloppy01', 'sybian',
         'floppyhorsecock', 'blackshem1', 'fingersucc', 'vullylick', 'fingersucc', 'cmontakeit', 'jessi flash', 'poju-butt',
-        'cheegrope2', 'patr1', 'ahega01 2', 'handjob1nuke', 'harmanfingers', 'hermione1', '2buttw1', 'dropsqueeze',
+        'cheegrope2', 'patr1', 'ahega01 2', 'handjob1nuke', 'harmanfingers', '2buttw1', 'dropsqueeze',
         'lixlove', 'bbctitjob6', 'appreciativetease', 'bimbowhisper', 'subj3', 'salivashare', 'ballsworship3', 'wolfsknot2', 'gaykiss',
-        'slurpkiss', 'absbulge', 'cockiss', 'horsedick11', 'knot1', 'g4ebulge', 'blackadamrough', 'knotdog', 'flaunt', 'cummiefj', 'lovetosuck',
+        'slurpkiss', 'absbulge', 'cockiss', 'horsedick11', 'knotknotknot', 'g4ebulge', 'blackadamrough', 'knotdog', 'flaunt', 'cummiefj', 'lovetosuck',
         'worship', 'hopelessly in love', 'knotts', 'cockloveeee', 'donglove', 'knotjob2', 'cummz', 'every drop', 'edgyoops',
         'orccummies2', 'oralcreampie100px', 'horseoral9a', 'swallowit', 'realahegao4', 'gayicon2', 'slut4', 'hossspurties2', 'cumringgag',
         'jillbimbogiffell2'];
 
       case 'memes':
-        return ['guncock', 'michaelguns', 'watchbadass', 'gonnabang', 'flirting101', 'monkeymeme', 'monkeymeme2', 'horsenoises',
+        return ['guncock', 'michaelguns', 'watchbadass', 'gonnabang', 'flirting101', 'monkeymeme', 'monkeymeme2', 'loudnoises',
         'nyancat', 'gayb', 'fortasshole', 'dickletsign', 'sausageface', 'siren0', 'apologize to god', 'jabbalick', 'zeldawink',
         'whatislove', 'surprisemothafucka', 'females', 'thanksihateit', 'hell is this', 'confused travolta', 'no words', 'coffindance',
         'homelander', 'thatsapenis', 'pennyhee', 'kermitbusiness', 'goodbye', 'rickle', 'shiamagic', 'oag', ];

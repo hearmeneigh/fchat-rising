@@ -237,6 +237,7 @@ export namespace Settings {
         readonly risingColorblindMode: boolean;
         readonly risingShowPortraitNearInput: boolean;
         readonly risingShowPortraitInMessage: boolean;
+        readonly risingShowHighQualityPortraits: boolean;
 
         readonly risingFilter: SmartFilterSettings;
     }

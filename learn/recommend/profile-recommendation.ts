@@ -4,6 +4,7 @@ import Axios from 'axios';
 import { CharacterAnalysis, Matcher } from '../matcher';
 import { FurryPreference, Kink, mammalSpecies, Species } from '../matcher-types';
 import { characterImage } from '../../chat/common';
+import { ProfileCache } from '../profile-cache';
 
 export enum ProfileRecommendationLevel {
   INFO = 'info',
@@ -39,6 +40,7 @@ export class ProfileRecommendationAnalyzer {
     this.recommendations = [];
 
     await this.checkPortrait();
+    await this.checkHqPortrait();
 
     this.checkMissingProperties();
     this.checkSpeciesPreferences();
@@ -53,12 +55,22 @@ export class ProfileRecommendationAnalyzer {
   }
 
   protected async checkPortrait(): Promise<void> {
-    const profileUrl = characterImage(this.profile.character.name);
+    const portraitUrl = characterImage(this.profile.character.name);
 
-    const result = await Axios.head(profileUrl);
+    const result = await Axios.head(portraitUrl);
 
     if (_.trim(result.headers['etag'] || '', '"').trim().toLowerCase() === '639d154d-16c3') {
       this.add(`ADD_AVATAR`, ProfileRecommendationLevel.CRITICAL, 'Add an avatar portrait', 'Profiles with an avatar portrait stand out in chats.', 'https://wiki.f-list.net/Guide:_Character_Profiles#Avatar');
+    }
+  }
+
+  protected async checkHqPortrait(): Promise<void> {
+    const profileUrl = ProfileCache.detectRisingPortraitURL(this.profile.character.description);
+
+    if (!profileUrl) {
+      this.add(`ADD_HQ_AVATAR`, ProfileRecommendationLevel.CRITICAL, 'Add a high-quality portrait', 'Profiles with a high-quality portraits stand out in chats with other F-Chat Rising players.', 'https://github.com/hearmeneigh/fchat-rising/wiki/High%E2%80%90Quality-Portraits');
+    } else if (!ProfileCache.isSafeRisingPortraitURL(profileUrl)) {
+      this.add(`ADD_HQ_AVATAR_SAFE_DOMAIN`, ProfileRecommendationLevel.CRITICAL, 'Unsupported high-quality portrait URL', 'High-quality portraits can only point to f-list.net, freeimages.host, e621.net, iili.io, imgur.com, or redgifs.com domains.', 'https://github.com/hearmeneigh/fchat-rising/wiki/High%E2%80%90Quality-Portraits');
     }
   }
 

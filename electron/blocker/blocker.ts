@@ -5,6 +5,7 @@ import path from 'path';
 import fs from 'fs';
 import * as _ from 'lodash';
 import * as electron from 'electron';
+import { NetworkFilter } from '@cliqz/adblocker';
 
 export class BlockerIntegration {
   protected static readonly adBlockerLists = [
@@ -53,13 +54,17 @@ export class BlockerIntegration {
 
       log.debug('adblock.session.created');
 
+      blocker.update({
+        newNetworkFilters: [
+          NetworkFilter.parse('@@||redgifs.com')!,
+        ]
+      });
+
       blocker.enableBlockingInSession(session);
-      // blocker.enableBlockingInSession(electron.session.defaultSession);
 
       log.debug('adblock.enabled');
 
       BlockerIntegration.configureBlocker(blocker, session);
-      // BlockerIntegration.configureBlocker(blocker, electron.session.defaultSession);
 
       log.debug('adblock.session.attached');
 

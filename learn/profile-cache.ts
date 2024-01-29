@@ -72,7 +72,7 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
     }
 
 
-    async get(name: string, skipStore: boolean = false, fromChannel?: string): Promise<CharacterCacheRecord | null> {
+    async get(name: string, skipStore: boolean = false, _fromChannel?: string): Promise<CharacterCacheRecord | null> {
         const key = AsyncCache.nameKey(name);
 
         if (key in this.cache) {
@@ -149,7 +149,7 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
         }
     }
 
-    isSafeImageURL(url: string): boolean {
+    static isSafeRisingPortraitURL(url: string): boolean {
         if (url.match(/^https?:\/\/static\.f-list\.net\//i)) {
             return true;
         }
@@ -177,14 +177,26 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
         return false;
     }
 
-    updateOverrides(c: ComplexCharacter): void {
-        const match = c.character.description.match(/\[url=(.*?)]\s*?Rising\s*?Portrait\s*?\[\/url]/i);
+    static detectRisingPortraitURL(description: string): string | null {
+        if (!core.state.settings.risingShowHighQualityPortraits) {
+            return null;
+        }
+
+        const match = description.match(/\[url=(.*?)]\s*?Rising\s*?Portrait\s*?\[\/url]/i);
 
         if (match && match[1]) {
-            const avatarUrl = match[1].trim();
+            return match[1].trim();
+        }
 
-            if (!this.isSafeImageURL(avatarUrl)) {
-                log.info('portrait.hq.invalid.domain', { name: c.character.name, url: avatarUrl });
+        return null;
+    }
+
+    updateOverrides(c: ComplexCharacter): void {
+        const avatarUrl = ProfileCache.detectRisingPortraitURL(c.character.description);
+
+        if (avatarUrl) {
+            if (!ProfileCache.isSafeRisingPortraitURL(avatarUrl)) {
+                log.info('portrait.hq.invalid.domain', { name, url: avatarUrl });
                 return;
             }
 
@@ -198,7 +210,6 @@ export class ProfileCache extends AsyncCache<CharacterCacheRecord> {
             core.characters.setOverride(c.character.name, 'avatarUrl', avatarUrl);
         }
     }
-
 
     async register(c: ComplexCharacter, skipStore: boolean = false): Promise<CharacterCacheRecord> {
         const k = AsyncCache.nameKey(c.character.name);
