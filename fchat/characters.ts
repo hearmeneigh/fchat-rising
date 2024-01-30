@@ -3,6 +3,7 @@ import { methods } from '../site/character_page/data_store';
 import {decodeHTML} from './common';
 import {Character as Interfaces, Connection} from './interfaces';
 import { Character as CharacterProfile } from '../site/character_page/interfaces';
+import Vue from 'vue';
 
 class Character implements Interfaces.Character {
     gender: Interfaces.Gender = 'None';
@@ -68,7 +69,8 @@ class State implements Interfaces.State {
     setOverride(name: string, type: 'status', value: Interfaces.Status | undefined): void;
     setOverride(name: string, type: keyof CharacterOverrides, value: any): void {
         const char = this.get(name);
-        char.overrides[type] = value;
+
+        Vue.set(char.overrides, type, value);
     }
 
     async resolveOwnProfile(): Promise<void> {

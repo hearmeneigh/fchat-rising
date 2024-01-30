@@ -1,6 +1,8 @@
+import _ from 'lodash';
 import { EventBus } from '../chat/preview/event-bus';
 import { Message } from '../chat/common';
 import core from '../chat/core';
+import Vue from 'vue';
 
 export function initYiffbot4000Integration() {
   EventBus.$on('private-message', ({ message }: { message: Message }) => {
@@ -14,8 +16,8 @@ export function initYiffbot4000Integration() {
           if (manifest.type === 'FChatRisingBotManifest' && manifest.version >= 1) {
             const char = core.characters.get('YiffBot 4000');
 
-            char.overrides.avatarUrl = manifest.avatarUrl;
-            char.overrides.gender = manifest.gender;
+            Vue.set(char.overrides, 'avatarUrl', manifest.avatarUrl);
+            Vue.set(char.overrides, 'gender', _.get(manifest, 'assistant.gender'));
           }
         } catch (err) {
           console.error('FChatRisingBotManifest.error', err);
