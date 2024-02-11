@@ -1,0 +1,65 @@
+@import "~bootstrap/scss/functions";
+@import "../../functions";
+@import "../variables/dracula_variables";
+@import "~bootstrap/scss/variables";
+@import "../../flist_derived";
+@import "../variables/dracula_derived";
+
+// Apply variables to theme.
+@import "../chat";
+
+* {
+    &::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 2px $card-border-color;
+        border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar {
+        width: 12px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.8);
+        background-color: $gray-300;
+        &:hover {
+            background-color: $gray-500;
+        }
+
+        &:active {
+            background-color: $gray-700;
+        }
+    }
+}
+
+$genders: (
+        "shemale": #BD93F9,
+        "herm": #680DE7,
+        "none": #6272A4,
+        "female": #FF79C6,
+        "male": #8BE9FD,
+        "male-herm": #03A5C9,
+        "transgender": #FFB86C,
+        "cunt-boy": #50FA7B,
+);
+
+@each $gender, $color in $genders {
+  .gender-#{$gender} {
+    color: $color;
+  }
+
+  .message-event .gender-#{$gender} {
+    color: lighten($color, 5%)
+  }
+}
+
+.colorblindMode {
+  @import "../colorblind";
+  @import "../../rising";
+
+  @each $varName, $value in $risingVariables {
+    --#{$varName}: #{$value};
+  }
+}
+
+
