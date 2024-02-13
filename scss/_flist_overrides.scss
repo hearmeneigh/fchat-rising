@@ -46,6 +46,11 @@ $font-family-base: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue", A
 body{
   font-family: $font-family-base;
 }
+
+input:checked {
+  accent-color: $primary;
+  border-color: $primary;
+}
 // HACK: Bootstrap offers no way to override these by default, and they are SUPER bright.
 // The level numbers have been changed to make them work for dark themes.
 @if $theme-is-dark {

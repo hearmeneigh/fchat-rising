@@ -50,6 +50,7 @@ $grid-gutter-width: 20px;
 $input-bg: $gray-200;
 $input-color: $black;
 $custom-select-bg: $gray-200;
+$form-check-input-checked-bg-color: $primary;
 
 // List groups
 $list-group-bg: $gray-200;
@@ -111,7 +112,7 @@ $characterInfotagColor: rgba(255, 255, 255, 0.7);
 $messageTimeBgColor: #4f4f61;
 $messageTimeFgColor: #dadada;
 
-$headerBackgroundMaskColor: #2a2a54;
+$headerBackgroundMaskColor: $gray-200;
 
 $linkForcedColor: white;
 $tabSecondaryFgColor: rgba(255, 255, 255, 0.5);
