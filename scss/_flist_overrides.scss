@@ -35,6 +35,11 @@ sup {
 
 $theme-is-dark: false !default;
 
+input:checked {
+  accent-color: $primary;
+  border-color: $primary;
+}
+
 @font-face {
   font-family: "OpenMojiDemoFont";
   //The url is checked from the theme file, so we have to use this absolutely bonkers relative path.

@@ -1,0 +1,5 @@
+$blue-color: $blue-color;
+
+.blackText {
+  @include text-outline($gray-600);
+}
