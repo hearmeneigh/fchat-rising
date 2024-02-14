@@ -38,7 +38,7 @@ $genders: (
         "none": $dracula-comment,
         "female": $dracula-pink,
         "male": $dracula-cyan,
-        "male-herm": darken(saturate($dracula-cyan, 0.45), 36.86),
+        "male-herm": lighten(saturate($dracula-cyan, 0.45), 36.86),
         "transgender": $dracula-orange,
         "cunt-boy": $dracula-green
 );
