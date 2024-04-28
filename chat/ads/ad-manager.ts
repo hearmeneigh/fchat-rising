@@ -22,7 +22,7 @@ export interface RecoverableAd {
 
 
 export class AdManager {
-    static readonly POSTING_PERIOD = 3 * 60 * 60 * 1000;
+    static readonly POSTING_PERIOD = Number.MAX_SAFE_INTEGER;
     static readonly START_VARIANCE = 3 * 60 * 1000;
     static readonly POST_VARIANCE = 8 * 60 * 1000;
     static readonly POST_DELAY = 1.5 * 60 * 1000;

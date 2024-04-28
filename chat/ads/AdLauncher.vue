@@ -89,7 +89,8 @@ export default class AdLauncherDialog extends CustomDialog {
     { value: 30, title: '30 minutes' },
     { value: 60, title: '1 hour' },
     { value: 120, title: '2 hours' },
-    { value: 180, title: '3 hours' }
+    { value: 180, title: '3 hours' },
+    { value: Number.MAX_SAFE_INTEGER, title: 'Endless' }
   ]
 
   load() {
