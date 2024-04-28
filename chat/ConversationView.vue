@@ -620,7 +620,7 @@
                     ((adManager.getNextPostDue()) && (!adManager.getFirstPost())) ? 'admgr.postingBegins' : 'admgr.nextPostDue',
                     diffMins,
                     diffSecs
-                ) + l('admgr.expiresIn', expDiffMins, expDiffSecs);
+                ) + (Number.isNaN(expDiffMins) || Number.isNaN(expDiffSecs) ? l('admgr.neverExpires') : l('admgr.expiresIn', expDiffMins, expDiffSecs));
 
                 this.adsRequireSetup = false;
             } else {

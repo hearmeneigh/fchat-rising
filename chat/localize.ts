@@ -20,6 +20,7 @@ const strings: {[key: string]: string | undefined} = {
     'admgr.postingBegins': 'Posting beings in {0}m {1}s',
     'admgr.nextPostDue': 'Next ad in {0}m {1}s',
     'admgr.expiresIn': ', auto-posting expires in {0}m {1}s',
+    'admgr.neverExpires': ', auto-posting never expires',
     'admgr.noAds': 'No ads have been set up -- auto-posting will be cancelled. Click "Ads > Edit Channel Ads..." to set up your ads.',
     'admgr.activeHeader': 'Auto-Posting Ads',
     'admgr.comingNext': 'Coming Next',
