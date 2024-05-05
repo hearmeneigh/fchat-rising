@@ -543,7 +543,7 @@
             }
 
             return {
-              [`theme-${this.settings.theme}`]: true,
+              [`theme-${core.state.settings.risingCharacterTheme || this.settings.theme}`]: true,
               colorblindMode: core.state.settings.risingColorblindMode,
               disableWindowsHighContrast: core.state.generalSettings?.risingDisableWindowsHighContrast || false
             };
@@ -593,9 +593,9 @@
 
         get styling(): string {
             try {
-                return `<style id="themeStyle">${fs.readFileSync(path.join(__dirname, `themes/${this.settings.theme}.css`), 'utf8').toString()}</style>`;
+                return `<style id="themeStyle">${fs.readFileSync(path.join(__dirname, `themes/${((this.character != undefined && core.state.settings.risingCharacterTheme) || this.settings.theme)}.css`), 'utf8').toString()}</style>`;
             } catch(e) {
-                if((<Error & {code: string}>e).code === 'ENOENT' && this.settings.theme !== 'default') {
+              if((<Error & {code: string}>e).code === 'ENOENT' && this.settings.theme !== 'default') {
                     this.settings.theme = 'default';
                     return this.styling;
                 }
