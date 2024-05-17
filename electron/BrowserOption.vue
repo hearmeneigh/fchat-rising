@@ -81,18 +81,12 @@ import l from '../chat/localize';
 import {GeneralSettings} from './common';
 import fs from "fs";
 import path from "path";
-import Modal from "../components/Modal.vue";
-import modal from "../components/Modal.vue";
-import tabs from "../components/tabs";
-import logs from "../chat/Logs.vue";
-import chat from "../chat/ChatView.vue";
 import {ipcRenderer} from "electron";
-import {EIconStore} from "../learn/eicon/store";
 import log from "electron-log";
 
 const browserWindow = remote.getCurrentWindow();
 @Component({
-  components: {chat, logs, modal, tabs, Modal}
+  components: {}
 })
 export default class BrowserOption extends Vue {
   settings!: GeneralSettings;
