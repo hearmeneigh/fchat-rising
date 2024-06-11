@@ -12,6 +12,8 @@ This repository contains a heavily customized version of the mainline F-Chat 3.0
 ## TL;DR
 
 ### Setting Up
+FChat-Rising requires a specific version of NodeJS and may not work on newer versions. Use [`nvm`](https://github.com/nvm-sh/nvm) or [`nvm-windows`](https://github.com/coreybutler/nvm-windows) to simplify your life.
+
 ```bash
 # Windows only
 npm install --global --production --vs2015 --add-python-to-path windows-build-tools node-gyp
