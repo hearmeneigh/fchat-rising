@@ -125,12 +125,12 @@ const mainConfig = {
                         context: path.resolve(__dirname, '..', 'chat', 'preview', 'assets')
                     },
                     {
-                        from: path.resolve(__dirname, '..', 'node_modules', '@cliqz', 'adblocker-electron-preload', 'dist', 'preload.cjs.js').replace(/\\/g, '/'),
+                        from: path.resolve(__dirname, '..', 'node_modules', '@cliqz', 'adblocker-electron-preload', 'dist', 'cjs', 'preload.cjs').replace(/\\/g, '/'),
                         to: path.join('preview', 'assets', 'adblocker'),
                         context: path.resolve(__dirname, '..', 'node_modules', '@cliqz', 'adblocker-electron-preload', 'dist')
                     },
                     {
-                        from: path.resolve(__dirname, '..', 'node_modules', '@cliqz', 'adblocker-electron-preload', 'dist', 'preload.es6.js').replace(/\\/g, '/'),
+                        from: path.resolve(__dirname, '..', 'node_modules', '@cliqz', 'adblocker-electron-preload', 'dist', 'src', 'preload.js').replace(/\\/g, '/'),
                         to: path.join('preview', 'assets', 'adblocker'),
                         context: path.resolve(__dirname, '..', 'node_modules', '@cliqz', 'adblocker-electron-preload', 'dist')
                     },
