@@ -84,6 +84,12 @@
                 </label>
             </div>
             <div class="form-group">
+                <label class="control-label" for="notifyOnFriendMessage">
+                    <input type="checkbox" id ="notifyOnFriendMessage" v-model="notifyOnFriendMessage"/>
+                    {{l('settings.friendMessageNotification')}}
+                </label>
+            </div>
+            <div class="form-group">
                 <label class="control-label" for="notifications">
                     <input type="checkbox" id="notifications" v-model="notifications"/>
                     {{l('settings.notifications')}}
@@ -372,6 +378,7 @@
         clickOpensMessage!: boolean;
         disallowedTags!: string;
         notifications!: boolean;
+        notifyOnFriendMessage!: boolean;
         highlight!: boolean;
         highlightWords!: string;
         showAvatars!: boolean;
@@ -427,6 +434,7 @@
             this.eventMessages = settings.eventMessages;
             this.joinMessages = settings.joinMessages;
             this.alwaysNotify = settings.alwaysNotify;
+            this.notifyOnFriendMessage = settings.notifyOnFriendMessage;
             this.logMessages = settings.logMessages;
             this.logAds = settings.logAds;
             this.fontSize = settings.fontSize.toString();
