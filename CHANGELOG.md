@@ -7,8 +7,8 @@
 * Notify when bookmark/friend says something on a channel?
 * Clicking a log entry opens the conversation at that point
 
-## 1.27.1
-* Fixed build error
+## 1.27.1 & 1.27.2
+* Build fixes
 
 ## 1.27.0
 * 'Non-binary' kink is now respected in gender matching  (credit: [@FatCatClient](https://github.com/FatCatClient))
