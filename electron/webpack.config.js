@@ -126,7 +126,8 @@ const mainConfig = {
                     },
                     {
                         from: path.resolve(__dirname, '..', 'node_modules', '@cliqz', 'adblocker-electron-preload', 'dist', 'cjs', 'preload.cjs').replace(/\\/g, '/'),
-                        to: path.join('preview', 'assets', 'adblocker'),
+                        to: path.join('preview', 'assets', 'adblocker', 'preload.cjs.js'),
+                        toType: 'file',
                         context: path.resolve(__dirname, '..', 'node_modules', '@cliqz', 'adblocker-electron-preload', 'dist')
                     },
                     {

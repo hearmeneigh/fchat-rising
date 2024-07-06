@@ -81,7 +81,7 @@ export class BlockerIntegration {
     // Temp fix -- manually override adblocker's preload script
     // to point to CJS  that has been copied over with config in webpack.config.js
     // require.resolve('@cliqz/adblocker-electron-preload');
-    const preloadScript =  path.join(electron.app.getAppPath(), './preview/assets/adblocker/preload.cjs');
+    const preloadScript =  path.join(electron.app.getAppPath(), './preview/assets/adblocker/preload.cjs.js');
 
     // const originPath = require.resolve('@cliqz/adblocker-electron-preload');
     // const preloadScript = path.resolve(path.dirname(originPath), 'preload.cjs');
