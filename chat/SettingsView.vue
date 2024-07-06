@@ -222,9 +222,9 @@
 
             <div class="form-group">
                 <label class="control-label" for="risingCharacterTheme">
-                    Select character theme
+                    Override UI theme (for this character only)
                     <select id="risingCharacterTheme" class="form-control" v-model="risingCharacterTheme" style="flex:1;margin-right:10px">
-                        <option value=undefined>Client theme</option>
+                        <option value=undefined>(Use default theme)</option>
                         <option disabled>---</option>
                         <option v-for="theme in risingAvailableThemes" :value="theme">{{theme}}</option>
                     </select>
