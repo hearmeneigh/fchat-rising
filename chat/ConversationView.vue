@@ -108,6 +108,12 @@
             <a class="btn btn-sm btn-light" style="position:absolute;right:5px;top:50%;transform:translateY(-50%);line-height:0;z-index:10"
                 @click="hideSearch"><i class="fas fa-times"></i></a>
         </div>
+        <div class="yiffbot-controls" v-if="isYiffBot()">
+            <div class="btn-group">
+              <div class="btn btn-sm btn-outline-secondary" @click="onYiffBotContinuePost">#continue</div>
+              <div class="btn btn-sm btn-outline-secondary" @click="onYiffBotRetryPost">#retry</div>
+            </div>
+        </div>
         <div class="auto-ads" v-show="isAutopostingAds()">
             <h4>{{l('admgr.activeHeader')}}</h4>
             <div class="update">{{adAutoPostUpdate}}</div>
@@ -201,7 +207,7 @@
     import CharacterAdView from './character/CharacterAdView.vue';
     import {Editor} from './bbcode';
     import CommandHelp from './CommandHelp.vue';
-    import { characterImage, errorToString, getByteLength, getKey } from './common';
+    import { characterImage, errorToString, getByteLength, getKey, Message } from './common';
     import ConversationSettings from './ConversationSettings.vue';
     import ConversationAdSettings from './ads/ConversationAdSettings.vue';
     import core from './core';
@@ -698,6 +704,36 @@
             const member = conv.channel.members[core.connection.character];
             return member !== undefined && member.rank > Channel.Rank.Member;
         }
+
+        isYiffBot(): boolean {
+          if (!this.isPrivate(this.conversation)) {
+            return false;
+          }
+
+          return this.conversation.character.name === 'YiffBot 4000';
+        }
+
+        async onYiffBotContinuePost(): Promise<void> {
+          if (!this.isPrivate(this.conversation)) {
+            return;
+          }
+
+          const conv = (<Conversation.PrivateConversation>this.conversation);
+
+          await conv.sendMessageEx('#continue');
+          await this.messageAdded(this.conversation.messages as Message[]);
+        }
+
+        async onYiffBotRetryPost(): Promise<void> {
+          if (!this.isPrivate(this.conversation)) {
+            return;
+          }
+
+          const conv = (<Conversation.PrivateConversation>this.conversation);
+
+          await conv.sendMessageEx('#retry');
+          await this.messageAdded(this.conversation.messages as Message[]);
+        }
     }
 </script>
 
@@ -1051,5 +1087,13 @@
       margin-top: 0;
       min-width: 1.2em;
       max-width: 1.2em;
+    }
+
+    .yiffbot-controls {
+      .btn-group {
+        margin-left: 70px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
     }
 </style>

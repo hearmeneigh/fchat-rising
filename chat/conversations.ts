@@ -249,6 +249,32 @@ class PrivateConversation extends Conversation implements Interfaces.PrivateConv
         return state.savePinned();
     }
 
+    public async sendMessageEx(messageText: string): Promise<void> {
+        if(this.character.status === 'offline') {
+            this.errorText = l('chat.errorOffline', this.character.name);
+            return;
+        }
+
+        if(this.character.isIgnored) {
+            this.errorText = l('chat.errorIgnored', this.character.name);
+            return;
+        }
+
+        await Conversation.conversationThroat(
+            async() => {
+                await Conversation.testPostDelay();
+
+                core.connection.send('PRI', {recipient: this.name, message: messageText});
+                core.cache.markLastPostTime();
+
+                const message = createMessage(MessageType.Message, core.characters.ownCharacter, messageText);
+                this.safeAddMessage(message);
+
+                if(core.state.settings.logMessages) await core.logs.logMessage(this, message);
+            }
+        );
+    }
+
     protected async doSend(): Promise<void> {
         await this.logPromise;
         if(this.character.status === 'offline') {

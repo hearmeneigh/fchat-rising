@@ -73,12 +73,13 @@
     import CharacterSearchHistory from './CharacterSearchHistory.vue';
     import { Matcher } from '../learn/matcher';
     import {
+      Gender,
       kinkMatchScoreMap,
       kinkMatchWeights,
-      nonAnthroSpecies,
+      nonAnthroSpecies, Orientation,
       Species,
       speciesMapping,
-      speciesNames
+      speciesNames, TagId
     } from '../learn/matcher-types';
     import { CharacterCacheRecord } from '../learn/profile-cache';
     import Bluebird from 'bluebird';
@@ -273,6 +274,34 @@
           console.log('Done!');
         }
 
+        getYiffBotCompatibleGender(): Character.Gender {
+          const g = Matcher.getTagValueList(TagId.Gender, core.characters.ownProfile.character);
+          const o = Matcher.getTagValueList(TagId.Orientation, core.characters.ownProfile.character);
+
+          if (o === Orientation.Straight || o === Orientation.Unsure || _.isNil(o)) {
+            if (g === Gender.Male) {
+              return 'Female';
+            }
+
+            if (g === Gender.Female) {
+              return 'Male';
+            }
+          }
+
+          if (o === Orientation.Gay && g) {
+            return g === Gender.Male ? 'Male' : 'Female';
+          }
+
+          if (o === Orientation.BiFemalePreference) {
+            return 'Female';
+          }
+
+          if (o === Orientation.BiMalePreference) {
+            return 'Male';
+          }
+
+          return _.sample(['Male', 'Female']) as Character.Gender;
+        }
 
         @Hook('mounted')
         mounted(): void {
@@ -310,6 +339,16 @@
                 // this is done LAST to force Vue to wait with rendering
                 this.hasReceivedResults = true;
                 this.results = results;
+
+                if (this.isYiffBot4000Online()) {
+                    const char = core.characters.get('YiffBot 4000');
+
+                    (char as any).status = 'looking';
+                    (char as any).gender = this.getYiffBotCompatibleGender();
+                    (char as any).statusText = 'Try AI play with any gender, orientation & kink!';
+
+                    this.results.push({ character: char, profile: core.cache.profileCache.getSync('YiffBot 4000') });
+                }
 
                 this.resort(results);
             });
@@ -548,15 +587,19 @@
             this.shouldShowAvatar = core.state.settings.risingShowPortraitInMessage;
 
             this.results = [];
+
             this.state = 'results';
 
             this.error = '';
+
             const data: Connection.ClientCommands['FKS'] & {[key: string]: (string | number)[]} = {kinks: []};
+
             for(const key in this.data) {
                 const item = this.data[<keyof SearchData>key]; // SearchData is correct
                 if(item.length > 0 && key !== 'bodytypes')
                     data[key] = key === 'kinks' ? (<SearchKink[]>item).map((x) => x.id) : (<string[]>item);
             }
+
             core.connection.send('FKS', data);
 
             // tslint:disable-next-line

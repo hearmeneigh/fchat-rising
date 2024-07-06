@@ -67,6 +67,8 @@ export namespace Conversation {
     export interface PrivateConversation extends TabConversation {
         readonly character: Character
         readonly typingStatus: TypingStatus
+
+        sendMessageEx(text: string): Promise<void>;
     }
 
     export interface ChannelConversation extends TabConversation {

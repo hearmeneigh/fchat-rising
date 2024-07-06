@@ -1,22 +1,19 @@
 # Changelog
 
-## Canary
+## Next?
+* Merge Ad Editor and Post Ads?
+* Fix Yiffbot portrait updates
+* Remove broadcasts from logs; maybe into a dialog? where do we store them tho? At least shouldn't orange-highlight all convos
+* Notify when bookmark/friend says something on a channel?
+* Clicking a log entry opens the conversation at that point
+
+## 1.27.0
 * 'Non-binary' kink is now respected in gender matching  (credit: [@FatCatClient](https://github.com/FatCatClient))
 * OpenMoji is now treated as a fallback font (credit: [@FatCatClient](https://github.com/FatCatClient))
-* Added two new UI themes: 'Dracula', and 'Dark Dimmed' (credit: [@FatCatClient](https://github.com/FatCatClient))
-
-* Add high-quality portraits to Profile Helper
-* FBot should always be a UNICORN match
-* FBot should have extra buttons to help one-handed
-* FBot should show up in Search Results... if online
-* Remove broadcasts from logs; maybe into a dialog? where do we store them tho? At least shouldn't orange-highlight all convos
-* Update e-icons
-* Merge Ad Editor and Post Ads?
-* Notify when bookmark/friend says something on a channel?
-* Fix image previews (redgifs?)
-* Fix Yiffbot portrait updates
-* Address scoring issues per FCR Notes
-* Clicking a log entry opens the conversation at that point
+* Added two UI themes: 'Dracula', and 'Dark Dimmed' (credit: [@FatCatClient](https://github.com/FatCatClient))
+* Each character can now set its own UI theme (credit: [@Nensec](https://github.com/Nensec))
+* Bugfix: Characters with 'None' gender are no longer considered a mismatch against other genders
+* Fixed Redgifs previews (again)
 
 ## 1.26.2
 * Fixed a few cases where high-quality portraits were not displayed

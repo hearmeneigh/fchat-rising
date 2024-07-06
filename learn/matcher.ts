@@ -238,6 +238,62 @@ export class Matcher {
         return report;
     }
 
+    static getYiffBot4000MatchReport(you: Character, them: Character): MatchReport {
+        const scores: MatchResultScores =  {
+            [TagId.Orientation]: new Score(Scoring.MATCH, 'Perfect match!'),
+            [TagId.Gender]: new Score(Scoring.MATCH, 'Perfect match!'),
+            [TagId.Age]: new Score(Scoring.MATCH, 'Perfect match!'),
+            [TagId.FurryPreference]: new Score(Scoring.MATCH, 'Perfect match!'),
+            [TagId.Species]: new Score(Scoring.MATCH, 'Perfect match!'),
+            [TagId.SubDomRole]: new Score(Scoring.MATCH, 'Perfect match!'),
+            [TagId.Kinks]: new Score(Scoring.MATCH, 'Perfect match!'),
+            [TagId.PostLength]: new Score(Scoring.MATCH, 'Perfect match!'),
+            [TagId.Position]: new Score(Scoring.MATCH, 'Perfect match!'),
+            [TagId.BodyType]: new Score(Scoring.MATCH, 'Perfect match!')
+        };
+
+        const yourAnalysis = new CharacterAnalysis(you);
+        const theirAnalysis = new CharacterAnalysis(them);
+
+        return {
+            _isVue: true,
+            you: {
+                you,
+                them,
+                scores,
+                info: {
+                    species: Matcher.species(you),
+                    gender: Matcher.getTagValueList(TagId.Gender, you),
+                    orientation: Matcher.getTagValueList(TagId.Orientation, you)
+                },
+                total: _.sum(_.values(scores).map((s: Score) => s.score)),
+                yourAnalysis,
+                theirAnalysis
+            },
+            them: {
+                you: them,
+                them: you,
+                scores,
+                info: {
+                    species: Matcher.species(them),
+                    gender: Matcher.getTagValueList(TagId.Gender, them),
+                    orientation: Matcher.getTagValueList(TagId.Orientation, them)
+                } ,
+                total: _.sum(_.values(scores).map((s: Score) => s.score)),
+                yourAnalysis: theirAnalysis,
+                theirAnalysis: yourAnalysis
+            },
+            youMultiSpecies: false,
+            themMultiSpecies: false,
+            merged: scores,
+            score: Scoring.MATCH,
+            details: {
+                totalScoreDimensions: _.values(scores).length * 2,
+                dimensionsAtScoreLevel: _.values(scores).length * 2
+            }
+        };
+    }
+
     static identifyBestMatchReport(you: Character, them: Character): MatchReport {
         const reportStartTime = Date.now();
 
@@ -247,6 +303,10 @@ export class Matcher {
         let bestScore = null;
         let bestScoreLevelCount = -10000;
         let bestReport: MatchReport;
+
+        if (you.name === 'YiffBot 4000' || them.name === 'YiffBot 4000') {
+            return Matcher.getYiffBot4000MatchReport(you, them);
+        }
 
         for(const yourAnalysis of yourCharacterAnalyses) {
             for (const theirAnalysis of theirCharacterAnalyses) {
@@ -437,7 +497,7 @@ export class Matcher {
 
 
     static scoreOrientationByGender(yourGender: Gender | null, yourOrientation: Orientation | null, theirGender: Gender | null): Score {
-        if ((yourGender === null) || (theirGender === null) || (yourOrientation === null))
+        if ((yourGender === null) || (theirGender === null) || (yourOrientation === null) || yourGender === Gender.None || theirGender === Gender.None)
             return new Score(Scoring.NEUTRAL);
 
         // CIS
@@ -727,8 +787,9 @@ export class Matcher {
         const yourOrientation = this.yourAnalysis.orientation;
         const theirGender = this.theirAnalysis.gender;
 
-        if (theirGender === null)
+        if (theirGender === null) {
             return new Score(Scoring.NEUTRAL);
+        }
 
         const genderName = `${Gender[theirGender].toLowerCase()}s`;
         const genderKinkScore = Matcher.getKinkGenderPreference(you, theirGender);
@@ -1375,6 +1436,10 @@ export class Matcher {
         match: MatchReport,
         penalty: number
     ): number {
+        if (match.you.you.name === 'YiffBot 4000' || match.you.them.name === 'YiffBot 4000') {
+            return kinkMatchWeights.unicornThreshold;
+        }
+
         const totalScoreDimensions = match ? Matcher.countScoresTotal(match) : 0;
         const dimensionsAtScoreLevel = match ? (Matcher.countScoresAtLevel(match, score) || 0) : 0;
         const dimensionsAboveScoreLevel = match ? (Matcher.countScoresAboveLevel(match, Math.max(score, Scoring.WEAK_MATCH))) : 0;

@@ -11,6 +11,7 @@ This project contains contributions from:
 * [WhiteHusky](https://github.com/WhiteHusky)
 * [Abeehiltz](https://github.com/Abeehiltz)
 * [greyhoof](https://github.com/greyhoof)
+* [Nensec](https://github.com/Nensec)
 * [F-List Team](https://github.com/f-list) (original F-Chat 3.0 client)
 
 
