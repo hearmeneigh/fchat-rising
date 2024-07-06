@@ -1,6 +1,10 @@
 # Changelog
 
 ## Canary
+* 'Non-binary' kink is now respected in gender matching  (credit: [@FatCatClient](https://github.com/FatCatClient))
+* OpenMoji is now treated as a fallback font  (credit: [@FatCatClient](https://github.com/FatCatClient))
+* 
+
 * Add high-quality portraits to Profile Helper
 * FBot should always be a UNICORN match
 * FBot should have extra buttons to help one-handed

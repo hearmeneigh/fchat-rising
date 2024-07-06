@@ -746,8 +746,12 @@ export class Matcher {
                     Orientation.BiFemalePreference,
                     Orientation.BiMalePreference
                 ].includes(yourOrientation)) {
-                    let nonBinaryPref:KinkPreference|null = Matcher.getKinkPreference(you, Kink.Nonbinary);
-                    if(nonBinaryPref != null) return Matcher.formatKinkScore(nonBinaryPref, 'non-binary genders');
+                    const nonBinaryPref = Matcher.getKinkPreference(you, Kink.Nonbinary);
+
+                    if(nonBinaryPref) {
+                        return Matcher.formatKinkScore(nonBinaryPref, 'non-binary genders');
+                    }
+
                     return new Score(Scoring.MISMATCH, 'No <span>non-binary</span> genders');
                 }
             }
@@ -1093,8 +1097,9 @@ export class Matcher {
     }
 
     static getKinkGenderPreference(c: Character, gender: Gender): KinkPreference | null {
-        if (!(gender in genderKinkMapping))
+        if (!(gender in genderKinkMapping)) {
             return null;
+        }
 
         return Matcher.getKinkPreference(c, genderKinkMapping[gender]);
     }
