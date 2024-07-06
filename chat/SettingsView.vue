@@ -219,6 +219,17 @@
                     Show high-quality portraits
                 </label>
             </div>
+
+            <div class="form-group">
+                <label class="control-label" for="risingCharacterTheme">
+                    Select character theme
+                    <select id="risingCharacterTheme" class="form-control" v-model="risingCharacterTheme" style="flex:1;margin-right:10px">
+                        <option value=undefined>Client theme</option>
+                        <option disabled>---</option>
+                        <option v-for="theme in risingAvailableThemes" :value="theme">{{theme}}</option>
+                    </select>
+                </label>
+            </div>
         </div>
 
         <div v-show="selectedTab === '3'">
@@ -334,6 +345,8 @@
 </template>
 
 <script lang="ts">
+    import * as fs from 'fs';
+    import * as path from 'path';
     import {Component} from '@f-list/vue-ts';
     import CustomDialog from '../components/custom_dialog';
     import Modal from '../components/Modal.vue';
@@ -394,6 +407,9 @@
 
         risingFilter!: SmartFilterSettings = {} as any;
 
+        risingAvailableThemes!: ReadonlyArray<string> = [];
+        risingCharacterTheme!: string | undefined;
+
         smartFilterTypes = smartFilterTypesOrigin;
 
         async load(): Promise<void> {
@@ -438,6 +454,9 @@
             this.risingShowHighQualityPortraits = settings.risingShowHighQualityPortraits;
 
             this.risingFilter = settings.risingFilter;
+
+            this.risingAvailableThemes = fs.readdirSync(path.join(__dirname, 'themes')).filter((x) => x.substr(-4) === '.css').map((x) => x.slice(0, -4));
+            this.risingCharacterTheme = settings.risingCharacterTheme;
         }
 
         async doImport(): Promise<void> {
@@ -506,7 +525,9 @@
                   ...this.risingFilter,
                   minAge: (minAge !== null && maxAge !== null) ? Math.min(minAge, maxAge) : minAge,
                   maxAge: (minAge !== null && maxAge !== null) ? Math.max(minAge, maxAge) : maxAge
-                }
+                },
+
+                risingCharacterTheme: this.risingCharacterTheme != "undefined" ? this.risingCharacterTheme : undefined
             };
 
             console.log('SETTINGS', minAge, maxAge, core.state.settings);

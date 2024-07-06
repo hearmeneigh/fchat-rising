@@ -104,6 +104,8 @@ export class Settings implements ISettings {
         },
         exceptionNames: []
     };
+
+    risingCharacterTheme = undefined;
 }
 
 

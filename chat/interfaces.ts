@@ -240,6 +240,8 @@ export namespace Settings {
         readonly risingShowHighQualityPortraits: boolean;
 
         readonly risingFilter: SmartFilterSettings;
+
+        readonly risingCharacterTheme: string | undefined;
     }
 }
 
