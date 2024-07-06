@@ -1,5 +1,19 @@
 # Changelog
 
+## Canary
+* Add high-quality portraits to Profile Helper
+* FBot should always be a UNICORN match
+* FBot should have extra buttons to help one-handed
+* FBot should show up in Search Results... if online
+* Remove broadcasts from logs; maybe into a dialog? where do we store them tho? At least shouldn't orange-highlight all convos
+* Update e-icons
+* Merge Ad Editor and Post Ads?
+* Notify when bookmark/friend says something on a channel?
+* Fix image previews (redgifs?)
+* Fix Yiffbot portrait updates
+* Address scoring issues per FCR Notes
+* Clicking a log entry opens the conversation at that point
+
 ## 1.26.2
 * Fixed a few cases where high-quality portraits were not displayed
 

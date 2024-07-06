@@ -13,13 +13,16 @@ This repository contains a heavily customized version of the mainline F-Chat 3.0
 
 ### Setting Up
 ```bash
-# Windows only
+# Windows only:
 npm install --global --production --vs2015 --add-python-to-path windows-build-tools node-gyp
 
-# Ubuntu only
+# Ubuntu only:
 sudo apt install libsecret-1-dev
 
-# All operating systems
+# MacOS only:
+brew install python-setuptools
+
+# All operating systems:
 git clone https://github.com/hearmeneigh/fchat-rising.git
 cd fchat-rising
 yarn
