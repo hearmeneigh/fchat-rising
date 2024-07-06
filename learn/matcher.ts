@@ -746,6 +746,8 @@ export class Matcher {
                     Orientation.BiFemalePreference,
                     Orientation.BiMalePreference
                 ].includes(yourOrientation)) {
+                    let nonBinaryPref:KinkPreference|null = Matcher.getKinkPreference(you, Kink.Nonbinary);
+                    if(nonBinaryPref != null) return Matcher.formatKinkScore(nonBinaryPref, 'non-binary genders');
                     return new Score(Scoring.MISMATCH, 'No <span>non-binary</span> genders');
                 }
             }
