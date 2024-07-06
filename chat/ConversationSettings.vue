@@ -28,6 +28,15 @@
             <input :id="'highlightWords' + conversation.key" class="form-control" v-model="highlightWords"/>
         </div>
         <div class="form-group">
+            <label class="control-label" :for="'friendsNotify' + conversation.key">{{l('settings.friendMessageNotification')}}</label>
+            <select class="form-control" :id="'friendsNotify' + conversation.key" v-model="notifyOnFriendMessage">
+                <option :value="setting.Default">{{l('conversationSettings.default')}}</option>
+                <option :value="setting.True">{{l('conversationSettings.true')}}</option>
+                <option :value="setting.False">{{l('conversationSettings.false')}}</option>
+            </select>
+
+        </div>
+        <div class="form-group">
             <label class="control-label" :for="'joinMessages' + conversation.key">{{l('settings.joinMessages')}}</label>
             <select class="form-control" :id="'joinMessages' + conversation.key" v-model="joinMessages">
                 <option :value="setting.Default">{{l('conversationSettings.default')}}</option>
@@ -37,7 +46,6 @@
         </div>
     </modal>
 </template>
-
 <script lang="ts">
     import {Component, Prop} from '@f-list/vue-ts';
     import CustomDialog from '../components/custom_dialog';
@@ -58,6 +66,7 @@
         highlightWords!: string;
         joinMessages!: Conversation.Setting;
         defaultHighlights!: boolean;
+        notifyOnFriendMessage!: Conversation.Setting;
 
         load(): void {
             const settings = this.conversation.settings;
@@ -66,6 +75,7 @@
             this.highlightWords = settings.highlightWords.join(',');
             this.joinMessages = settings.joinMessages;
             this.defaultHighlights = settings.defaultHighlights;
+            this.notifyOnFriendMessage = settings.notifyOnFriendMessage;
         }
 
         submit(): void {
@@ -75,7 +85,8 @@
                 highlightWords: this.highlightWords.split(',').map((x) => x.trim()).filter((x) => (x.length > 0)),
                 joinMessages: this.joinMessages,
                 defaultHighlights: this.defaultHighlights,
-                adSettings: this.conversation.settings.adSettings
+                adSettings: this.conversation.settings.adSettings,
+                notifyOnFriendMessage: this.notifyOnFriendMessage
             };
         }
     }

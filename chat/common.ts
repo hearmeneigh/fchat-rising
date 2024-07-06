@@ -118,6 +118,7 @@ export class AdSettings implements Conversation.AdSettings {
 
 export class ConversationSettings implements Conversation.Settings {
     notify = Conversation.Setting.Default;
+    notifyOnFriendMessage = Conversation.Setting.Default;
     highlight = Conversation.Setting.Default;
     highlightWords: string[] = [];
     joinMessages = Conversation.Setting.Default;

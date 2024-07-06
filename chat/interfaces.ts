@@ -112,6 +112,7 @@ export namespace Conversation {
 
     export interface Settings {
         readonly notify: Setting;
+        readonly notifyOnFriendMessage: Setting;
         readonly highlight: Setting;
         readonly highlightWords: ReadonlyArray<string>;
         readonly joinMessages: Setting;
