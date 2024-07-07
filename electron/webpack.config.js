@@ -25,7 +25,7 @@ const mainConfig = {
                     transpileOnly: true
                 }
             },
-            {test: path.join(__dirname, 'package.json'), loader: 'json-loader', options: {name: 'package.json'}, type: 'javascript/auto'},
+            {test: path.join(__dirname, 'package.json'), loader: 'file-loader', options: {name: 'package.json'}, type: 'javascript/auto'},
             {test: /\.(png|ico|html)$/, loader: 'file-loader', options: {name: '[name].[ext]'}},
             {test: /\.raw\.js$/, loader: 'raw-loader'}
         ]
