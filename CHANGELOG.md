@@ -7,7 +7,7 @@
 * Notify when bookmark/friend says something on a channel?
 * Clicking a log entry opens the conversation at that point
 
-## 1.27.1 & 1.27.2
+## 1.27.1 & 1.27.2 & 1.27.3
 * Build fixes
 
 ## 1.27.0
