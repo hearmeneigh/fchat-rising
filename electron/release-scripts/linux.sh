@@ -19,6 +19,7 @@ mkdir -p "${RELEASE_PATH}"
 rm -rf "${DIST_PATH}"
 
 cd electron
+rm -rf app
 yarn build:dist
 node pack.js
 
