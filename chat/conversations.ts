@@ -872,7 +872,14 @@ export default function(this: any): Interfaces.State {
             message.isHighlight = true;
             await state.consoleTab.addMessage(new EventMessage(l('events.highlight', `[user]${data.character}[/user]`, results[0],
                 `[session=${conversation.name}]${data.channel}[/session]`), time));
-        } else if(conversation.settings.notify === Interfaces.Setting.True) {
+        } else if(conversation.settings.notify === Interfaces.Setting.True || 
+            ( 
+                (conversation.settings.notifyOnFriendMessage === Interfaces.Setting.Default && core.state.settings.notifyOnFriendMessage ||
+                    conversation.settings.notifyOnFriendMessage === Interfaces.Setting.True)
+                &&
+                (core.characters.friendList.includes(data.character) || core.characters.bookmarkList.includes(data.character)) 
+            )
+        ){
             await core.notifications.notify(conversation, conversation.name, messageToString(message),
                 characterImage(data.character), 'attention');
             if(conversation !== state.selectedConversation || !state.windowFocused) conversation.unread = Interfaces.UnreadState.Mention;
