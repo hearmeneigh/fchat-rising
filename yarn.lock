@@ -25,7 +25,7 @@
     js-tokens "^4.0.0"
     picocolors "^1.0.0"
 
-"@cliqz/adblocker-content@1.26.16", "@cliqz/adblocker-content@^1.26.16", "@cliqz/adblocker-content@~1.26.16":
+"@cliqz/adblocker-content@1.26.16", "@cliqz/adblocker-content@^1.26.16", "@cliqz/adblocker-content@^1.27.11", "@cliqz/adblocker-content@~1.26.16":
   version "1.26.16"
   resolved "https://registry.yarnpkg.com/@cliqz/adblocker-content/-/adblocker-content-1.26.16.tgz#eb0bb6b9155e3886503784777b92725f89bb7a4f"
   integrity sha512-N1pKg1gxfpnz47w2Sjs2sg3fxFZb113ClUhitgAFSVXeIhZ+S+bCaQtvwtP0mJT+SDfUx2NsPiLwZoPjVRI3wQ==
@@ -48,12 +48,12 @@
     "@cliqz/adblocker-electron-preload" "^1.26.16"
     tldts-experimental "^6.0.14"
 
-"@cliqz/adblocker-extended-selectors@1.26.16", "@cliqz/adblocker-extended-selectors@^1.26.16", "@cliqz/adblocker-extended-selectors@~1.26.16":
+"@cliqz/adblocker-extended-selectors@1.26.16", "@cliqz/adblocker-extended-selectors@^1.26.16", "@cliqz/adblocker-extended-selectors@^1.27.11", "@cliqz/adblocker-extended-selectors@~1.26.16":
   version "1.26.16"
   resolved "https://registry.yarnpkg.com/@cliqz/adblocker-extended-selectors/-/adblocker-extended-selectors-1.26.16.tgz#d2f3a7bdb0994183ec025afeb929c70cad67ba88"
   integrity sha512-ePXS3aD1R+0XfCnOj0L2ms0NA5AxKHfFLfw92cZ87IPY8ZEZK/sWwQCv5wawbwBmXksr0YkMfFVCiH/IQgUNBQ==
 
-"@cliqz/adblocker@1.26.16", "@cliqz/adblocker@^1.26.16", "@cliqz/adblocker@~1.26.16":
+"@cliqz/adblocker@1.26.16", "@cliqz/adblocker@^1.26.16":
   version "1.26.16"
   resolved "https://registry.yarnpkg.com/@cliqz/adblocker/-/adblocker-1.26.16.tgz#c017f853ebf44c12c1a805559f144678ca897f0d"
   integrity sha512-NQ5WdNeiWiggDhhT/IXbsjKgH44nA9k5GlW00gUWRUpfKHCCInyDJYjM5pbHqxhgC3LkMVmXmU5vIsMUZ4RxFQ==
@@ -64,6 +64,20 @@
     "@remusao/small" "^1.2.1"
     "@remusao/smaz" "^1.9.1"
     "@types/chrome" "^0.0.260"
+    "@types/firefox-webext-browser" "^120.0.0"
+    tldts-experimental "^6.0.14"
+
+"@cliqz/adblocker@~1.27.11":
+  version "1.27.11"
+  resolved "https://registry.yarnpkg.com/@cliqz/adblocker/-/adblocker-1.27.11.tgz#f6c4e9d2072be50d67e3a7e003b99fe0539b95c1"
+  integrity sha512-nNhXLCzYwwFsDNZiAr7p5O/J/X7CKq247znQlIZJDYi3LwncK/2nJxKpmOuGxIoj8QRhm2AMwebSJTGTm47RBQ==
+  dependencies:
+    "@cliqz/adblocker-content" "^1.27.11"
+    "@cliqz/adblocker-extended-selectors" "^1.27.11"
+    "@remusao/guess-url-type" "^1.2.1"
+    "@remusao/small" "^1.2.1"
+    "@remusao/smaz" "^1.9.1"
+    "@types/chrome" "^0.0.268"
     "@types/firefox-webext-browser" "^120.0.0"
     tldts-experimental "^6.0.14"
 
@@ -353,6 +367,14 @@
   version "0.0.260"
   resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.260.tgz#b694a12a56dc469cd28212ad59a500575a6ee52e"
   integrity sha512-lX6QpgfsZRTDpNcCJ+3vzfFnFXq9bScFRTlfhbK5oecSAjamsno+ejFTCbNtc5O/TPnVK9Tja/PyecvWQe0F2w==
+  dependencies:
+    "@types/filesystem" "*"
+    "@types/har-format" "*"
+
+"@types/chrome@^0.0.268":
+  version "0.0.268"
+  resolved "https://registry.yarnpkg.com/@types/chrome/-/chrome-0.0.268.tgz#d5855546f30c83e181cadd77127a162c25b480d2"
+  integrity sha512-7N1QH9buudSJ7sI8Pe4mBHJr5oZ48s0hcanI9w3wgijAlv1OZNUZve9JR4x42dn5lJ5Sm87V1JNfnoh10EnQlA==
   dependencies:
     "@types/filesystem" "*"
     "@types/har-format" "*"
