@@ -32,14 +32,14 @@
   dependencies:
     "@cliqz/adblocker-extended-selectors" "^1.26.16"
 
-"@cliqz/adblocker-electron-preload@1.26.16", "@cliqz/adblocker-electron-preload@^1.26.16", "@cliqz/adblocker-electron-preload@~1.26.16":
+"@cliqz/adblocker-electron-preload@1.26.16", "@cliqz/adblocker-electron-preload@^1.26.16", "@cliqz/adblocker-electron-preload@^1.27.11", "@cliqz/adblocker-electron-preload@~1.26.16":
   version "1.26.16"
   resolved "https://registry.yarnpkg.com/@cliqz/adblocker-electron-preload/-/adblocker-electron-preload-1.26.16.tgz#1a2eb6964cbc01040b462dea5b8fa6ba82e612eb"
   integrity sha512-ea9RSMo7hXTYaEu2DkSegG/MbYK8jAUBhFhtACDRdjX2SE3bwa5WYKEwDMqP7pb4tFxR2VlS+MvKC5v/E6c1kQ==
   dependencies:
     "@cliqz/adblocker-content" "^1.26.16"
 
-"@cliqz/adblocker-electron@1.26.16", "@cliqz/adblocker-electron@~1.26.16":
+"@cliqz/adblocker-electron@1.26.16":
   version "1.26.16"
   resolved "https://registry.yarnpkg.com/@cliqz/adblocker-electron/-/adblocker-electron-1.26.16.tgz#e3004fbc11eab8568f936858934e6fa5248eb8a6"
   integrity sha512-olpIpWInGoJcDhfY9xvDmA0lCUg9w6Np1vSLIdKiZsFT2n+iLZcN0NJJt5VFSHGaCTGX/h9oNy7ajQJQKpgR6Q==
@@ -48,12 +48,21 @@
     "@cliqz/adblocker-electron-preload" "^1.26.16"
     tldts-experimental "^6.0.14"
 
+"@cliqz/adblocker-electron@~1.27.11":
+  version "1.27.11"
+  resolved "https://registry.yarnpkg.com/@cliqz/adblocker-electron/-/adblocker-electron-1.27.11.tgz#cf6fff0a3daf6400e3ac088c2dcdc97d335f72ce"
+  integrity sha512-09YNXBU1ik1DqWmCrnCpFD9lwEX0i/tcDapGW/vMCV2El56NLOzwMIksnoL/iv6O10tn8+t6+RgCue3WS+Hv3Q==
+  dependencies:
+    "@cliqz/adblocker" "^1.27.11"
+    "@cliqz/adblocker-electron-preload" "^1.27.11"
+    tldts-experimental "^6.0.14"
+
 "@cliqz/adblocker-extended-selectors@1.26.16", "@cliqz/adblocker-extended-selectors@^1.26.16", "@cliqz/adblocker-extended-selectors@~1.26.16":
   version "1.26.16"
   resolved "https://registry.yarnpkg.com/@cliqz/adblocker-extended-selectors/-/adblocker-extended-selectors-1.26.16.tgz#d2f3a7bdb0994183ec025afeb929c70cad67ba88"
   integrity sha512-ePXS3aD1R+0XfCnOj0L2ms0NA5AxKHfFLfw92cZ87IPY8ZEZK/sWwQCv5wawbwBmXksr0YkMfFVCiH/IQgUNBQ==
 
-"@cliqz/adblocker@1.26.16", "@cliqz/adblocker@^1.26.16", "@cliqz/adblocker@~1.26.16":
+"@cliqz/adblocker@1.26.16", "@cliqz/adblocker@^1.26.16", "@cliqz/adblocker@^1.27.11", "@cliqz/adblocker@~1.26.16":
   version "1.26.16"
   resolved "https://registry.yarnpkg.com/@cliqz/adblocker/-/adblocker-1.26.16.tgz#c017f853ebf44c12c1a805559f144678ca897f0d"
   integrity sha512-NQ5WdNeiWiggDhhT/IXbsjKgH44nA9k5GlW00gUWRUpfKHCCInyDJYjM5pbHqxhgC3LkMVmXmU5vIsMUZ4RxFQ==
