@@ -44,8 +44,11 @@ const mainConfig = {
     ],
     resolve: {
         extensions: ['.ts', '.js']
-    }
-}, rendererConfig = {
+    },
+    optimization: {
+        minify: false,
+    },
+  }, rendererConfig = {
     entry: {
         chat: [path.join(__dirname, 'chat.ts'), path.join(__dirname, 'index.html')],
         window: [path.join(__dirname, 'window.ts'), path.join(__dirname, 'window.html'), path.join(__dirname, 'build', 'tray@2x.png')],
@@ -152,7 +155,8 @@ const mainConfig = {
         // alias: {qs: 'querystring'}
     },
     optimization: {
-        splitChunks: {chunks: 'all', minChunks: 2, name: 'common'}
+        splitChunks: {chunks: 'all', minChunks: 2, name: 'common'},
+        minify: false,
     }
 };
 
@@ -185,6 +189,10 @@ const storeWorkerEndpointConfig = _.assign(
                     }
                 },
             ]
+        },
+
+        optimization: {
+            minify: false,
         },
 
         plugins: [
