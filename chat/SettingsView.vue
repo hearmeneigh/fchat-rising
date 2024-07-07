@@ -425,6 +425,7 @@
             this.clickOpensMessage = settings.clickOpensMessage;
             this.disallowedTags = settings.disallowedTags.join(',');
             this.notifications = settings.notifications;
+            this.notifyOnFriendMessage = settings.notifyOnFriendMessage;
             this.highlight = settings.highlight;
             this.highlightWords = settings.highlightWords.join(',');
             this.showAvatars = settings.showAvatars;
@@ -498,6 +499,7 @@
                 clickOpensMessage: this.clickOpensMessage,
                 disallowedTags: this.disallowedTags.split(',').map((x) => x.trim()).filter((x) => x.length),
                 notifications: this.notifications,
+                notifyOnFriendMessage: this.notifyOnFriendMessage,
                 highlight: this.highlight,
                 highlightWords: this.highlightWords.split(',').map((x) => x.trim()).filter((x) => x.length),
                 showAvatars: this.showAvatars,

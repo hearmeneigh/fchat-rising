@@ -210,6 +210,7 @@ export namespace Settings {
         readonly clickOpensMessage: boolean;
         readonly disallowedTags: ReadonlyArray<string>;
         readonly notifications: boolean;
+        readonly notifyOnFriendMessage: boolean;
         readonly highlight: boolean;
         readonly highlightWords: ReadonlyArray<string>;
         readonly showAvatars: boolean;

@@ -33,6 +33,7 @@ export class Settings implements ISettings {
     clickOpensMessage = false;
     disallowedTags: string[] = [];
     notifications = true;
+    notifyOnFriendMessage = false;
     highlight = true;
     highlightWords: string[] = [];
     showAvatars = true;
