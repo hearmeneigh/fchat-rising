@@ -47,6 +47,8 @@ const mainConfig = {
     },
     optimization: {
         minimize: false,
+        moduleIds: 'named',
+        chunkIds: 'named',
     },
   }, rendererConfig = {
     entry: {
@@ -157,6 +159,8 @@ const mainConfig = {
     optimization: {
         splitChunks: {chunks: 'all', minChunks: 2, name: 'common'},
         minimize: false,
+        moduleIds: 'named',
+        chunkIds: 'named',
     }
 };
 
@@ -193,6 +197,8 @@ const storeWorkerEndpointConfig = _.assign(
 
         optimization: {
             minimize: false,
+            moduleIds: 'named',
+            chunkIds: 'named',
         },
 
         plugins: [
