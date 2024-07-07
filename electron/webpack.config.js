@@ -46,7 +46,7 @@ const mainConfig = {
         extensions: ['.ts', '.js']
     },
     optimization: {
-        minify: false,
+        minimize: false,
     },
   }, rendererConfig = {
     entry: {
@@ -156,7 +156,7 @@ const mainConfig = {
     },
     optimization: {
         splitChunks: {chunks: 'all', minChunks: 2, name: 'common'},
-        minify: false,
+        minimize: false,
     }
 };
 
@@ -192,7 +192,7 @@ const storeWorkerEndpointConfig = _.assign(
         },
 
         optimization: {
-            minify: false,
+            minimize: false,
         },
 
         plugins: [
