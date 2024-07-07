@@ -1,6 +1,5 @@
 import log from 'electron-log';
 import { ElectronBlocker } from '@cliqz/adblocker-electron';
-import fetch from 'node-fetch';
 import path from 'path';
 import fs from 'fs';
 import * as _ from 'lodash';

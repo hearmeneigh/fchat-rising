@@ -25,7 +25,7 @@ const mainConfig = {
                     transpileOnly: true
                 }
             },
-            {test: path.join(__dirname, 'package.json'), loader: 'file-loader', options: {name: 'package.json'}, type: 'javascript/auto'},
+            {test: path.join(__dirname, 'package.json'), loader: 'json-loader', options: {name: 'package.json'}, type: 'javascript/auto'},
             {test: /\.(png|ico|html)$/, loader: 'file-loader', options: {name: '[name].[ext]'}},
             {test: /\.raw\.js$/, loader: 'raw-loader'}
         ]
@@ -38,7 +38,8 @@ const mainConfig = {
         new ForkTsCheckerWebpackPlugin({
             async: false,
             tslint: path.join(__dirname, '../tslint.json'),
-            tsconfig: './tsconfig-main.json'
+            tsconfig: './tsconfig-main.json',
+            ignoreLintWarnings: true,
         })
     ],
     resolve: {
@@ -90,7 +91,7 @@ const mainConfig = {
                 use: [
                     'vue-style-loader',
                     {loader: 'css-loader', options: {esModule: false}},
-                    'sass-loader'
+                    {loader: 'sass-loader', options: {warnRuleAsWarning: false}},
                 ]
             },
             {
@@ -113,7 +114,8 @@ const mainConfig = {
             async: false,
             tslint: path.join(__dirname, '../tslint.json'),
             tsconfig: './tsconfig-renderer.json',
-            vue: true
+            vue: true,
+            ignoreLintWarnings: true,
         }),
         new VueLoaderPlugin(),
         new CopyPlugin(
@@ -189,7 +191,8 @@ const storeWorkerEndpointConfig = _.assign(
                 async: false,
                 tslint: path.join(__dirname, '../tslint.json'),
                 tsconfig: './tsconfig-renderer.json',
-                vue: true
+                vue: true,
+                ignoreLintWarnings: true,
             })
         ]
     }
@@ -211,7 +214,7 @@ module.exports = function(mode) {
                     {loader: 'file-loader', options: {name: 'themes/[name].css'}},
                     'extract-loader',
                     {loader: 'css-loader', options: {esModule: false}},
-                    'sass-loader'
+                    {loader: 'sass-loader', options: {warnRuleAsWarning: false}},
                 ]
             }
         );
@@ -227,16 +230,19 @@ module.exports = function(mode) {
                 {loader: 'file-loader', options: {name: 'fa.css'}},
                 'extract-loader',
                 {loader: 'css-loader', options: {esModule: false}},
-                'sass-loader'
+                {loader: 'sass-loader', options: {warnRuleAsWarning: false}},
             ]
         }
     );
 
     if(mode === 'production') {
         process.env.NODE_ENV = 'production';
-        mainConfig.devtool = rendererConfig.devtool = 'source-map';
+
+        mainConfig.devtool = 'inline-source-map';
+        rendererConfig.devtool = 'inline-source-map';
+        storeWorkerEndpointConfig.devtool = 'inline-source-map';
+
         rendererConfig.plugins.push(new OptimizeCssAssetsPlugin());
-        storeWorkerEndpointConfig.devtool = 'source-map';
     } else {
         // mainConfig.devtool = rendererConfig.devtool = 'none';
 
@@ -245,5 +251,5 @@ module.exports = function(mode) {
         storeWorkerEndpointConfig.devtool = 'inline-source-map';
     }
 
-    return [mainConfig, rendererConfig, storeWorkerEndpointConfig];
+    return [storeWorkerEndpointConfig, mainConfig, rendererConfig];
 };

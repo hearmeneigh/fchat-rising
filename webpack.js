@@ -21,7 +21,11 @@ function compilerCallback(err, stats) {
         const statsString = stats.toString({colors: require("supports-color"), context: config[0].context, cached: false, cachedAssets: false, exclude: ['node_modules']});
         if(statsString) process.stdout.write(statsString + '\n');
     }
-    if(mode !== 'watch' && stats.hasErrors()) process.exitCode = 2;
+
+    if(mode !== 'watch' && stats.hasErrors()) {
+        process.exitCode = 2;
+        console.error('FULL ERROR', stats.stats[0].compilation.errors[0]);
+    }
 }
 
 console.log(config);

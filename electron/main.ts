@@ -53,7 +53,6 @@ import DownloadItem = electron.DownloadItem;
 import { AdCoordinatorHost } from '../chat/ads/ad-coordinator-host';
 import { IpcMainEvent } from 'electron';
 import { BlockerIntegration } from './blocker/blocker';
-import core from "../chat/core";
 
 //tslint:disable-next-line:no-require-imports
 const pck = require('./package.json');
