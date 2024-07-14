@@ -193,6 +193,13 @@
             </div>
 
             <div class="form-group">
+                <label class="control-label" for="risingNotifyFriendSignIn">
+                    <input type="checkbox" id="risingNotifyFriendSignIn" v-model="risingNotifyFriendSignIn"/>
+                   Notify when friends or bookmarks sign in.
+                </label>
+            </div>
+
+            <div class="form-group">
                 <label class="control-label" for="risingColorblindMode">
                     <input type="checkbox" id="risingColorblindMode" v-model="risingColorblindMode"/>
                     Colorblind mode
@@ -405,6 +412,8 @@
         risingShowPortraitInMessage!: boolean;
         risingShowHighQualityPortraits!: boolean;
 
+        risingNotifyFriendSignIn!: boolean;
+
         risingFilter!: SmartFilterSettings = {} as any;
 
         risingAvailableThemes!: ReadonlyArray<string> = [];
@@ -452,6 +461,8 @@
             this.risingShowPortraitNearInput = settings.risingShowPortraitNearInput;
             this.risingShowPortraitInMessage = settings.risingShowPortraitInMessage;
             this.risingShowHighQualityPortraits = settings.risingShowHighQualityPortraits;
+
+            this.risingNotifyFriendSignIn = settings.risingNotifyFriendSignIn;
 
             this.risingFilter = settings.risingFilter;
 
@@ -519,6 +530,8 @@
                 risingShowPortraitNearInput: this.risingShowPortraitNearInput,
                 risingShowPortraitInMessage: this.risingShowPortraitInMessage,
                 risingShowHighQualityPortraits: this.risingShowHighQualityPortraits,
+
+                risingNotifyFriendSignIn: this.risingNotifyFriendSignIn,
 
                 risingColorblindMode: this.risingColorblindMode,
                 risingFilter: {

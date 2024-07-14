@@ -228,8 +228,7 @@
 
             // skipping await
             // tslint:disable-next-line: no-floating-promises
-            core.notifications.initSounds(['attention', 'login', 'logout', 'modalert', 'newnote']);
-
+            core.notifications.initSounds(['attention', 'login', 'logout', 'modalert', 'newnote', 'silence']);
             core.connection.connect(this.selectedCharacter.name);
         }
 

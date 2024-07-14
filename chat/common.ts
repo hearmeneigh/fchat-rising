@@ -65,6 +65,7 @@ export class Settings implements ISettings {
     risingShowPortraitInMessage = true;
     risingShowHighQualityPortraits = true;
 
+    risingNotifyFriendSignIn = false;
     risingFilter = {
         hideAds: false,
         hideSearchResults: false,

@@ -241,6 +241,7 @@ export namespace Settings {
         readonly risingShowPortraitInMessage: boolean;
         readonly risingShowHighQualityPortraits: boolean;
 
+        readonly risingNotifyFriendSignIn: boolean;
         readonly risingFilter: SmartFilterSettings;
 
         readonly risingCharacterTheme: string | undefined;

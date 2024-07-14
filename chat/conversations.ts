@@ -931,7 +931,11 @@ export default function(this: any): Interfaces.State {
     });
     connection.onMessage('NLN', async(data, time) => {
         const message = new EventMessage(l('events.login', `[user]${data.identity}[/user]`), time);
-        if(isOfInterest(core.characters.get(data.identity))) await addEventMessage(message);
+        if(isOfInterest(core.characters.get(data.identity))) {
+            await addEventMessage(message);
+            //I considered sending the login message too, but this I find this looks better.
+            if(core.state.settings.risingNotifyFriendSignIn) await core.notifications.notify(state.consoleTab, data.identity, l('events.login', data.identity), characterImage(data.identity), 'silence');
+        }
         const conv = state.privateMap[data.identity.toLowerCase()];
         if(conv !== undefined && (!core.state.settings.eventMessages || conv !== state.selectedConversation))
             await conv.addMessage(message);
