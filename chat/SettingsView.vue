@@ -195,7 +195,7 @@
             <div class="form-group">
                 <label class="control-label" for="risingNotifyFriendSignIn">
                     <input type="checkbox" id="risingNotifyFriendSignIn" v-model="risingNotifyFriendSignIn"/>
-                   Notify when friends or bookmarks sign in and out.
+                   Notify when friends or bookmarks sign in.
                 </label>
             </div>
 
