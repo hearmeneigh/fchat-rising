@@ -210,6 +210,7 @@
                     electron.ipcRenderer.send('has-new', this.tabs.reduce((cur, t) => cur || t.hasNew, false));
                 }
                 tab.user = undefined;
+                Vue.set(tab, 'avatarUrl', undefined);
                 tab.tray.setToolTip(l('title'));
                 tab.tray.setContextMenu(remote.Menu.buildFromTemplate(this.createTrayMenu(tab)));
             });
