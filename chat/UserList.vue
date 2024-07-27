@@ -11,7 +11,7 @@
                 <user :character="character" :showStatus="true" :bookmark="false"></user>
             </div>
         </div>
-        <div v-if="channel" style="padding-left:5px;flex:1;display:flex;flex-direction:column" v-show="tab === '0'">
+        <div v-if="channel" style="padding-left:5px;flex:1;display:flex;flex-direction:column" v-show="tab === '1'">
             <div class="users" style="flex:1;padding-left:5px">
                 <h4>{{l('users.memberCount', channel.sortedMembers.length)}} <a class="btn sort" @click="switchSort"><i class="fa fa-sort"></i></a></h4>
                 <div v-for="member in filteredMembers" :key="member.character.name">
