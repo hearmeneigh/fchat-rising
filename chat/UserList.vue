@@ -1,7 +1,7 @@
 <template>
     <sidebar id="user-list" :label="l('users.title')" icon="fa-users" :right="true" :open="expanded">
-        <tabs style="flex-shrink:0" :tabs="channel ? { friends: l('users.friends'), members: l('users.members') } : { profile: 'Profile', friends: l('users.friends') }" v-model="tab"></tabs>
-        <div class="users" style="padding-left:10px" v-show="tab === 'friends'">
+        <tabs style="flex-shrink:0" :tabs="channel ? { 0: l('users.friends'), 1: l('users.members') } : !isConsoleTab ? { 0: l('users.friends'), 1: 'Profile'} : { 0: l('users.friends') }" v-model="tab"></tabs>
+        <div class="users" style="padding-left:10px" v-show="tab === '0'">
             <h4>{{l('users.friends')}}</h4>
             <div v-for="character in friends" :key="character.name">
                 <user :character="character" :showStatus="true" :bookmark="false"></user>
@@ -11,7 +11,7 @@
                 <user :character="character" :showStatus="true" :bookmark="false"></user>
             </div>
         </div>
-        <div v-if="channel" style="padding-left:5px;flex:1;display:flex;flex-direction:column" v-show="tab === 'members'">
+        <div v-if="channel" style="padding-left:5px;flex:1;display:flex;flex-direction:column" v-show="tab === '0'">
             <div class="users" style="flex:1;padding-left:5px">
                 <h4>{{l('users.memberCount', channel.sortedMembers.length)}} <a class="btn sort" @click="switchSort"><i class="fa fa-sort"></i></a></h4>
                 <div v-for="member in filteredMembers" :key="member.character.name">
@@ -25,7 +25,7 @@
                 <input class="form-control" v-model="filter" :placeholder="l('filter')" type="text"/>
             </div>
         </div>
-        <div v-if="!channel" style="flex:1;display:flex;flex-direction:column" class="profile" v-show="tab === 'profile'">
+        <div v-if="!channel && !isConsoleTab" style="flex:1;display:flex;flex-direction:column" class="profile" v-show="tab === '1'">
 
           <a :href="profileUrl" target="_blank" class="btn profile-button">
               <span class="fa fa-fw fa-user"></span>
@@ -86,11 +86,11 @@
         components: {characterPage, user: UserView, sidebar: Sidebar, tabs: Tabs}
     })
     export default class UserList extends Vue {
-        tab = 'friends';
+        tab = '0';
         expanded = window.innerWidth >= 992;
         filter = '';
         l = l;
-        sorter = (x: Character, y: Character) => (x.name < y.name ? -1 : (x.name > y.name ? 1 : 0));
+        sorter = (x: Character, y: Character) => (x.name.toLocaleLowerCase() < y.name.toLocaleLowerCase() ? -1 : (x.name.toLocaleLowerCase() > y.name.toLocaleLowerCase() ? 1 : 0));
 
         sortType: typeof availableSorts[number] = 'normal';
 
@@ -106,6 +106,9 @@
             return (<Conversation.ChannelConversation>core.conversations.selectedConversation).channel;
         }
 
+        get isConsoleTab(): Boolean {
+            return core.conversations.selectedConversation === core.conversations.consoleTab;
+        }
         get profileName(): string | undefined {
           return this.channel ? undefined : core.conversations.selectedConversation.name;
         }
