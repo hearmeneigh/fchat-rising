@@ -6,6 +6,9 @@
             <div class="btn" :class="'btn-' + (hasUpdate ? 'warning' : 'light')" @click="openMenu" id="settings">
                 <i class="fa fa-cog"></i>
             </div>
+            <div class="btn btn-outline-success" :class="'btn-snowflake-' + (hasUpdate ? 'ready' : 'unavailable')" id="update-darwin" @click="openUpdatePage">
+                <i class="fa fa-arrow-down"></i>
+            </div>
             <ul class="nav nav-tabs" style="border-bottom:0;margin-bottom:-1px;margin-top:1px" ref="tabs">
                 <li v-for="(tab,index) in tabs" :key="'tab-' + index" class="nav-item" @click.middle="remove(tab)">
                     <a href="#" @click.prevent="show(tab)" class="nav-link tab"
@@ -442,6 +445,9 @@
             remote.Menu.getApplicationMenu()!.popup({});
         }
 
+        openUpdatePage(): void {
+            electron.ipcRenderer.send('open-url-externally', "https://github.com/hearmeneigh/fchat-rising/releases");
+        }
         getThemeClass() {
           // console.log('getThemeClassWindow', this.settings?.risingDisableWindowsHighContrast);
 
@@ -523,11 +529,17 @@
         font-size: 14px;
     }
 
+    #window-tabs .btn-snowflake-ready, #window-tabs .btn-snowflake-unavailable {
+        display:none;
+    }
     .platform-darwin {
         #windowButtons .btn, #settings {
             display: none;
         }
 
+        #window-tabs .btn-snowflake-ready {
+            display: flex;
+        }
         #window-tabs {
             h4 {
                 margin: 0 15px 0 77px;
