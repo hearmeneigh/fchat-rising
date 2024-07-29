@@ -46,7 +46,7 @@ import {defaultHost, GeneralSettings} from './common';
 import { getSafeLanguages, knownLanguageNames, updateSupportedLanguages } from './language';
 import * as windowState from './window_state';
 // import BrowserWindow = electron.BrowserWindow;
-//import MenuItem = electron.MenuItem;
+import MenuItem = electron.MenuItem;
 import MenuItemConstructorOptions = electron.MenuItemConstructorOptions;
 import * as _ from 'lodash';
 import DownloadItem = electron.DownloadItem;
@@ -179,10 +179,30 @@ async function checkForGitRelease(semVer: string, releaseUrl: string): Promise<v
         let release: ReleaseInfo = (await Axios.get<ReleaseInfo>(`${releaseUrl}`)).data;
         if (release && release.tag_name !== semVer) {
             log.info(`Update available: You're using ${semVer} instead of ${release.tag_name}`);
+            const menu = electron.Menu.getApplicationMenu()!;
+            const item = menu.getMenuItemById('update') as MenuItem | null;
+            if(item !== null) item.visible = true;
+            else
+                menu.append(new electron.MenuItem({
+                    label: l('action.updateAvailable'),
+                    submenu: electron.Menu.buildFromTemplate([{
+                        label: l('action.update'),
+                        click: () => {
+                            for(const w of windows) w.webContents.send('quit');
+                            openURLExternally('https://github.com/hearmeneigh/fchat-rising/releases');
+                        }
+                    }, {
+                        label: l('help.changelog'),
+                        click: showPatchNotes
+                    }]),
+                    id: 'update'
+                }));
+            electron.Menu.setApplicationMenu(menu);
             for (const w of windows) w.webContents.send('update-available', true);
         }
         else {
             log.info(`F-Chat Rising up to date: ${semVer}`);
+            for (const w of windows) w.webContents.send('update-available', false);
         }
     }
     catch (e) {
