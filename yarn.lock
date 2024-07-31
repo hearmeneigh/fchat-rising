@@ -25,19 +25,26 @@
     js-tokens "^4.0.0"
     picocolors "^1.0.0"
 
-"@cliqz/adblocker-content@1.26.16", "@cliqz/adblocker-content@^1.26.16", "@cliqz/adblocker-content@~1.26.16":
+"@cliqz/adblocker-content@1.26.16", "@cliqz/adblocker-content@^1.26.16", "@cliqz/adblocker-content@^1.28.2", "@cliqz/adblocker-content@~1.26.16":
   version "1.26.16"
   resolved "https://registry.yarnpkg.com/@cliqz/adblocker-content/-/adblocker-content-1.26.16.tgz#eb0bb6b9155e3886503784777b92725f89bb7a4f"
   integrity sha512-N1pKg1gxfpnz47w2Sjs2sg3fxFZb113ClUhitgAFSVXeIhZ+S+bCaQtvwtP0mJT+SDfUx2NsPiLwZoPjVRI3wQ==
   dependencies:
     "@cliqz/adblocker-extended-selectors" "^1.26.16"
 
-"@cliqz/adblocker-electron-preload@1.26.16", "@cliqz/adblocker-electron-preload@^1.26.16", "@cliqz/adblocker-electron-preload@~1.26.16":
+"@cliqz/adblocker-electron-preload@1.26.16", "@cliqz/adblocker-electron-preload@^1.26.16":
   version "1.26.16"
   resolved "https://registry.yarnpkg.com/@cliqz/adblocker-electron-preload/-/adblocker-electron-preload-1.26.16.tgz#1a2eb6964cbc01040b462dea5b8fa6ba82e612eb"
   integrity sha512-ea9RSMo7hXTYaEu2DkSegG/MbYK8jAUBhFhtACDRdjX2SE3bwa5WYKEwDMqP7pb4tFxR2VlS+MvKC5v/E6c1kQ==
   dependencies:
     "@cliqz/adblocker-content" "^1.26.16"
+
+"@cliqz/adblocker-electron-preload@~1.28.0":
+  version "1.28.2"
+  resolved "https://registry.yarnpkg.com/@cliqz/adblocker-electron-preload/-/adblocker-electron-preload-1.28.2.tgz#beb06f52ac1c97f4ce6e7ab7dfbb31c4df6e284d"
+  integrity sha512-3yCvK8HjEF1TyMo59Pw4HwUTPSOBl0XCW2oXrmBpJKlcW/02R7qYxNO1QnUl2gubjvqVXNl2PnsMmkfST8rmRw==
+  dependencies:
+    "@cliqz/adblocker-content" "^1.28.2"
 
 "@cliqz/adblocker-electron@1.26.16", "@cliqz/adblocker-electron@~1.26.16":
   version "1.26.16"
