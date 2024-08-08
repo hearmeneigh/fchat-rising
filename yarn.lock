@@ -48,10 +48,15 @@
     "@cliqz/adblocker-electron-preload" "^1.26.16"
     tldts-experimental "^6.0.14"
 
-"@cliqz/adblocker-extended-selectors@1.26.16", "@cliqz/adblocker-extended-selectors@^1.26.16", "@cliqz/adblocker-extended-selectors@~1.26.16":
+"@cliqz/adblocker-extended-selectors@1.26.16", "@cliqz/adblocker-extended-selectors@^1.26.16":
   version "1.26.16"
   resolved "https://registry.yarnpkg.com/@cliqz/adblocker-extended-selectors/-/adblocker-extended-selectors-1.26.16.tgz#d2f3a7bdb0994183ec025afeb929c70cad67ba88"
   integrity sha512-ePXS3aD1R+0XfCnOj0L2ms0NA5AxKHfFLfw92cZ87IPY8ZEZK/sWwQCv5wawbwBmXksr0YkMfFVCiH/IQgUNBQ==
+
+"@cliqz/adblocker-extended-selectors@~1.30.0":
+  version "1.30.1"
+  resolved "https://registry.yarnpkg.com/@cliqz/adblocker-extended-selectors/-/adblocker-extended-selectors-1.30.1.tgz#285dfcbc6aea84e0141f6fd339886905953068d1"
+  integrity sha512-lYqRgQv6085TkgkyNwDrRGaKZUxTVykRc5jbuz0V4ccNzWeuJuZjc99wMIeNp5bb4+ikJeh7FAx+Enoye+tNNw==
 
 "@cliqz/adblocker@1.26.16", "@cliqz/adblocker@^1.26.16", "@cliqz/adblocker@~1.26.16":
   version "1.26.16"
